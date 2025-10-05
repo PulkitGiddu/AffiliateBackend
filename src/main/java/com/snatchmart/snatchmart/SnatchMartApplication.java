@@ -1,13 +1,13 @@
-package com.fastbuy.fastbuy;
+package com.snatchmart.snatchmart;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FastBuyApplication {
+public class SnatchMartApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FastBuyApplication.class, args);
+		SpringApplication.run(SnatchMartApplication.class, args);
 
 	}
 
