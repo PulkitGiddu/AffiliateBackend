@@ -1,0 +1,39 @@
+/*
+FLOW:
+
+1. USER A SIGNS UP:
+   - POST /api/users/signup
+   - Request: { email: "userA@test.com", username: "userA", password: "pass123" }
+   - Response: { id: "uuid-a", referral_code: "ABC12XY9", ... }
+   - User A shares "ABC12XY9" with friends
+
+2. USER B SIGNS UP (referred by User A):
+   - POST /api/users/signup
+   - Request: {
+       email: "userB@test.com",
+       username: "userB",
+       password: "pass456",
+       referred_by_code: "ABC12XY9"  // User B enters the code User A gave them
+     }
+   - Response: {
+       id: "uuid-b",
+       referral_code: "DEF45KL2",  // Auto-generated for User B
+       referred_by_id: "uuid-a",   // Tracks that User B was referred by User A
+       ...
+     }
+
+3. QUERY REFERRAL CHAIN:
+   - Find all users referred by User A:
+     SELECT * FROM user_login WHERE referred_by_id = 'uuid-a'
+   
+   - Find who referred User B:
+     SELECT * FROM user_login WHERE id = 'uuid-a'  (from user_login.referred_by_id)
+
+ADVANTAGES:
+✓ No duplicate referral codes
+✓ Unique code generated per user automatically
+✓ Easy to track referral chains
+✓ User just needs to share their referral_code
+✓ Next user enters that code when signing up
+✓ No conflicts or collisions
+*/
