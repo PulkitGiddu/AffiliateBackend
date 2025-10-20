@@ -17,14 +17,14 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/users")
+@RequestMapping("api/v1")
 @Tag(name = "User Management", description = "APIs for user registration, login, and referral system")
 public class UserSignUpController {
 
     @Autowired
     private UserService userService;
 
-    @PostMapping
+    @PostMapping("/users")
     @Operation(summary = "Create a new user (Sign Up)",
             description = "Register a new user with auto-generated referral code")
     @ApiResponses(value = {
