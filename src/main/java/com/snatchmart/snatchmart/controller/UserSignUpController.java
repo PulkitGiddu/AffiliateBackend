@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("api/v1")  // https:localhost:9090/api/v1/login
 @Tag(name = "User Management", description = "APIs for user registration, login, and referral system")
 public class UserSignUpController {
 
@@ -25,14 +25,7 @@ public class UserSignUpController {
     private UserService userService;
 
     @PostMapping("/users")
-    @Operation(summary = "Create a new user (Sign Up)",
-            description = "Register a new user with auto-generated referral code")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User created successfully",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid input"),
-            @ApiResponse(responseCode = "409", description = "User already exists")
-    })
+
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         UserDTO createdUser = userService.createUser(userDTO);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);

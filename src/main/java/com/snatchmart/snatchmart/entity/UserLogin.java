@@ -1,23 +1,14 @@
 package com.snatchmart.snatchmart.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user_login", indexes = {
-        @Index(name = "idx_user_login_email", columnList = "email_id"),
-        @Index(name = "idx_user_login_username", columnList = "username"),
-        @Index(name = "idx_user_login_referral_code", columnList = "referral_code"),
-        @Index(name = "idx_user_login_referred_by_id", columnList = "referred_by_id"),
-        @Index(name = "idx_user_login_is_active", columnList = "is_active")
-})
+@Table(name = "user_login")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

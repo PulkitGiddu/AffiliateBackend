@@ -1,26 +1,26 @@
 -- ================================================================
--- PostgreSQL Cloud Database Setup Script
+-- SnatchMart PostgreSQL Schema
 -- Compatible with PostgreSQL 12+
+-- Run this script to create/ensure all tables match JPA entities.
 -- ================================================================
 
--- Enable UUID extension if not already enabled
+-- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- ================================================================
 -- FUNCTION: update_timestamp
--- Reusable trigger function for automatic timestamp updates
+-- Sets updated_at to current time on row update (PG 11+: EXECUTE FUNCTION)
 -- ================================================================
 CREATE OR REPLACE FUNCTION update_timestamp()
 RETURNS TRIGGER AS $$
 BEGIN
-    NEW.updated_at = NOW();
+    NEW.updated_at = CURRENT_TIMESTAMP;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
 -- ================================================================
 -- TABLE: user_login
--- Stores user account information and referral system
 -- ================================================================
 CREATE TABLE IF NOT EXISTS user_login (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -48,7 +48,6 @@ CREATE INDEX IF NOT EXISTS idx_user_login_referral_code ON user_login(referral_c
 
 -- ================================================================
 -- TABLE: merchants
--- Stores merchant/store information
 -- ================================================================
 CREATE TABLE IF NOT EXISTS merchants (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -66,7 +65,6 @@ CREATE INDEX IF NOT EXISTS idx_merchants_name ON merchants(name);
 
 -- ================================================================
 -- TABLE: categories
--- Stores product categories with support for hierarchical structure
 -- ================================================================
 CREATE TABLE IF NOT EXISTS categories (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -87,7 +85,6 @@ CREATE INDEX IF NOT EXISTS idx_categories_parent_id ON categories(parent_id);
 
 -- ================================================================
 -- TABLE: products
--- Stores product information with pricing and merchant details
 -- ================================================================
 CREATE TABLE IF NOT EXISTS products (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -123,7 +120,6 @@ CREATE INDEX IF NOT EXISTS idx_products_deals_expires ON products(deals_expires_
 
 -- ================================================================
 -- TABLE: sales_events
--- Stores promotional events and sales campaigns
 -- ================================================================
 CREATE TABLE IF NOT EXISTS sales_events (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -144,29 +140,147 @@ BEFORE UPDATE ON sales_events
 FOR EACH ROW EXECUTE FUNCTION update_timestamp();
 
 CREATE INDEX IF NOT EXISTS idx_sales_events_merchant_id ON sales_events(merchant_id);
-CREATE INDEX IF NOT EXISTS idx_sales_events_start_date ON sales_events(start_date);
-CREATE INDEX IF NOT EXISTS idx_sales_events_end_date ON sales_events(end_date);
+CREATE INDEX IF NOT EXISTS idx_sales_events_dates ON sales_events(start_date, end_date);
 
 -- ================================================================
--- TABLE: product_sales_events
--- Junction table linking products to sales events
+-- TABLE: product_sales_events (junction)
 -- ================================================================
 CREATE TABLE IF NOT EXISTS product_sales_events (
     product_id UUID NOT NULL,
     sales_event_id UUID NOT NULL,
     PRIMARY KEY (product_id, sales_event_id),
-    CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
-    CONSTRAINT fk_sales_event FOREIGN KEY (sales_event_id) REFERENCES sales_events(id) ON DELETE CASCADE
+    CONSTRAINT fk_pse_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    CONSTRAINT fk_pse_sales_event FOREIGN KEY (sales_event_id) REFERENCES sales_events(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_product_sales_events_product ON product_sales_events(product_id);
 CREATE INDEX IF NOT EXISTS idx_product_sales_events_event ON product_sales_events(sales_event_id);
 
 -- ================================================================
--- GRANT PERMISSIONS (Customize as needed)
--- Replace 'your_app_user' with your actual database user
+-- TABLE: coupons
+-- ================================================================
+CREATE TABLE IF NOT EXISTS coupons (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    code VARCHAR(100) NOT NULL,
+    description TEXT,
+    discount_type VARCHAR(20) CHECK (discount_type IN ('PERCENT', 'FLAT')),
+    discount_value DECIMAL(10, 2),
+    expiry_at TIMESTAMP WITH TIME ZONE,
+    merchant_id UUID,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_coupon_merchant FOREIGN KEY (merchant_id) REFERENCES merchants(id) ON DELETE SET NULL
+);
+
+CREATE TRIGGER set_coupons_timestamp
+BEFORE UPDATE ON coupons
+FOR EACH ROW EXECUTE FUNCTION update_timestamp();
+
+CREATE INDEX IF NOT EXISTS idx_coupons_merchant_id ON coupons(merchant_id);
+CREATE INDEX IF NOT EXISTS idx_coupons_expiry ON coupons(expiry_at);
+CREATE INDEX IF NOT EXISTS idx_coupons_is_active ON coupons(is_active);
+
+-- ================================================================
+-- TABLE: affiliate_clicks
+-- ================================================================
+CREATE TABLE IF NOT EXISTS affiliate_clicks (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID,
+    product_id UUID NOT NULL,
+    merchant_id UUID,
+    clicked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    device_info TEXT,
+    ip_address VARCHAR(50),
+    CONSTRAINT fk_click_user FOREIGN KEY (user_id) REFERENCES user_login(id) ON DELETE SET NULL,
+    CONSTRAINT fk_click_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_affiliate_clicks_user ON affiliate_clicks(user_id);
+CREATE INDEX IF NOT EXISTS idx_affiliate_clicks_product ON affiliate_clicks(product_id);
+CREATE INDEX IF NOT EXISTS idx_affiliate_clicks_clicked_at ON affiliate_clicks(clicked_at);
+
+-- ================================================================
+-- TABLE: user_wishlist
+-- ================================================================
+CREATE TABLE IF NOT EXISTS user_wishlist (
+    user_id UUID NOT NULL,
+    product_id UUID NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, product_id),
+    CONSTRAINT fk_wishlist_user FOREIGN KEY (user_id) REFERENCES user_login(id) ON DELETE CASCADE,
+    CONSTRAINT fk_wishlist_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_wishlist_user ON user_wishlist(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_wishlist_product ON user_wishlist(product_id);
+
+-- ================================================================
+-- TABLE: user_budgets
+-- ================================================================
+CREATE TABLE IF NOT EXISTS user_budgets (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL,
+    product_name VARCHAR(255),
+    target_price DECIMAL(10, 2),
+    current_price DECIMAL(10, 2),
+    alert_enabled BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_budget_user FOREIGN KEY (user_id) REFERENCES user_login(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_budgets_user ON user_budgets(user_id);
+
+-- ================================================================
+-- TABLE: product_price_history
+-- ================================================================
+CREATE TABLE IF NOT EXISTS product_price_history (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    product_id UUID NOT NULL,
+    price DECIMAL(10, 2),
+    recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_pph_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_pph_product_id ON product_price_history(product_id);
+CREATE INDEX IF NOT EXISTS idx_pph_recorded_at ON product_price_history(recorded_at DESC);
+
+-- ================================================================
+-- TABLE: notifications
+-- ================================================================
+CREATE TABLE IF NOT EXISTS notifications (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID,
+    message TEXT,
+    is_read BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_notification_user FOREIGN KEY (user_id) REFERENCES user_login(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_is_read ON notifications(is_read);
+CREATE INDEX IF NOT EXISTS idx_notifications_created_at ON notifications(created_at DESC);
+
+-- ================================================================
+-- GRANTS (uncomment and set your_app_user)
 -- ================================================================
 -- GRANT CONNECT ON DATABASE your_database TO your_app_user;
 -- GRANT USAGE ON SCHEMA public TO your_app_user;
 -- GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO your_app_user;
 -- GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO your_app_user;
+
+-- ================================================================
+-- Entity ↔ Table mapping (for reconfirmation)
+-- ================================================================
+-- UserLogin         → user_login
+-- Merchant          → merchants
+-- Category          → categories
+-- Product           → products
+-- SalesEvent        → sales_events
+-- ProductSalesEvent → product_sales_events
+-- Coupon            → coupons
+-- AffiliateClick    → affiliate_clicks
+-- UserWishlist      → user_wishlist
+-- UserBudget        → user_budgets
+-- ProductPriceHistory → product_price_history
+-- Notification      → notifications

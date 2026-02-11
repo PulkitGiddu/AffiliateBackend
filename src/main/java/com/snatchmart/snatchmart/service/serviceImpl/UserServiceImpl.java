@@ -8,6 +8,7 @@ import com.snatchmart.snatchmart.service.UserService;
 import com.snatchmart.snatchmart.validator.UserSignUpValidation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ReferralCodeGenerator referralCodeGenerator;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /**
      * Create a new user with auto-generated referral code
      */
@@ -48,7 +52,7 @@ public class UserServiceImpl implements UserService {
                 .username(userDTO.getUsername())
                 .firstName(userDTO.getFirst_name())
                 .lastName(userDTO.getLast_name())
-                .passwordHash(hashPassword(userDTO.getPassword_hash()))
+                .passwordHash(passwordEncoder.encode(userDTO.getPassword_hash()))
                 .isActive(userDTO.getIs_active() != null ? userDTO.getIs_active() : true)
                 .profilePictureUrl(userDTO.getProfile_picture_url())
                 .build();
@@ -167,6 +171,8 @@ public class UserServiceImpl implements UserService {
     public UserDTO login(UserDTO userDTO) {
         validation.validateLogin(userDTO);
 
+
+        // database call to register user
         Optional<UserLogin> userOpt = userRepository.findByEmailId(userDTO.getEmail_id());
 
         if (userOpt.isEmpty()) {
@@ -176,7 +182,7 @@ public class UserServiceImpl implements UserService {
         UserLogin user = userOpt.get();
 
         // Verify password
-        if (!user.getPasswordHash().equals(hashPassword(userDTO.getPassword_hash()))) {
+        if (!passwordEncoder.matches(userDTO.getPassword_hash(), user.getPasswordHash())) {
             throw new RuntimeException("Invalid email or password");
         }
 
@@ -236,13 +242,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
         return userRepository.countActiveReferrals(userId);
-    }
-
-    /**
-     * Hash password (TODO: Use BCryptPasswordEncoder for production)
-     */
-    private String hashPassword(String password) {
-        return Integer.toHexString(password.hashCode());
     }
 
     /**

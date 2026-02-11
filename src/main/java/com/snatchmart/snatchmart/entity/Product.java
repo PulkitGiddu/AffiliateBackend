@@ -1,15 +1,25 @@
 package com.snatchmart.snatchmart.entity;
 
 import jakarta.persistence.*;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "products")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Product {
     @Id
-    @GeneratedValue(generator = "UUID")
+    @UuidGenerator
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
@@ -60,7 +70,18 @@ public class Product {
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    // Getters and setters
-    // ...existing code...
-}
+    @PrePersist
+    public void prePersist() {
+        OffsetDateTime now = OffsetDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
+        if (this.isActive == null) {
+            this.isActive = true;
+        }
+    }
 
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = OffsetDateTime.now();
+    }
+}

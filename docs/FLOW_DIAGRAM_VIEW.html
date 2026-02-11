@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SnatchMart – Flow Diagram View</title>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'neutral',
+      flowchart: { useMaxWidth: true, htmlLabels: true },
+      sequence: { useMaxWidth: true },
+      er: { useMaxWidth: true }
+    });
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+      background: #f5f5f5;
+      color: #1a1a1a;
+    }
+    h1 { font-size: 1.75rem; margin-top: 0; color: #0d47a1; }
+    h2 { font-size: 1.25rem; margin-top: 2rem; color: #1565c0; border-bottom: 1px solid #90caf9; padding-bottom: 6px; }
+    h3 { font-size: 1.05rem; margin-top: 1.5rem; color: #1976d2; }
+    .nav {
+      background: #fff;
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .nav ul { margin: 0; padding-left: 20px; }
+    .nav a { color: #1565c0; text-decoration: none; }
+    .nav a:hover { text-decoration: underline; }
+    section {
+      background: #fff;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .mermaid {
+      display: flex;
+      justify-content: center;
+      margin: 16px 0;
+      min-height: 120px;
+    }
+    .mermaid svg { max-width: 100%; }
+    p, table { margin: 0.5rem 0; font-size: 0.95rem; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #e0e0e0; padding: 8px 12px; text-align: left; }
+    th { background: #e3f2fd; }
+  </style>
+</head>
+<body>
+  <h1>SnatchMart – Flow Diagram View</h1>
+  <p>UI → Backend → Neon DB. Open this file in a browser to see the diagrams.</p>
+
+  <nav class="nav">
+    <strong>Jump to diagram</strong>
+    <ul>
+      <li><a href="#high-level">1. High-Level Architecture</a></li>
+      <li><a href="#request-flow">2. Request Flow (Single Action)</a></li>
+      <li><a href="#auth">3.1 Authentication</a></li>
+      <li><a href="#home">3.2 Home (Categories & Products)</a></li>
+      <li><a href="#product-detail">3.3 Product Detail & Price History</a></li>
+      <li><a href="#wishlist">3.4 Wishlist</a></li>
+      <li><a href="#budgets">3.5 Budgets</a></li>
+      <li><a href="#coupons">3.6 Coupons</a></li>
+      <li><a href="#notifications">3.7 Notifications</a></li>
+      <li><a href="#affiliate">3.8 Affiliate Click</a></li>
+      <li><a href="#er">4. Database ER Diagram</a></li>
+    </ul>
+  </nav>
+
+  <section id="high-level">
+    <h2>1. High-Level Architecture</h2>
+    <div class="mermaid">
+flowchart LR
+    subgraph User
+        U[User]
+    end
+    subgraph "Flutter App (UI)"
+        UI[Screens]
+        API[Dio ApiClient]
+        UI --> API
+    end
+    subgraph "Spring Boot Backend"
+        REST[REST Controllers]
+        SVC[Services]
+        REPO[JPA Repositories]
+        REST --> SVC
+        SVC --> REPO
+    end
+    subgraph "Neon DB (PostgreSQL)"
+        DB[(Tables)]
+    end
+    U --> UI
+    API -->|"HTTP/REST + JWT"| REST
+    REPO -->|"JDBC/SQL"| DB
+    </div>
+  </section>
+
+  <section id="request-flow">
+    <h2>2. Request Flow (Single Action)</h2>
+    <div class="mermaid">
+sequenceDiagram
+    participant User
+    participant Flutter as Flutter UI
+    participant Dio as Dio / ApiClient
+    participant Backend as Spring Boot
+    participant Service as Service Layer
+    participant Repo as JPA Repository
+    participant Neon as Neon DB
+
+    User->>Flutter: Tap / Navigate
+    Flutter->>Dio: e.g. GET /api/v1/products
+    Dio->>Backend: HTTP + JWT (if auth)
+    Backend->>Service: Controller calls Service
+    Service->>Repo: e.g. productRepository.findAll()
+    Repo->>Neon: SQL (SELECT/INSERT/UPDATE/DELETE)
+    Neon-->>Repo: Rows
+    Repo-->>Service: Entities
+    Service-->>Backend: DTOs
+    Backend-->>Dio: JSON response
+    Dio-->>Flutter: Decoded data
+    Flutter-->>User: Update UI
+    </div>
+  </section>
+
+  <section id="auth">
+    <h2>3.1 Authentication (Register / Login)</h2>
+    <div class="mermaid">
+flowchart LR
+    subgraph UI
+        A1[Register/Login Screen]
+    end
+    subgraph Backend
+        B1["AuthController /api/v1/auth"]
+        B2[AuthService]
+        B3[UserRepository]
+    end
+    subgraph DB
+        T1[(user_login)]
+    end
+    A1 -->|POST register, POST login| B1
+    B1 --> B2
+    B2 --> B3
+    B3 --> T1
+    </div>
+  </section>
+
+  <section id="home">
+    <h2>3.2 Home: Categories and Top Deals (Products)</h2>
+    <div class="mermaid">
+flowchart LR
+    subgraph UI
+        H1[Home Screen]
+    end
+    subgraph Backend
+        C1["CategoryController /categories"]
+        C2["ProductController /products"]
+        S1[CategoryService]
+        S2[ProductService]
+        R1[CategoryRepository]
+        R2[ProductRepository]
+        R3[MerchantRepository]
+    end
+    subgraph DB
+        T1[(categories)]
+        T2[(products)]
+        T3[(merchants)]
+    end
+    H1 -->|GET /categories| C1
+    H1 -->|GET /products| C2
+    C1 --> S1 --> R1 --> T1
+    C2 --> S2 --> R2 --> T2
+    S2 -.->|FK| R3 --> T3
+    </div>
+  </section>
+
+  <section id="product-detail">
+    <h2>3.3 Product Detail and Price History</h2>
+    <div class="mermaid">
+flowchart LR
+    subgraph UI
+        P1[Product Detail Screen]
+    end
+    subgraph Backend
+        PC[ProductController]
+        PS[ProductService]
+        PR[ProductRepository]
+        PHR[ProductPriceHistoryRepository]
+    end
+    subgraph DB
+        T1[(products)]
+        T2[(product_price_history)]
+        T3[(merchants)]
+        T4[(categories)]
+    end
+    P1 -->|GET /products/:id| PC
+    P1 -->|GET price-history| PC
+    PC --> PS --> PR --> T1
+    PS --> PHR --> T2
+    PR -.-> T3
+    PR -.-> T4
+    </div>
+  </section>
+
+  <section id="wishlist">
+    <h2>3.4 Wishlist</h2>
+    <div class="mermaid">
+flowchart LR
+    subgraph UI
+        W1[Wishlist Screen]
+    end
+    subgraph Backend
+        WC["WishlistController /wishlist"]
+        WS[WishlistService]
+        WR[UserWishlistRepository]
+    end
+    subgraph DB
+        T1[(user_wishlist)]
+        T2[(products)]
+    end
+    W1 -->|GET POST DELETE| WC
+    WC --> WS --> WR --> T1
+    WR -.->|product_id FK| T2
+    </div>
+  </section>
+
+  <section id="budgets">
+    <h2>3.5 Budgets</h2>
+    <div class="mermaid">
+flowchart LR
+    subgraph UI
+        B1[Budgets Screen]
+    end
+    subgraph Backend
+        BC["BudgetController /budgets"]
+        BS[BudgetService]
+        BR[UserBudgetRepository]
+        UR[UserRepository]
+    end
+    subgraph DB
+        T1[(user_budgets)]
+        T2[(user_login)]
+    end
+    B1 -->|GET POST PUT DELETE| BC
+    BC --> BS --> BR --> T1
+    BS --> UR --> T2
+    </div>
+  </section>
+
+  <section id="coupons">
+    <h2>3.6 Coupons</h2>
+    <div class="mermaid">
+flowchart LR
+    subgraph UI
+        C1[Coupons Screen]
+    end
+    subgraph Backend
+        CC["CouponController /coupons"]
+        CS[CouponService]
+        CR[CouponRepository]
+        MR[MerchantRepository]
+    end
+    subgraph DB
+        T1[(coupons)]
+        T2[(merchants)]
+    end
+    C1 -->|GET POST PUT DELETE| CC
+    CC --> CS --> CR --> T1
+    CS --> MR --> T2
+    </div>
+  </section>
+
+  <section id="notifications">
+    <h2>3.7 Notifications</h2>
+    <div class="mermaid">
+flowchart LR
+    subgraph UI
+        N1[Notifications Screen]
+    end
+    subgraph Backend
+        NC["NotificationController /notifications"]
+        NS[NotificationService]
+        NR[NotificationRepository]
+    end
+    subgraph DB
+        T1[(notifications)]
+        T2[(user_login)]
+    end
+    N1 -->|GET PUT read| NC
+    NC --> NS --> NR --> T1
+    NR -.->|user_id FK| T2
+    </div>
+  </section>
+
+  <section id="affiliate">
+    <h2>3.8 Affiliate Click (Track Outbound Clicks)</h2>
+    <div class="mermaid">
+flowchart LR
+    subgraph UI
+        A1[Product / Deal link]
+    end
+    subgraph Backend
+        AC["AffiliateClickController"]
+        AS[AffiliateClickService]
+        ACR[AffiliateClickRepository]
+        UR[UserRepository]
+        PR[ProductRepository]
+    end
+    subgraph DB
+        T1[(affiliate_clicks)]
+        T2[(user_login)]
+        T3[(products)]
+    end
+    A1 -->|POST track| AC
+    AC --> AS --> ACR --> T1
+    AS --> UR --> T2
+    AS --> PR --> T3
+    </div>
+  </section>
+
+  <section id="er">
+    <h2>4. Database Tables and Relationships (ER)</h2>
+    <div class="mermaid">
+erDiagram
+    user_login ||--o{ user_login : "referred_by_id"
+    user_login ||--o{ user_wishlist : "user_id"
+    user_login ||--o{ user_budgets : "user_id"
+    user_login ||--o{ notifications : "user_id"
+    user_login ||--o{ affiliate_clicks : "user_id"
+
+    merchants ||--o{ products : "merchant_id"
+    merchants ||--o{ coupons : "merchant_id"
+    merchants ||--o{ affiliate_clicks : "merchant_id"
+
+    categories ||--o{ categories : "parent_id"
+    categories ||--o{ products : "category_id"
+
+    products ||--o{ product_sales_events : "product_id"
+    products ||--o{ user_wishlist : "product_id"
+    products ||--o{ product_price_history : "product_id"
+    products ||--o{ affiliate_clicks : "product_id"
+
+    sales_events ||--o{ product_sales_events : "sales_event_id"
+
+    user_login {
+        uuid id PK
+        email_id
+        username
+        password_hash
+        referral_code
+        referred_by_id FK
+    }
+
+    merchants {
+        uuid id PK
+        name
+        logo_url
+    }
+
+    categories {
+        uuid id PK
+        name
+        slug
+        parent_id FK
+    }
+
+    products {
+        uuid id PK
+        product_name
+        sale_price
+        merchant_id FK
+        category_id FK
+        affiliate_url
+    }
+
+    user_wishlist {
+        user_id PK,FK
+        product_id PK,FK
+    }
+
+    user_budgets {
+        uuid id PK
+        user_id FK
+        product_name
+        target_price
+    }
+
+    coupons {
+        uuid id PK
+        code
+        discount_type
+        merchant_id FK
+    }
+
+    notifications {
+        uuid id PK
+        user_id FK
+        message
+        is_read
+    }
+
+    affiliate_clicks {
+        uuid id PK
+        user_id FK
+        product_id FK
+        merchant_id FK
+    }
+
+    product_price_history {
+        uuid id PK
+        product_id FK
+        price
+        recorded_at
+    }
+
+    sales_events { uuid id PK }
+    product_sales_events { product_id FK, sales_event_id FK }
+    </div>
+  </section>
+
+  <section>
+    <h2>5. Summary</h2>
+    <table>
+      <tr><th>Layer</th><th>Role</th></tr>
+      <tr><td><strong>User</strong></td><td>Uses Flutter app (login, browse, wishlist, budgets, coupons, notifications).</td></tr>
+      <tr><td><strong>Flutter</strong></td><td>Screens + Dio ApiClient (base URL, JWT). Calls REST endpoints.</td></tr>
+      <tr><td><strong>Backend</strong></td><td>Spring Boot: Controllers → Services → JPA Repositories. Returns JSON.</td></tr>
+      <tr><td><strong>Neon DB</strong></td><td>PostgreSQL. Tables: user_login, merchants, categories, products, sales_events, product_sales_events, coupons, affiliate_clicks, user_wishlist, user_budgets, product_price_history, notifications.</td></tr>
+    </table>
+  </section>
+</body>
+</html>

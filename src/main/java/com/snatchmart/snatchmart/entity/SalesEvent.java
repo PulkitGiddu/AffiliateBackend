@@ -1,14 +1,24 @@
 package com.snatchmart.snatchmart.entity;
 
 import jakarta.persistence.*;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
+
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "sales_events")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SalesEvent {
     @Id
-    @GeneratedValue(generator = "UUID")
+    @UuidGenerator
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
@@ -37,7 +47,15 @@ public class SalesEvent {
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    // Getters and setters
-    // ...existing code...
-}
+    @PrePersist
+    public void prePersist() {
+        OffsetDateTime now = OffsetDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
 
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = OffsetDateTime.now();
+    }
+}

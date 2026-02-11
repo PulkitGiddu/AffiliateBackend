@@ -1,14 +1,25 @@
 package com.snatchmart.snatchmart.entity;
 
 import jakarta.persistence.*;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
+
 import java.time.OffsetDateTime;
+import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "categories")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Category {
     @Id
-    @GeneratedValue(generator = "UUID")
+    @UuidGenerator
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
@@ -18,17 +29,28 @@ public class Category {
     @Column(name = "slug", unique = true, nullable = false)
     private String slug;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Category parent;
 
-    @Column(name = "created_at")
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    private Set<Category> children;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
 
-    // Getters and setters
-    // ...existing code...
-}
+    @PrePersist
+    public void prePersist() {
+        OffsetDateTime now = OffsetDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
 
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = OffsetDateTime.now();
+    }
+}
