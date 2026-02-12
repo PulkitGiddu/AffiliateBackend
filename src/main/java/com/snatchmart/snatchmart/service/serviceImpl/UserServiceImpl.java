@@ -3,6 +3,7 @@ package com.snatchmart.snatchmart.service.serviceImpl;
 import com.snatchmart.snatchmart.DTO.UserDTO;
 import com.snatchmart.snatchmart.entity.UserLogin;
 import com.snatchmart.snatchmart.exception.DuplicateUserException;
+import com.snatchmart.snatchmart.exception.UserNotFoundException;
 import com.snatchmart.snatchmart.repository.UserRepository;
 import com.snatchmart.snatchmart.service.ReferralCodeGenerator;
 import com.snatchmart.snatchmart.service.UserService;
@@ -10,6 +11,8 @@ import com.snatchmart.snatchmart.validator.UserSignUpValidation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
+
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -43,6 +48,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDTO createUser(UserDTO userDTO) {
+        log.info("UserService.createUser received: email_id={}, username={}", userDTO.getEmail_id(), userDTO.getUsername());
         // Validate signup data
         validation.validateSignUp(userDTO);
         userDTO.setId(null);
@@ -101,7 +107,9 @@ public class UserServiceImpl implements UserService {
         user.setUpdatedAt(now);
 
         // Save user to database
+        log.info("UserService.createUser saving to DB: emailId={}, username={}", user.getEmailId(), user.getUsername());
         user = userRepository.save(user);
+        log.info("UserService.createUser saved to DB: id={}, emailId={}", user.getId(), user.getEmailId());
 
         // Use manual mapping to avoid null values
         return mapEntityToDTO(user);
@@ -135,7 +143,7 @@ public class UserServiceImpl implements UserService {
         validation.validateUpdate(userDTO);
 
         UserLogin user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
 
         // Update only mutable fields
         if (userDTO.getFirst_name() != null) {
@@ -161,7 +169,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getUserById(UUID id) {
         UserLogin user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
         return mapEntityToDTO(user);
     }
 
@@ -224,7 +232,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> getUsersReferredBy(UUID userId) {
         // Verify the user exists
         userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
         return userRepository.findByReferredById(userId).stream()
                 .map(this::mapEntityToDTO)
@@ -238,7 +246,7 @@ public class UserServiceImpl implements UserService {
     public Long getReferralCount(UUID userId) {
         // Verify the user exists
         userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
         return userRepository.countReferralsByUserId(userId);
     }
@@ -250,7 +258,7 @@ public class UserServiceImpl implements UserService {
     public Long getActiveReferralCount(UUID userId) {
         // Verify the user exists
         userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
         return userRepository.countActiveReferrals(userId);
     }

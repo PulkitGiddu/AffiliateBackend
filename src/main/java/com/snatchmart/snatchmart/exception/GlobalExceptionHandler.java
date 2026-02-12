@@ -38,6 +38,11 @@ public class GlobalExceptionHandler {
         return buildResponse(message, request.getRequestURI(), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException ex, HttpServletRequest request) {
+        return buildResponse(ex.getMessage(), request.getRequestURI(), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex, HttpServletRequest request) {
         return buildResponse("Invalid email or password", request.getRequestURI(), HttpStatus.UNAUTHORIZED);

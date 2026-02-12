@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../config/app_providers.dart';
+import '../../../core/network/api_config.dart';
+import '../../../core/utils/logger.dart';
 import '../providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -29,6 +32,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
     if (password.isEmpty) return;
+    if (kDebugMode) {
+      appLog('Login UI captured: email=$email, passwordLength=${password.length}', tag: 'Login');
+      appLog('Login sending to backend: ${ApiConfig.baseUrl}${ApiConfig.userLogin}', tag: 'Login');
+    }
     await ref.read(authStateProvider.notifier).login(email, password);
     if (!mounted) return;
     final auth = ref.read(authStateProvider).valueOrNull;
@@ -58,7 +65,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text('Sign in'),
+        title: const Text('Login'),
         actions: [
           TextButton(
             onPressed: () async {
@@ -88,7 +95,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Sign in to continue to SnatchMart',
+                  'Login to continue to SnatchMart',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -112,7 +119,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        'or sign in with email',
+                        'or login with email',
                         style: Theme.of(context).textTheme.labelMedium,
                       ),
                     ),
@@ -171,12 +178,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Text('Sign in'),
+                      : const Text('Login'),
                 ),
                 const SizedBox(height: 16),
                 TextButton(
                   onPressed: () => context.push('/register'),
-                  child: const Text("Don't have an account? Register"),
+                  child: const Text("Don't have an account? Sign up"),
                 ),
               ],
             ),

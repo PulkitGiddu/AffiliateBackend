@@ -3,6 +3,7 @@ import '../core/network/api_config.dart';
 import '../core/constants/app_constants.dart';
 import '../core/network/api_client.dart';
 import '../core/errors/exceptions.dart';
+import '../core/mock/mock_data_loader.dart';
 import '../models/product.dart';
 import '../models/price_history_entry.dart';
 
@@ -52,6 +53,16 @@ class ProductRepository {
       );
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) throw UnauthorizedException();
+      if (useMockWhenOffline) {
+        final list = await getMockProducts();
+        if (list.isNotEmpty) {
+          final pageSize = size;
+          final start = page * pageSize;
+          final end = (start + pageSize).clamp(0, list.length);
+          final items = start < list.length ? list.sublist(start, end) : <Product>[];
+          return (items: items, page: page, totalElements: list.length, totalPages: (list.length / pageSize).ceil(), hasNext: end < list.length);
+        }
+      }
       throw ServerException(e.response?.data?['message']?.toString() ?? e.message);
     }
   }
@@ -64,6 +75,11 @@ class ProductRepository {
       return Product.fromJson(inner);
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) throw UnauthorizedException();
+      if (useMockWhenOffline) {
+        final list = await getMockProducts();
+        final match = list.where((p) => p.id == id).firstOrNull ?? (list.isNotEmpty ? list.first : null);
+        if (match != null) return match;
+      }
       throw ServerException(e.response?.data?['message']?.toString() ?? e.message);
     }
   }

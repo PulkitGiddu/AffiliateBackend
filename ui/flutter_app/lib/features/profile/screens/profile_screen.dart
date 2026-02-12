@@ -21,6 +21,14 @@ class ProfileScreen extends ConsumerWidget {
           onPressed: () => context.pop(),
         ),
         title: const Text('Profile'),
+        actions: [
+          if (auth != null)
+            IconButton(
+              icon: const Icon(Icons.edit_outlined),
+              onPressed: () => context.push('/profile/edit'),
+              tooltip: 'Edit profile',
+            ),
+        ],
       ),
       body: auth == null
           ? SingleChildScrollView(
@@ -29,16 +37,48 @@ class ProfileScreen extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const SizedBox(height: 24),
-                  const Icon(Icons.person_outline, size: 64),
+                  ref.watch(mockUserProfileProvider).when(
+                    data: (User? demoUser) {
+                      if (demoUser != null) {
+                        final name = [demoUser.firstName, demoUser.lastName]
+                            .where((e) => e != null && e.isNotEmpty)
+                            .join(' ')
+                            .trim();
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: Text(
+                                'Demo profile (offline)',
+                                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+                              ),
+                            ),
+                            _ProfileHeader(
+                              email: demoUser.email,
+                              userId: demoUser.id,
+                              displayName: name.isEmpty ? null : name,
+                              username: demoUser.username,
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+                        );
+                      }
+                      return const Icon(Icons.person_outline, size: 64);
+                    },
+                    loading: () => const Icon(Icons.person_outline, size: 64),
+                    error: (_, __) => const Icon(Icons.person_outline, size: 64),
+                  ),
                   const SizedBox(height: 16),
                   Text(
-                    'Sign in to see your profile',
+                    'Login to see your profile',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 24),
                   FilledButton(
                     onPressed: () => context.push('/login'),
-                    child: const Text('Sign in'),
+                    child: const Text('Login'),
                   ),
                   const SizedBox(height: 32),
                   _ThemeSection(ref: ref),
@@ -65,6 +105,12 @@ class ProfileScreen extends ConsumerWidget {
                         error: (_, __) => _ProfileHeader(email: auth.email, userId: auth.userId, displayName: null),
                       ),
                 const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.edit_outlined),
+                  title: const Text('Edit profile'),
+                  subtitle: const Text('Name, profile picture'),
+                  onTap: () => context.push('/profile/edit'),
+                ),
                 ListTile(
                   leading: const Icon(Icons.favorite_border),
                   title: const Text('Wishlist'),
@@ -113,13 +159,31 @@ class _ProfileHeader extends StatelessWidget {
         ? displayName!
         : username?.isNotEmpty == true
             ? username!
-            : email;
-    return ListTile(
-      leading: CircleAvatar(
-        child: Text(title.isNotEmpty ? title[0].toUpperCase() : '?'),
+            : email.isNotEmpty ? email : 'User';
+    final subtitle = [
+      if (username != null && username!.isNotEmpty) '@$username',
+      email,
+    ].where((e) => e.isNotEmpty).join('  ·  ');
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 32,
+            child: Text(title.isNotEmpty ? title[0].toUpperCase() : '?', style: const TextStyle(fontSize: 24)),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(displayName?.isNotEmpty == true ? displayName! : (username ?? email), style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                if (subtitle.isNotEmpty) Text(subtitle, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+              ],
+            ),
+          ),
+        ],
       ),
-      title: Text(email),
-      subtitle: Text('User ID: $userId'),
     );
   }
 }

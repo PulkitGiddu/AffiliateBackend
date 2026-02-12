@@ -12,6 +12,7 @@ import '../repositories/budget_repository.dart';
 import '../repositories/notification_repository.dart';
 import '../repositories/affiliate_click_repository.dart';
 import '../repositories/user_repository.dart';
+import '../core/mock/mock_data_loader.dart';
 import '../models/user.dart';
 
 final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) async {
@@ -120,3 +121,6 @@ final userProfileProvider = FutureProvider.autoDispose.family<User?, String>((re
   final repo = ref.watch(userRepositoryProvider);
   return repo.getById(userId);
 });
+
+/// Demo profile when not logged in (from mock_data.json). Used to showcase profile UI when backend is offline.
+final mockUserProfileProvider = FutureProvider.autoDispose<User?>((ref) => getMockUser());

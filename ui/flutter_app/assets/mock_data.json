@@ -1,0 +1,62 @@
+{
+  "products": [
+    {"id": "mock-p1", "productName": "Wireless Bluetooth Earbuds", "description": "Noise-cancelling, 24hr battery", "productUniqueId": "EARBUD-001", "originalPrice": 79.99, "salePrice": 49.99, "reviewScore": 4.5, "reviewCount": 320, "affiliateUrl": "https://example.com/p1", "imageUrl": "https://picsum.photos/200?random=1", "merchantId": "m1", "categoryId": "cat-elec", "isActive": true},
+    {"id": "mock-p2", "productName": "Smart Watch Pro", "description": "Heart rate, GPS, 7-day battery", "productUniqueId": "WATCH-002", "originalPrice": 199, "salePrice": 149, "reviewScore": 4.7, "reviewCount": 890, "affiliateUrl": "https://example.com/p2", "imageUrl": "https://picsum.photos/200?random=2", "merchantId": "m1", "categoryId": "cat-elec", "isActive": true},
+    {"id": "mock-p3", "productName": "Portable Power Bank 20000mAh", "description": "Fast charge, dual USB", "productUniqueId": "PWR-003", "originalPrice": 45, "salePrice": 29.99, "reviewScore": 4.3, "reviewCount": 1200, "affiliateUrl": "https://example.com/p3", "imageUrl": "https://picsum.photos/200?random=3", "merchantId": "m2", "categoryId": "cat-elec", "isActive": true},
+    {"id": "mock-p4", "productName": "Organic Cotton T-Shirt", "description": "Unisex, multiple colors", "productUniqueId": "TSHIRT-004", "originalPrice": 29, "salePrice": 18.99, "reviewScore": 4.6, "reviewCount": 456, "affiliateUrl": "https://example.com/p4", "imageUrl": "https://picsum.photos/200?random=4", "merchantId": "m2", "categoryId": "cat-fashion", "isActive": true},
+    {"id": "mock-p5", "productName": "Running Shoes Light", "description": "Breathable mesh, cushioned sole", "productUniqueId": "SHOE-005", "originalPrice": 120, "salePrice": 84, "reviewScore": 4.8, "reviewCount": 2100, "affiliateUrl": "https://example.com/p5", "imageUrl": "https://picsum.photos/200?random=5", "merchantId": "m1", "categoryId": "cat-fashion", "isActive": true},
+    {"id": "mock-p6", "productName": "Stainless Steel Water Bottle", "description": "1L, insulated, BPA-free", "productUniqueId": "BOTTLE-006", "originalPrice": 35, "salePrice": 22, "reviewScore": 4.4, "reviewCount": 780, "affiliateUrl": "https://example.com/p6", "imageUrl": "https://picsum.photos/200?random=6", "merchantId": "m3", "categoryId": "cat-home", "isActive": true},
+    {"id": "mock-p7", "productName": "LED Desk Lamp", "description": "Dimmable, USB port", "productUniqueId": "LAMP-007", "originalPrice": 55, "salePrice": 39.99, "reviewScore": 4.5, "reviewCount": 340, "affiliateUrl": "https://example.com/p7", "imageUrl": "https://picsum.photos/200?random=7", "merchantId": "m3", "categoryId": "cat-home", "isActive": true},
+    {"id": "mock-p8", "productName": "Wireless Keyboard & Mouse", "description": "Slim, silent keys", "productUniqueId": "KBD-008", "originalPrice": 69, "salePrice": 49, "reviewScore": 4.6, "reviewCount": 567, "affiliateUrl": "https://example.com/p8", "imageUrl": "https://picsum.photos/200?random=8", "merchantId": "m1", "categoryId": "cat-elec", "isActive": true},
+    {"id": "mock-p9", "productName": "Backpack Laptop 15\"", "description": "Padded compartment, water-resistant", "productUniqueId": "BAG-009", "originalPrice": 89, "salePrice": 59.99, "reviewScore": 4.7, "reviewCount": 890, "affiliateUrl": "https://example.com/p9", "imageUrl": "https://picsum.photos/200?random=9", "merchantId": "m2", "categoryId": "cat-fashion", "isActive": true},
+    {"id": "mock-p10", "productName": "Bluetooth Speaker Mini", "description": "360° sound, 12hr play", "productUniqueId": "SPK-010", "originalPrice": 59, "salePrice": 39, "reviewScore": 4.2, "reviewCount": 234, "affiliateUrl": "https://example.com/p10", "imageUrl": "https://picsum.photos/200?random=10", "merchantId": "m1", "categoryId": "cat-elec", "isActive": true},
+    {"id": "mock-p11", "productName": "Yoga Mat Non-Slip", "description": "6mm thick, eco-friendly", "productUniqueId": "MAT-011", "originalPrice": 42, "salePrice": 27.99, "reviewScore": 4.6, "reviewCount": 445, "affiliateUrl": "https://example.com/p11", "imageUrl": "https://picsum.photos/200?random=11", "merchantId": "m3", "categoryId": "cat-sports", "isActive": true},
+    {"id": "mock-p12", "productName": "Coffee Maker Drip", "description": "12-cup, programmable", "productUniqueId": "COFFEE-012", "originalPrice": 75, "salePrice": 54.99, "reviewScore": 4.5, "reviewCount": 1200, "affiliateUrl": "https://example.com/p12", "imageUrl": "https://picsum.photos/200?random=12", "merchantId": "m3", "categoryId": "cat-home", "isActive": true},
+    {"id": "mock-p13", "productName": "Phone Stand Adjustable", "description": "Aluminum, 360° rotation", "productUniqueId": "STAND-013", "originalPrice": 25, "salePrice": 15.99, "reviewScore": 4.4, "reviewCount": 678, "affiliateUrl": "https://example.com/p13", "imageUrl": "https://picsum.photos/200?random=13", "merchantId": "m2", "categoryId": "cat-elec", "isActive": true},
+    {"id": "mock-p14", "productName": "Sunglasses UV400", "description": "Polarized, lightweight", "productUniqueId": "SUN-014", "originalPrice": 65, "salePrice": 42, "reviewScore": 4.7, "reviewCount": 312, "affiliateUrl": "https://example.com/p14", "imageUrl": "https://picsum.photos/200?random=14", "merchantId": "m2", "categoryId": "cat-fashion", "isActive": true},
+    {"id": "mock-p15", "productName": "Resistance Bands Set", "description": "5 levels, with carry bag", "productUniqueId": "BAND-015", "originalPrice": 38, "salePrice": 24.99, "reviewScore": 4.5, "reviewCount": 890, "affiliateUrl": "https://example.com/p15", "imageUrl": "https://picsum.photos/200?random=15", "merchantId": "m3", "categoryId": "cat-sports", "isActive": true},
+    {"id": "mock-p16", "productName": "Ceramic Coffee Mugs Set of 4", "description": "Dishwasher safe", "productUniqueId": "MUG-016", "originalPrice": 32, "salePrice": 19.99, "reviewScore": 4.6, "reviewCount": 534, "affiliateUrl": "https://example.com/p16", "imageUrl": "https://picsum.photos/200?random=16", "merchantId": "m3", "categoryId": "cat-home", "isActive": true},
+    {"id": "mock-p17", "productName": "USB-C Hub 7-in-1", "description": "HDMI, SD, PD", "productUniqueId": "HUB-017", "originalPrice": 49, "salePrice": 34.99, "reviewScore": 4.3, "reviewCount": 456, "affiliateUrl": "https://example.com/p17", "imageUrl": "https://picsum.photos/200?random=17", "merchantId": "m1", "categoryId": "cat-elec", "isActive": true},
+    {"id": "mock-p18", "productName": "Slim Wallet RFID", "description": "Leather, card slots", "productUniqueId": "WALLET-018", "originalPrice": 45, "salePrice": 28, "reviewScore": 4.5, "reviewCount": 267, "affiliateUrl": "https://example.com/p18", "imageUrl": "https://picsum.photos/200?random=18", "merchantId": "m2", "categoryId": "cat-fashion", "isActive": true},
+    {"id": "mock-p19", "productName": "Fitness Tracker Band", "description": "Steps, sleep, heart rate", "productUniqueId": "FIT-019", "originalPrice": 55, "salePrice": 36.99, "reviewScore": 4.4, "reviewCount": 1200, "affiliateUrl": "https://example.com/p19", "imageUrl": "https://picsum.photos/200?random=19", "merchantId": "m1", "categoryId": "cat-sports", "isActive": true},
+    {"id": "mock-p20", "productName": "Desk Organizer Set", "description": "Bamboo, 5 compartments", "productUniqueId": "ORG-020", "originalPrice": 42, "salePrice": 26.99, "reviewScore": 4.5, "reviewCount": 189, "affiliateUrl": "https://example.com/p20", "imageUrl": "https://picsum.photos/200?random=20", "merchantId": "m3", "categoryId": "cat-home", "isActive": true},
+    {"id": "mock-p21", "productName": "Noise Cancelling Headphones", "description": "Over-ear, 30hr battery", "productUniqueId": "HP-021", "originalPrice": 149, "salePrice": 99.99, "reviewScore": 4.8, "reviewCount": 2100, "affiliateUrl": "https://example.com/p21", "imageUrl": "https://picsum.photos/200?random=21", "merchantId": "m1", "categoryId": "cat-elec", "isActive": true},
+    {"id": "mock-p22", "productName": "Insulated Lunch Bag", "description": "Reusable, easy clean", "productUniqueId": "LUNCH-022", "originalPrice": 28, "salePrice": 17.99, "reviewScore": 4.3, "reviewCount": 423, "affiliateUrl": "https://example.com/p22", "imageUrl": "https://picsum.photos/200?random=22", "merchantId": "m3", "categoryId": "cat-home", "isActive": true}
+  ],
+  "categories": [
+    {"id": "cat-elec", "name": "Electronics", "slug": "electronics", "parentId": null},
+    {"id": "cat-fashion", "name": "Fashion", "slug": "fashion", "parentId": null},
+    {"id": "cat-home", "name": "Home & Kitchen", "slug": "home-kitchen", "parentId": null},
+    {"id": "cat-sports", "name": "Sports & Fitness", "slug": "sports-fitness", "parentId": null}
+  ],
+  "notifications": [
+    {"id": "mock-n1", "userId": "mock-user-1", "message": "Flash sale starts in 1 hour! Get up to 50% off on electronics.", "isRead": false, "createdAt": "2025-02-07T10:00:00Z"},
+    {"id": "mock-n2", "userId": "mock-user-1", "message": "Your order #SNM1234 has been shipped. Track your delivery.", "isRead": false, "createdAt": "2025-02-07T08:00:00Z"},
+    {"id": "mock-n3", "userId": "mock-user-1", "message": "Price drop alert: Item in your wishlist is now 20% cheaper.", "isRead": true, "createdAt": "2025-02-07T05:00:00Z"},
+    {"id": "mock-n4", "userId": "mock-user-1", "message": "Welcome to SnatchMart! Complete your profile to get personalized deals.", "isRead": true, "createdAt": "2025-02-06T12:00:00Z"},
+    {"id": "mock-n5", "userId": "mock-user-1", "message": "New category added: Smart Gadgets. Explore the latest wearables.", "isRead": true, "createdAt": "2025-02-05T09:00:00Z"},
+    {"id": "mock-n6", "userId": "mock-user-1", "message": "Use code SAVE10 at checkout for extra 10% off. Valid till Sunday.", "isRead": false, "createdAt": "2025-02-07T09:30:00Z"},
+    {"id": "mock-n7", "userId": "mock-user-1", "message": "Your referral earned you 50 points. Keep sharing!", "isRead": true, "createdAt": "2025-02-04T14:00:00Z"}
+  ],
+  "coupons": [
+    {"id": "mock-c1", "code": "WELCOME15", "description": "15% off first order", "discountType": "PERCENT", "discountValue": 15, "expiryAt": "2025-03-31T23:59:59Z", "merchantId": "m1", "isActive": true},
+    {"id": "mock-c2", "code": "FLAT20", "description": "₹20 off on orders above ₹500", "discountType": "FLAT", "discountValue": 20, "expiryAt": "2025-02-28T23:59:59Z", "merchantId": "m2", "isActive": true},
+    {"id": "mock-c3", "code": "ELECTRONICS25", "description": "25% off electronics", "discountType": "PERCENT", "discountValue": 25, "expiryAt": "2025-02-15T23:59:59Z", "merchantId": "m1", "isActive": true},
+    {"id": "mock-c4", "code": "FREESHIP", "description": "Free shipping on orders above ₹999", "discountType": "FLAT", "discountValue": 0, "expiryAt": "2025-04-30T23:59:59Z", "merchantId": null, "isActive": true},
+    {"id": "mock-c5", "code": "SAVE10", "description": "Extra 10% off sale items", "discountType": "PERCENT", "discountValue": 10, "expiryAt": "2025-02-10T23:59:59Z", "merchantId": "m3", "isActive": true},
+    {"id": "mock-c6", "code": "BIG50", "description": "₹50 off on orders above ₹1500", "discountType": "FLAT", "discountValue": 50, "expiryAt": "2025-03-15T23:59:59Z", "merchantId": "m2", "isActive": true},
+    {"id": "mock-c7", "code": "FASHION30", "description": "30% off fashion category", "discountType": "PERCENT", "discountValue": 30, "expiryAt": "2025-02-20T23:59:59Z", "merchantId": "m2", "isActive": true}
+  ],
+  "user": {
+    "id": "mock-user-1",
+    "email": "demo@snatchmart.com",
+    "username": "demouser",
+    "firstName": "Demo",
+    "lastName": "User",
+    "profilePictureUrl": null,
+    "referralCode": "DEMOREF123",
+    "isActive": true,
+    "createdAt": "2025-01-01T00:00:00Z",
+    "updatedAt": "2025-02-01T00:00:00Z"
+  }
+}

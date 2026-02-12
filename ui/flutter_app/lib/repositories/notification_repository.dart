@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import '../core/network/api_config.dart';
 import '../core/network/api_client.dart';
 import '../core/errors/exceptions.dart';
+import '../core/mock/mock_data_loader.dart';
 import '../models/notification_model.dart';
 
 class NotificationRepository {
@@ -21,6 +22,10 @@ class NotificationRepository {
           .toList();
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) throw UnauthorizedException();
+      if (useMockWhenOffline) {
+        final list = await getMockNotifications();
+        if (list.isNotEmpty) return list;
+      }
       throw ServerException(e.response?.data?['message']?.toString() ?? e.message);
     }
   }

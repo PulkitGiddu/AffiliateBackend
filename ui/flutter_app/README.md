@@ -47,7 +47,12 @@ Pick a device when prompted (e.g. `Chrome`, an Android emulator, or an iOS simul
   flutter run --dart-define=BASE_URL=http://127.0.0.1:8081
   ```
 
-- **Physical device**: use your computer’s LAN IP (e.g. `http://192.168.1.5:8081`).
+- **Physical Android device**: `10.0.2.2` does **not** work (that’s emulator-only). Use your computer’s LAN IP so the phone can reach the backend on the same WiFi:
+  1. Find your Mac’s IP: `ipconfig getifaddr en0` (or `en1`). On Windows: `ipconfig` and use the IPv4 address.
+  2. Run the app with that IP:  
+     `flutter run --dart-define=BASE_URL=http://YOUR_IP:8081`  
+     Example: `flutter run --dart-define=BASE_URL=http://192.168.1.5:8081`
+  3. Ensure the backend is running and the phone is on the same WiFi as your computer.
 
 **Quick run (script):**
 

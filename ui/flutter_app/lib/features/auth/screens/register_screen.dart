@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../config/app_providers.dart';
+import '../../../core/network/api_config.dart';
+import '../../../core/utils/logger.dart';
 import '../providers/auth_provider.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -34,19 +37,23 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
+    final email = _emailController.text.trim();
+    final username = _usernameController.text.trim();
+    final firstName = _firstNameController.text.trim().isEmpty ? null : _firstNameController.text.trim();
+    final lastName = _lastNameController.text.trim().isEmpty ? null : _lastNameController.text.trim();
+    final password = _passwordController.text;
+    final referredByCode = _referralController.text.trim().isEmpty ? null : _referralController.text.trim();
+    if (kDebugMode) {
+      appLog('Register UI captured: email=$email, username=$username, firstName=$firstName, lastName=$lastName, passwordLength=${password.length}, referredByCode=$referredByCode', tag: 'Register');
+      appLog('Register sending to backend: ${ApiConfig.baseUrl}${ApiConfig.userRegister}', tag: 'Register');
+    }
     await ref.read(authStateProvider.notifier).register(
-          email: _emailController.text.trim(),
-          username: _usernameController.text.trim(),
-          firstName: _firstNameController.text.trim().isEmpty
-              ? null
-              : _firstNameController.text.trim(),
-          lastName: _lastNameController.text.trim().isEmpty
-              ? null
-              : _lastNameController.text.trim(),
-          password: _passwordController.text,
-          referredByCode: _referralController.text.trim().isEmpty
-              ? null
-              : _referralController.text.trim(),
+          email: email,
+          username: username,
+          firstName: firstName,
+          lastName: lastName,
+          password: password,
+          referredByCode: referredByCode,
         );
     if (!mounted) return;
     final auth = ref.read(authStateProvider).valueOrNull;

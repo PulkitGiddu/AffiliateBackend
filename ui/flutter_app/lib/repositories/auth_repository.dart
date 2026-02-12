@@ -34,8 +34,12 @@ class AuthRepository {
     if (referredByCode != null && referredByCode.isNotEmpty) body['referred_by_code'] = referredByCode.trim();
     if (profilePictureUrl != null && profilePictureUrl.isNotEmpty) body['profile_picture_url'] = profilePictureUrl;
 
+    final fullUrl = '${ApiConfig.baseUrl}$path';
     if (kDebugMode) {
-      appLog('Auth REGISTER (UserSignUp) → ${ApiConfig.baseUrl}$path', tag: 'Auth');
+      appLog('Auth REGISTER → $fullUrl', tag: 'Auth');
+      final p = body['password_hash'] as String?;
+      final bodyForLog = Map<String, dynamic>.from(body)..['password_hash'] = '<${p?.length ?? 0} chars>';
+      appLog('Auth REGISTER body (snake_case): $bodyForLog', tag: 'Auth');
     }
 
     try {
@@ -52,28 +56,29 @@ class AuthRepository {
     }
   }
 
+  /// Login via UserSignUpController POST /api/v1/login with UserDTO (email_id, password_hash).
+  /// Response is UserDTO (id, email_id, ...); no JWT. We store userId and treat as logged in.
   Future<AuthResponse> login({
     required String email,
     required String password,
   }) async {
-    final path = ApiConfig.authLogin;
-    final body = {'email': email.trim(), 'password': password};
+    final path = ApiConfig.userLogin;
+    final body = {'email_id': email.trim(), 'password_hash': password};
 
+    final fullUrl = '${ApiConfig.baseUrl}$path';
     if (kDebugMode) {
-      appLog('Auth LOGIN → ${ApiConfig.baseUrl}$path', tag: 'Auth');
+      appLog('Auth LOGIN → $fullUrl', tag: 'Auth');
+      appLog('Auth LOGIN body (UserDTO): email_id=${body['email_id']}, password_hash=<${(body['password_hash'] as String).length} chars>', tag: 'Auth');
     }
 
     try {
       final res = await _api.dio.post(path, data: body);
       final raw = res.data;
       if (raw is! Map<String, dynamic>) throw ServerException('Invalid response format');
-      // Backend returns { success, message, data: { userId, email, token }, timestamp }
-      Map<String, dynamic>? dataMap = raw['data'] as Map<String, dynamic>?;
-      if (dataMap == null && _looksLikeAuth(raw)) dataMap = raw;
-      if (dataMap == null) throw ServerException('Invalid response');
-      final auth = AuthResponse.fromJson(dataMap);
-      if (auth.token.isEmpty) throw ServerException('No token in response');
-      await _storage.saveToken(auth.token);
+      // Backend POST /api/v1/login returns UserDTO (id, email_id, username, ...) - no token
+      final auth = AuthResponse.fromJson(raw);
+      if (auth.userId.isEmpty) throw ServerException('No user id in response');
+      await _storage.saveToken(auth.token.isNotEmpty ? auth.token : '');
       await _storage.saveUserId(auth.userId);
       return auth;
     } on DioException catch (e) {
@@ -84,14 +89,12 @@ class AuthRepository {
     }
   }
 
-  static bool _looksLikeAuth(Map<String, dynamic> json) =>
-      json.containsKey('token') && (json.containsKey('userId') || json.containsKey('user_id'));
-
   Future<void> logout() async {
     await _storage.clearAuth();
     ApiClient.reset();
   }
 
-  bool get isLoggedIn => _storage.token != null && _storage.token!.isNotEmpty;
+  bool get isLoggedIn => (_storage.userId != null && _storage.userId!.isNotEmpty) ||
+      (_storage.token != null && _storage.token!.isNotEmpty);
   String? get currentUserId => _storage.userId;
 }

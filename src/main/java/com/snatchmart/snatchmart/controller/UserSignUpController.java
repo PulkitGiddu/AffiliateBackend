@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -21,13 +24,18 @@ import java.util.UUID;
 @Tag(name = "User Management", description = "APIs for user registration, login, and referral system")
 public class UserSignUpController {
 
+    private static final Logger log = LoggerFactory.getLogger(UserSignUpController.class);
+
     @Autowired
     private UserService userService;
 
     @PostMapping("/users")
-
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+        log.info("BACKEND received POST /api/v1/users (register): email_id={}, username={}, first_name={}, last_name={}, password_hash present={}, referred_by_code={}",
+                userDTO.getEmail_id(), userDTO.getUsername(), userDTO.getFirst_name(), userDTO.getLast_name(),
+                userDTO.getPassword_hash() != null, userDTO.getReferred_by_code());
         UserDTO createdUser = userService.createUser(userDTO);
+        log.info("BACKEND createUser success: id={}, email_id={}", createdUser.getId(), createdUser.getEmail_id());
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
@@ -74,7 +82,9 @@ public class UserSignUpController {
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
+        log.info("BACKEND received POST /api/v1/login: email_id={}, password present={}", userDTO.getEmail_id(), userDTO.getPassword_hash() != null);
         UserDTO loggedInUser = userService.login(userDTO);
+        log.info("BACKEND login success: id={}", loggedInUser.getId());
         return new ResponseEntity<>(loggedInUser, HttpStatus.OK);
     }
 

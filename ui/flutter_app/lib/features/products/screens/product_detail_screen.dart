@@ -88,7 +88,7 @@ class ProductDetailScreen extends ConsumerWidget {
     if (userId == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Sign in to add items to your wishlist')),
+          const SnackBar(content: Text('Login to add items to your wishlist')),
         );
         context.push('/login');
       }
@@ -111,7 +111,7 @@ class ProductDetailScreen extends ConsumerWidget {
     if (userId == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Sign in to set price alerts')),
+          const SnackBar(content: Text('Login to set price alerts')),
         );
         context.push('/login');
       }

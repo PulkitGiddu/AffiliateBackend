@@ -13,7 +13,7 @@ void main() {
   );
 }
 
-/// Root that shows a branded splash for 1.5s, then the main app.
+/// Root that shows a branded splash, then the main app.
 class _SplashRoot extends StatefulWidget {
   const _SplashRoot({super.key});
 
@@ -27,7 +27,7 @@ class _SplashRootState extends State<_SplashRoot> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 1500), () {
+    Future.delayed(const Duration(milliseconds: 1800), () {
       if (mounted) {
         setState(() => _showSplash = false);
       }
@@ -37,7 +37,7 @@ class _SplashRootState extends State<_SplashRoot> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 400),
       child: _showSplash
           ? const _SplashScreen(key: ValueKey('splash'))
           : const SnatchMartApp(key: ValueKey('app')),
@@ -45,27 +45,116 @@ class _SplashRootState extends State<_SplashRoot> {
   }
 }
 
-/// Simple splash screen showing the SnatchMart logo.
-class _SplashScreen extends StatelessWidget {
+/// Splash screen with logo2.png on blue gradient (no black background).
+class _SplashScreen extends StatefulWidget {
   const _SplashScreen({super.key});
 
   @override
+  State<_SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<_SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scale;
+  late Animation<double> _opacity;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 900),
+      vsync: this,
+    );
+    _scale = Tween<double>(begin: 1.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+    _opacity = Tween<double>(begin: 1.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    const splashBlue = Color(0xFF2874F0);
+    const splashBlueDark = Color(0xFF1565C0);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
-      home: Builder(
-        builder: (ctx) => Scaffold(
-          backgroundColor: Theme.of(ctx).colorScheme.primary,
-          body: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(32),
-              child: Image.asset(
-                'lib/asserts/snatchmart.png',
-                fit: BoxFit.contain,
+      themeMode: ThemeMode.light,
+      home: Scaffold(
+        backgroundColor: splashBlue,
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [splashBlue, splashBlueDark],
+            ),
+          ),
+          child: SafeArea(
+            child: Center(
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (context, child) {
+                  return Opacity(
+                    opacity: _opacity.value,
+                    child: Transform.scale(
+                      scale: _scale.value,
+                      child: Padding(
+                        padding: const EdgeInsets.all(48),
+                        child: Image.asset(
+                          'lib/asserts/logo2.png',
+                          fit: BoxFit.contain,
+                          filterQuality: FilterQuality.medium,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Shown only if prefs load slowly after splash; keeps same look.
+class _SplashStyleLoading extends StatelessWidget {
+  const _SplashStyleLoading();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF2874F0), Color(0xFF1565C0)],
+          ),
+        ),
+        child: const Center(
+          child: SizedBox(
+            width: 40,
+            height: 40,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
           ),
         ),
@@ -83,17 +172,15 @@ class SnatchMartApp extends ConsumerWidget {
 
     return prefsAsync.when(
       loading: () => MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
         darkTheme: AppTheme.dark,
         themeMode: ThemeMode.system,
-        home: const Scaffold(
-          body: Center(child: CircularProgressIndicator()),
-        ),
+        home: const _SplashStyleLoading(),
       ),
       error: (e, _) => MaterialApp(
         theme: AppTheme.light,
         darkTheme: AppTheme.dark,
-        themeMode: ThemeMode.system,
         home: Builder(
           builder: (ctx) => Scaffold(
             body: Center(
@@ -110,7 +197,6 @@ class SnatchMartApp extends ConsumerWidget {
         ),
       ),
       data: (_) {
-        // Only watch router after SharedPreferences is ready (router depends on auth → apiClient → localStorage → prefs).
         final router = ref.watch(goRouterProvider);
         final themeMode = ref.watch(themeModeProvider);
         return MaterialApp.router(

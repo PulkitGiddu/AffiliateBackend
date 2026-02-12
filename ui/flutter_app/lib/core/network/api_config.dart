@@ -12,9 +12,10 @@ class ApiConfig {
   );
 
   /// Backend base URL. All API calls use this.
-  /// When [BASE_URL] is not set: Android uses 10.0.2.2:8081 (emulator → host), others use 127.0.0.1:8081.
-  /// On a physical device or another machine, set BASE_URL to your backend (e.g. http://YOUR_IP:8081).
-  /// Override: flutter run --dart-define=BASE_URL=http://your-host:8081
+  /// When [BASE_URL] is not set: Android uses 10.0.2.2:8081 (emulator only), others use 127.0.0.1:8081.
+  /// On a physical Android device, 10.0.2.2 does NOT work — use your computer's LAN IP instead:
+  ///   flutter run --dart-define=BASE_URL=http://YOUR_PC_IP:8081
+  /// (Same WiFi; find IP: Mac `ipconfig getifaddr en0`, Windows `ipconfig`.)
   static String get baseUrl {
     if (_baseUrlEnv.isNotEmpty) return _baseUrlEnv;
     if (defaultTargetPlatform == TargetPlatform.android) {

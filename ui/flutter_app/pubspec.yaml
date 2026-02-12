@@ -47,8 +47,18 @@ dev_dependencies:
   json_serializable: ^6.7.1
   riverpod_generator: ^2.3.9
   hive_generator: ^2.0.1
+  flutter_launcher_icons: ^0.14.3
+  image: ^4.7.2
 
 flutter:
   uses-material-design: true
   assets:
     - lib/asserts/snatchmart.png
+    - lib/asserts/logo1.png
+    - lib/asserts/logo2.png
+    - lib/asserts/banner_1_diwali.png
+    - lib/asserts/banner_2_flipkart.png
+    - lib/asserts/banner_3_myntra.png
+    - lib/asserts/banner_4_mega.png
+    - lib/asserts/banner_5_super.png
+    - assets/mock_data.json

@@ -11,6 +11,8 @@ import com.snatchmart.snatchmart.service.ReferralCodeGenerator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,8 @@ import java.util.Map;
 @Service
 @Transactional
 public class AuthServiceImpl implements AuthService {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -68,11 +72,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(AuthRequest request) {
+        log.info("AuthService.login: email={}", request.getEmail());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
         UserLogin user = userRepository.findByEmailId(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        log.info("AuthService.login user found and authenticated: id={}, email={}", user.getId(), user.getEmailId());
         String token = jwtService.generateToken(user.getEmailId(), Map.of("role", "USER"));
         return AuthResponse.builder()
                 .userId(user.getId())
