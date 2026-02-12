@@ -2,10 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../models/product.dart';
+import '../../../models/category.dart';
 import '../providers/product_provider.dart';
 import '../../home/providers/category_provider.dart';
 import '../../../widgets/shimmer_loading.dart';
 import '../../../widgets/empty_state.dart';
+
+/// Maps category slug/name to an icon for the left sidebar.
+IconData _iconForCategory(String? slug, String name) {
+  final s = (slug ?? name).toLowerCase();
+  if (s.contains('fashion') || s.contains('cloth')) return Icons.checkroom_rounded;
+  if (s.contains('appliance')) return Icons.kitchen_rounded;
+  if (s.contains('mobile') || s.contains('phone')) return Icons.smartphone_rounded;
+  if (s.contains('electronic') || s.contains('laptop')) return Icons.computer_rounded;
+  if (s.contains('gadget') || s.contains('smart')) return Icons.watch_rounded;
+  if (s.contains('home') || s.contains('furniture')) return Icons.home_rounded;
+  if (s.contains('beauty') || s.contains('personal')) return Icons.face_retouching_natural_rounded;
+  if (s.contains('toy') || s.contains('baby')) return Icons.child_care_rounded;
+  return Icons.category_outlined;
+}
 
 class ProductsScreen extends ConsumerStatefulWidget {
   const ProductsScreen({super.key});
@@ -17,6 +32,7 @@ class ProductsScreen extends ConsumerStatefulWidget {
 class _ProductsScreenState extends ConsumerState<ProductsScreen> {
   final _searchController = TextEditingController();
   final _scrollController = ScrollController();
+  static const double _leftColumnWidth = 100;
 
   @override
   void initState() {
@@ -36,9 +52,15 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     super.dispose();
   }
 
+  void _onCategorySelected(String? categoryId) {
+    ref.read(productCategoryFilterProvider.notifier).state = categoryId;
+    ref.read(productListNotifierProvider.notifier).load();
+  }
+
   @override
   Widget build(BuildContext context) {
     final listState = ref.watch(productListNotifierProvider);
+    final selectedCategoryId = ref.watch(productCategoryFilterProvider);
     final categoriesAsync = ref.watch(categoryListProvider);
 
     return Scaffold(
@@ -47,100 +69,224 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        title: const Text('Products'),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search products...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                filled: true,
-              ),
-              onSubmitted: (v) {
-                ref.read(productSearchQueryProvider.notifier).state = v;
-                ref.read(productListNotifierProvider.notifier).load();
-              },
-            ),
+        title: const Text('All Categories'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search_rounded),
+            onPressed: () => _showSearch(context),
           ),
-        ),
-      ),
-      body: Column(
-        children: [
-          categoriesAsync.when(
-            data: (categories) => SizedBox(
-              height: 44,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: FilterChip(
-                      label: const Text('All'),
-                      selected: ref.watch(productCategoryFilterProvider) == null,
-                      onSelected: (_) {
-                        ref.read(productCategoryFilterProvider.notifier).state = null;
-                        ref.read(productListNotifierProvider.notifier).load();
-                      },
+          IconButton(
+            icon: const Icon(Icons.camera_alt_outlined),
+            onPressed: () {},
+          ),
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.shopping_cart_outlined),
+                onPressed: () {},
+              ),
+              Positioned(
+                right: 6,
+                top: 6,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                  child: const Center(
+                    child: Text(
+                      '5',
+                      style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  ...categories.map((c) => Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: FilterChip(
-                          label: Text(c.name),
-                          selected: ref.watch(productCategoryFilterProvider) == c.id,
-                          onSelected: (_) {
-                            ref.read(productCategoryFilterProvider.notifier).state = c.id;
-                            ref.read(productListNotifierProvider.notifier).load();
-                          },
-                        ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Left: categories (~1/3 width)
+          Container(
+            width: _leftColumnWidth,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerLowest,
+              border: Border(
+                right: BorderSide(
+                  color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+                ),
+              ),
+            ),
+            child: categoriesAsync.when(
+              data: (categories) => ListView(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                children: [
+                  _CategorySideItem(
+                    label: 'For You',
+                    icon: Icons.local_offer_rounded,
+                    isSelected: selectedCategoryId == null,
+                    onTap: () => _onCategorySelected(null),
+                  ),
+                  ...categories.map((c) => _CategorySideItem(
+                        label: c.name,
+                        icon: _iconForCategory(c.slug, c.name),
+                        isSelected: selectedCategoryId == c.id,
+                        onTap: () => _onCategorySelected(c.id),
                       )),
                 ],
               ),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (_, __) => const Center(child: Icon(Icons.error_outline)),
             ),
-            loading: () => const SizedBox.shrink(),
-            error: (_, __) => const SizedBox.shrink(),
           ),
+          // Right: content (products)
           Expanded(
-            child: listState.loading && listState.items.isEmpty
-                ? ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: 8,
-                    itemBuilder: (_, __) => const _ProductTileShimmer(),
-                  )
-                : listState.items.isEmpty
-                    ? const EmptyState(
-                        message: 'No products found. Try another search or category.',
-                        icon: Icons.search_off,
-                      )
-                    : RefreshIndicator(
-                        onRefresh: () =>
-                            ref.read(productListNotifierProvider.notifier).load(),
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          padding: const EdgeInsets.all(16),
-                          itemCount: listState.items.length +
-                              (listState.loadingMore ? 1 : 0),
-                          itemBuilder: (_, i) {
-                            if (i == listState.items.length) {
-                              return const Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Center(child: CircularProgressIndicator()),
-                              );
-                            }
-                            final p = listState.items[i];
-                            return _ProductTile(product: p);
-                          },
-                        ),
-                      ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: listState.loading && listState.items.isEmpty
+                      ? ListView.builder(
+                          padding: const EdgeInsets.all(12),
+                          itemCount: 8,
+                          itemBuilder: (_, __) => const _ProductTileShimmer(),
+                        )
+                      : listState.items.isEmpty
+                          ? const EmptyState(
+                              message: 'No products in this category.',
+                              icon: Icons.inventory_2_outlined,
+                            )
+                          : RefreshIndicator(
+                              onRefresh: () =>
+                                  ref.read(productListNotifierProvider.notifier).load(),
+                              child: ListView.builder(
+                                controller: _scrollController,
+                                padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+                                itemCount: listState.items.length +
+                                    (listState.loadingMore ? 1 : 0),
+                                itemBuilder: (_, i) {
+                                  if (i == listState.items.length) {
+                                    return const Padding(
+                                      padding: EdgeInsets.all(16),
+                                      child: Center(child: CircularProgressIndicator()),
+                                    );
+                                  }
+                                  return _ProductTile(product: listState.items[i]);
+                                },
+                              ),
+                            ),
+                ),
+              ],
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showSearch(BuildContext context) {
+    ref.read(productSearchQueryProvider.notifier).state = _searchController.text;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: TextField(
+            controller: _searchController,
+            autofocus: true,
+            decoration: InputDecoration(
+              hintText: 'Search products...',
+              prefixIcon: const Icon(Icons.search),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              filled: true,
+            ),
+            onSubmitted: (v) {
+              ref.read(productSearchQueryProvider.notifier).state = v;
+              ref.read(productListNotifierProvider.notifier).load();
+              Navigator.of(ctx).pop();
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CategorySideItem extends StatelessWidget {
+  const _CategorySideItem({
+    required this.label,
+    required this.icon,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+      child: Material(
+        color: isSelected
+            ? theme.colorScheme.primaryContainer.withOpacity(0.4)
+            : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isSelected
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.surfaceContainerHighest,
+                  ),
+                  child: Icon(
+                    icon,
+                    size: 26,
+                    color: isSelected
+                        ? theme.colorScheme.onPrimary
+                        : theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Text(
+                    label,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                      color: isSelected
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurfaceVariant,
+                    ),
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

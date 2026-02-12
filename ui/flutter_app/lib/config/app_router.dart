@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'app_providers.dart';
 import '../features/auth/providers/auth_provider.dart';
 import '../features/auth/screens/login_screen.dart';
 import '../features/auth/screens/register_screen.dart';
+import '../features/auth/screens/referral_screen.dart';
 import '../features/home/screens/home_screen.dart';
 import '../features/products/screens/product_detail_screen.dart';
 import '../features/products/screens/products_screen.dart';
@@ -17,6 +19,7 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
+  final skippedLogin = ref.watch(skippedLoginProvider);
 
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
@@ -24,9 +27,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       final isLoggedIn = authState.valueOrNull != null;
       final location = state.matchedLocation;
-      final isAuthRoute = location == '/login' || location == '/register';
 
-      // Protect profile, wishlist, budgets, notifications (optional: require login)
+      // On app start: show login unless user is logged in or has skipped
+      if (location == '/' && !isLoggedIn && !skippedLogin) {
+        return '/login';
+      }
+      // Protect profile, wishlist, budgets, notifications (require login)
       final protectedRoutes = ['/profile', '/wishlist', '/budgets', '/notifications'];
       final isProtected = protectedRoutes.any((r) => location.startsWith(r));
       if (isProtected && !isLoggedIn) {
@@ -46,6 +52,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/register',
         builder: (_, __) => const RegisterScreen(),
+      ),
+      GoRoute(
+        path: '/referral',
+        builder: (_, __) => const ReferralScreen(),
       ),
       GoRoute(
         path: '/products',

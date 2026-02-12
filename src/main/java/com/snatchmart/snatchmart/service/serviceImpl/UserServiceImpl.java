@@ -2,6 +2,7 @@ package com.snatchmart.snatchmart.service.serviceImpl;
 
 import com.snatchmart.snatchmart.DTO.UserDTO;
 import com.snatchmart.snatchmart.entity.UserLogin;
+import com.snatchmart.snatchmart.exception.DuplicateUserException;
 import com.snatchmart.snatchmart.repository.UserRepository;
 import com.snatchmart.snatchmart.service.ReferralCodeGenerator;
 import com.snatchmart.snatchmart.service.UserService;
@@ -45,6 +46,16 @@ public class UserServiceImpl implements UserService {
         // Validate signup data
         validation.validateSignUp(userDTO);
         userDTO.setId(null);
+
+        // Fail fast with clear 409 instead of DB constraint violation
+        userRepository.findByEmailId(userDTO.getEmail_id().trim())
+                .ifPresent(u -> {
+                    throw new DuplicateUserException("This email is already registered. Please sign in.");
+                });
+        userRepository.findByUsername(userDTO.getUsername().trim())
+                .ifPresent(u -> {
+                    throw new DuplicateUserException("This username is already taken. Please choose another.");
+                });
 
         // Build user entity
         UserLogin user = UserLogin.builder()

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../core/constants/api_constants.dart';
+import '../core/network/api_config.dart';
 import '../core/network/api_client.dart';
 import '../core/errors/exceptions.dart';
 import '../models/notification_model.dart';
@@ -11,7 +11,7 @@ class NotificationRepository {
   Future<List<NotificationModel>> getByUser(String userId) async {
     try {
       final res = await _api.dio.get(
-        ApiConstants.notifications,
+        ApiConfig.notifications,
         queryParameters: {'userId': userId},
       );
       final data = res.data as Map<String, dynamic>;
@@ -27,7 +27,7 @@ class NotificationRepository {
 
   Future<NotificationModel> markRead(String id) async {
     try {
-      final res = await _api.dio.put('${ApiConstants.notifications}/$id/read');
+      final res = await _api.dio.put('${ApiConfig.notifications}/$id/read');
       final data = res.data as Map<String, dynamic>;
       final inner = data['data'] as Map<String, dynamic>? ?? data;
       return NotificationModel.fromJson(inner);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../config/app_providers.dart';
 import '../providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -25,14 +26,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    await ref.read(authStateProvider.notifier).login(
-          _emailController.text.trim(),
-          _passwordController.text,
-        );
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    if (password.isEmpty) return;
+    await ref.read(authStateProvider.notifier).login(email, password);
     if (!mounted) return;
     final auth = ref.read(authStateProvider).valueOrNull;
-    if (auth != null && mounted) {
-      context.go('/');
+    if (auth != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Welcome back! Signed in as ${auth.email.isNotEmpty ? auth.email : 'user'}.'),
+          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      // Defer so GoRouter rebuilds with new auth state before redirect runs
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.go('/');
+      });
     }
   }
 
@@ -47,6 +59,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           onPressed: () => context.pop(),
         ),
         title: const Text('Sign in'),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              await ref.read(localStorageServiceProvider).setSkippedLogin(true);
+              ref.invalidate(skippedLoginProvider);
+              if (!mounted) return;
+              context.go('/');
+            },
+            child: const Text('Skip'),
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -70,7 +93,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 32),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    // TODO: integrate google_sign_in; for now go to referral then home
+                    context.go('/referral');
+                  },
+                  icon: const Icon(Icons.g_mobiledata, size: 22),
+                  label: const Text('Continue with Google'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(child: Divider(color: Theme.of(context).colorScheme.outline)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'or sign in with email',
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ),
+                    Expanded(child: Divider(color: Theme.of(context).colorScheme.outline)),
+                  ],
+                ),
+                const SizedBox(height: 24),
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,

@@ -1,9 +1,12 @@
 package com.snatchmart.snatchmart.exception;
 
 import com.snatchmart.snatchmart.DTO.ErrorResponse;
+import com.snatchmart.snatchmart.exception.DuplicateUserException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,6 +15,34 @@ import java.time.OffsetDateTime;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(DuplicateUserException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateUser(DuplicateUserException ex, HttpServletRequest request) {
+        return buildResponse(ex.getMessage(), request.getRequestURI(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrity(DataIntegrityViolationException ex, HttpServletRequest request) {
+        String message = ex.getMessage();
+        if (message != null) {
+            if (message.contains("email_id") || message.contains("email")) {
+                message = "This email is already registered. Please sign in.";
+            } else if (message.contains("username")) {
+                message = "This username is already taken. Please choose another.";
+            } else {
+                message = "A user with this email or username already exists.";
+            }
+        } else {
+            message = "A user with this email or username already exists.";
+        }
+        return buildResponse(message, request.getRequestURI(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex, HttpServletRequest request) {
+        return buildResponse("Invalid email or password", request.getRequestURI(), HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex, HttpServletRequest request) {
         return buildResponse(ex.getMessage(), request.getRequestURI(), HttpStatus.BAD_REQUEST);

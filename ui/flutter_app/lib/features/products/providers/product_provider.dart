@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../config/app_providers.dart';
+import '../../../core/utils/logger.dart';
 import '../../../models/price_history_entry.dart';
 import '../../../models/product.dart';
 
@@ -32,7 +34,11 @@ class ProductListNotifier extends StateNotifier<ProductListState> {
     state = const ProductListState(loading: true, page: 0);
     final repo = _ref.read(productRepositoryProvider);
     final keyword = _ref.read(productSearchQueryProvider);
-    final categoryId = _ref.read(productCategoryFilterProvider);
+    final rawCategoryId = _ref.read(productCategoryFilterProvider);
+    final categoryId = (rawCategoryId != null && rawCategoryId.isNotEmpty) ? rawCategoryId : null;
+    if (kDebugMode) {
+      appLog('Products load: categoryId=${categoryId ?? "all"}, keyword=${keyword.isEmpty ? "none" : keyword}', tag: 'Products');
+    }
     final res = await repo.search(
       keyword: keyword.isEmpty ? null : keyword,
       categoryId: categoryId,
@@ -58,7 +64,8 @@ class ProductListNotifier extends StateNotifier<ProductListState> {
     );
     final repo = _ref.read(productRepositoryProvider);
     final keyword = _ref.read(productSearchQueryProvider);
-    final categoryId = _ref.read(productCategoryFilterProvider);
+    final rawCategoryId = _ref.read(productCategoryFilterProvider);
+    final categoryId = (rawCategoryId != null && rawCategoryId.isNotEmpty) ? rawCategoryId : null;
     final res = await repo.search(
       keyword: keyword.isEmpty ? null : keyword,
       categoryId: categoryId,

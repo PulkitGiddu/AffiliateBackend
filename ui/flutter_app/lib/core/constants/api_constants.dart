@@ -1,4 +1,5 @@
-/// API paths matching Spring Boot backend.
+/// @deprecated Use [ApiConfig] in `core/network/api_config.dart` for base URL and all endpoints.
+/// Kept for reference only; new code should use ApiConfig.
 class ApiConstants {
   ApiConstants._();
 

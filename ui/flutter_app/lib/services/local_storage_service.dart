@@ -19,4 +19,12 @@ class LocalStorageService {
     await _prefs.remove(AppConstants.tokenKey);
     await _prefs.remove(AppConstants.userIdKey);
   }
+
+  bool get hasSkippedLogin => _prefs.getBool(AppConstants.skippedLoginKey) ?? false;
+  Future<void> setSkippedLogin(bool value) =>
+      _prefs.setBool(AppConstants.skippedLoginKey, value);
+
+  String get themeMode => _prefs.getString(AppConstants.themeModeKey) ?? 'system';
+  Future<void> setThemeMode(String value) =>
+      _prefs.setString(AppConstants.themeModeKey, value);
 }

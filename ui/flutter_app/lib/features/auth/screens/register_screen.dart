@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../config/app_providers.dart';
 import '../providers/auth_provider.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -49,8 +50,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         );
     if (!mounted) return;
     final auth = ref.read(authStateProvider).valueOrNull;
-    if (auth != null && mounted) {
-      context.go('/');
+    if (auth != null) {
+      // Defer so GoRouter rebuilds with new auth state before redirect runs
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.go('/');
+      });
     }
   }
 
@@ -65,6 +70,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           onPressed: () => context.pop(),
         ),
         title: const Text('Register'),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              await ref.read(localStorageServiceProvider).setSkippedLogin(true);
+              ref.invalidate(skippedLoginProvider);
+              if (!mounted) return;
+              context.go('/');
+            },
+            child: const Text('Skip'),
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -74,6 +90,32 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                OutlinedButton.icon(
+                  onPressed: () {
+                    // TODO: integrate google_sign_in + backend; for now go to referral then home
+                    context.go('/referral');
+                  },
+                  icon: const Icon(Icons.g_mobiledata, size: 22),
+                  label: const Text('Continue with Google'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(child: Divider(color: Theme.of(context).colorScheme.outline)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'or register with email',
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ),
+                    Expanded(child: Divider(color: Theme.of(context).colorScheme.outline)),
+                  ],
+                ),
+                const SizedBox(height: 24),
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,

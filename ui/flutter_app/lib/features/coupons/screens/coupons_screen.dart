@@ -49,11 +49,11 @@ class CouponsScreen extends ConsumerWidget {
               child: ListTile(
                 title: Container(
                   height: 16,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 ),
                 subtitle: Container(
                   height: 12,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   margin: const EdgeInsets.only(top: 8),
                 ),
               ),

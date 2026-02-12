@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../core/constants/api_constants.dart';
+import '../core/network/api_config.dart';
 import '../core/network/api_client.dart';
 import '../core/errors/exceptions.dart';
 import '../models/coupon.dart';
@@ -10,7 +10,7 @@ class CouponRepository {
 
   Future<List<Coupon>> getAll() async {
     try {
-      final res = await _api.dio.get(ApiConstants.coupons);
+      final res = await _api.dio.get(ApiConfig.coupons);
       final data = res.data as Map<String, dynamic>;
       final inner = data['data'] as List<dynamic>? ?? [];
       return inner

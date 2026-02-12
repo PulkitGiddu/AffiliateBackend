@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../core/constants/api_constants.dart';
+import '../core/network/api_config.dart';
 import '../core/constants/app_constants.dart';
 import '../core/network/api_client.dart';
 import '../core/errors/exceptions.dart';
@@ -27,14 +27,14 @@ class ProductRepository {
         'size': size,
       };
       if (keyword != null && keyword.isNotEmpty) query['keyword'] = keyword;
-      if (categoryId != null) query['categoryId'] = categoryId;
+      if (categoryId != null && categoryId.isNotEmpty) query['categoryId'] = categoryId;
       if (merchantId != null) query['merchantId'] = merchantId;
       if (minPrice != null) query['minPrice'] = minPrice;
       if (maxPrice != null) query['maxPrice'] = maxPrice;
       if (active != null) query['active'] = active;
 
       final res = await _api.dio.get(
-        ApiConstants.products,
+        ApiConfig.products,
         queryParameters: query,
       );
       final data = res.data as Map<String, dynamic>;
@@ -58,7 +58,7 @@ class ProductRepository {
 
   Future<Product> getById(String id) async {
     try {
-      final res = await _api.dio.get('${ApiConstants.products}/$id');
+      final res = await _api.dio.get('${ApiConfig.products}/$id');
       final data = res.data as Map<String, dynamic>;
       final inner = data['data'] as Map<String, dynamic>? ?? data;
       return Product.fromJson(inner);
@@ -71,7 +71,7 @@ class ProductRepository {
   Future<List<PriceHistoryEntry>> getPriceHistory(String productId) async {
     try {
       final res = await _api.dio.get(
-        '${ApiConstants.products}/$productId/price-history',
+        '${ApiConfig.products}/$productId/price-history',
       );
       final data = res.data as Map<String, dynamic>;
       final inner = data['data'] as List<dynamic>? ?? [];

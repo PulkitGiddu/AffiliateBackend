@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../core/constants/api_constants.dart';
+import '../core/network/api_config.dart';
 import '../core/network/api_client.dart';
 import '../core/errors/exceptions.dart';
 
@@ -17,7 +17,7 @@ class AffiliateClickRepository {
   }) async {
     try {
       await _api.dio.post(
-        ApiConstants.affiliateClicks,
+        ApiConfig.affiliateClicks,
         data: {
           if (userId != null) 'userId': userId,
           'productId': productId,

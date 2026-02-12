@@ -40,7 +40,7 @@ class ProductDetailScreen extends ConsumerWidget {
           product: product,
           priceHistory: priceHistoryAsync.valueOrNull ?? <PriceHistoryEntry>[],
           onOpenAffiliateLink: () => _openAffiliateLink(context, ref, product),
-          onAddWishlist: () => _addWishlist(ref, product),
+          onAddWishlist: () => _addWishlist(context, ref, product),
           onSetBudgetAlert: () => _setBudgetAlert(context, ref, product),
         ),
         loading: () => const _DetailShimmer(),
@@ -69,6 +69,11 @@ class ProductDetailScreen extends ConsumerWidget {
     final uri = Uri.parse(product.affiliateUrl);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Opened deal link')),
+        );
+      }
     } else {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -78,12 +83,23 @@ class ProductDetailScreen extends ConsumerWidget {
     }
   }
 
-  static void _addWishlist(WidgetRef ref, Product product) {
+  static void _addWishlist(BuildContext context, WidgetRef ref, Product product) {
     final userId = ref.read(authStateProvider).valueOrNull?.userId;
     if (userId == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Sign in to add items to your wishlist')),
+        );
+        context.push('/login');
+      }
       return;
     }
     ref.read(wishlistNotifierProvider.notifier).add(productId: product.id);
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Added to wishlist')),
+      );
+    }
   }
 
   static void _setBudgetAlert(
@@ -92,14 +108,22 @@ class ProductDetailScreen extends ConsumerWidget {
     Product product,
   ) {
     final userId = ref.read(authStateProvider).valueOrNull?.userId;
-    if (userId == null) return;
+    if (userId == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Sign in to set price alerts')),
+        );
+        context.push('/login');
+      }
+      return;
+    }
     ref.read(budgetListNotifierProvider.notifier).create(
           productName: product.productName,
           targetPrice: product.salePrice,
         );
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Budget alert set')),
+        const SnackBar(content: Text('Price alert set')),
       );
     }
   }

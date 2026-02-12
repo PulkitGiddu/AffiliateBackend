@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import '../../config/env_config.dart';
 import '../constants/app_constants.dart';
 import '../errors/exceptions.dart';
 import '../utils/logger.dart';
+import 'api_config.dart';
 import 'interceptors/auth_interceptor.dart';
 import 'interceptors/error_interceptor.dart';
 import 'interceptors/logging_interceptor.dart';
@@ -11,7 +11,7 @@ import 'interceptors/logging_interceptor.dart';
 class ApiClient {
   ApiClient._() {
     _dio = Dio(BaseOptions(
-      baseUrl: EnvConfig.baseUrl,
+      baseUrl: ApiConfig.baseUrl,
       connectTimeout: const Duration(milliseconds: AppConstants.connectTimeoutMs),
       receiveTimeout: const Duration(milliseconds: AppConstants.receiveTimeoutMs),
       headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},

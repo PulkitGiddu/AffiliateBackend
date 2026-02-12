@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1")  // https:localhost:9090/api/v1/login
+@RequestMapping("/api/v1")
 @Tag(name = "User Management", description = "APIs for user registration, login, and referral system")
 public class UserSignUpController {
 
