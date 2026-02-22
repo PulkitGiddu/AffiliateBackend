@@ -1,0 +1,186 @@
+2026-02-13 00:00:01 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
+2026-02-13 00:00:09 INFO  [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-02-13 00:00:09 INFO  [] c.s.snatchmart.SnatchMartApplication - Starting SnatchMartApplication using Java 21.0.9 with PID 89324 (/Users/pulkitgiddu/Documents/Code/Backend/snatchMart/target/classes started by pulkitgiddu in /Users/pulkitgiddu/Documents/Code/Backend/snatchMart)
+2026-02-13 00:00:09 DEBUG [] c.s.snatchmart.SnatchMartApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2026-02-13 00:00:09 INFO  [] c.s.snatchmart.SnatchMartApplication - The following 1 profile is active: "local"
+2026-02-13 00:00:09 INFO  [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-13 00:00:09 INFO  [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-13 00:00:09 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-02-13 00:00:09 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-13 00:00:09 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 55 ms. Found 12 JPA repository interfaces.
+2026-02-13 00:00:09 INFO  [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2026-02-13 00:00:09 INFO  [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-02-13 00:00:09 INFO  [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-02-13 00:00:09 INFO  [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-02-13 00:00:09 INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-02-13 00:00:09 INFO  [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 559 ms
+2026-02-13 00:00:09 INFO  [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-13 00:00:09 INFO  [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2026-02-13 00:00:09 INFO  [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-02-13 00:00:09 INFO  [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-13 00:00:09 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-02-13 00:00:12 INFO  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@43831a9f
+2026-02-13 00:00:12 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-02-13 00:00:13 WARN  [] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-13 00:00:14 INFO  [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.7
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-13 00:00:14 INFO  [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-13 00:00:31 INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-13 00:00:31 INFO  [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-13 00:00:31 DEBUG [] c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-02-13 00:00:31 INFO  [] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-02-13 00:00:31 WARN  [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-02-13 00:00:31 WARN  [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-13 00:00:32 INFO  [] o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:postgresql://ep-blue-field-afvby5th-pooler.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require'
+2026-02-13 00:00:32 INFO  [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-02-13 00:00:32 INFO  [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-02-13 00:00:32 INFO  [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/'
+2026-02-13 00:00:32 INFO  [] c.s.snatchmart.SnatchMartApplication - Started SnatchMartApplication in 23.195 seconds (process running for 23.332)
+2026-02-13 00:00:32 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-13 00:00:32 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-13 00:00:32 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from flipkart
+2026-02-13 00:02:17 INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-13 00:02:17 INFO  [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-02-13 00:02:17 INFO  [] o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2026-02-13 00:02:29 WARN  [] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [com.snatchmart.snatchmart.exception.UserNotFoundException: User not found with ID: 535477f9-cf1b-48ce-977d-a0164ea2c358]
+2026-02-13 00:03:03 INFO  [] c.s.s.c.UserSignUpController - BACKEND received POST /api/v1/users (register): email_id=pulkitgiddu09@gmail.com, username=pulkit09, first_name=pulkit, last_name=g, password_hash present=true, referred_by_code=null
+2026-02-13 00:03:03 INFO  [] c.s.s.s.serviceImpl.UserServiceImpl - UserService.createUser received: email_id=pulkitgiddu09@gmail.com, username=pulkit09
+2026-02-13 00:03:04 INFO  [] c.s.s.s.serviceImpl.UserServiceImpl - UserService.createUser saving to DB: emailId=pulkitgiddu09@gmail.com, username=pulkit09
+2026-02-13 00:03:04 INFO  [] c.s.s.s.serviceImpl.UserServiceImpl - UserService.createUser saved to DB: id=8789ba4d-c1ba-4041-a3ef-37bc17ff21a9, emailId=pulkitgiddu09@gmail.com
+2026-02-13 00:03:05 INFO  [] c.s.s.c.UserSignUpController - BACKEND createUser success: id=8789ba4d-c1ba-4041-a3ef-37bc17ff21a9, email_id=pulkitgiddu09@gmail.com
+2026-02-13 00:03:06 INFO  [] c.s.s.c.UserSignUpController - BACKEND received POST /api/v1/login: email_id=pulkitgiddu09@gmail.com, password present=true
+2026-02-13 00:03:07 INFO  [] c.s.s.c.UserSignUpController - BACKEND login success: id=8789ba4d-c1ba-4041-a3ef-37bc17ff21a9
+2026-02-13 00:13:00 INFO  [] c.s.s.c.UserSignUpController - BACKEND received POST /api/v1/login: email_id=pulkitgiddu09@gmail.com, password present=true
+2026-02-13 00:13:01 INFO  [] c.s.s.c.UserSignUpController - BACKEND login success: id=8789ba4d-c1ba-4041-a3ef-37bc17ff21a9
+2026-02-13 00:30:32 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-13 00:30:32 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-13 00:30:32 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from flipkart
+2026-02-13 01:00:32 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-13 01:00:32 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-13 01:00:32 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from flipkart
+2026-02-13 01:27:53 INFO  [] c.s.s.c.UserSignUpController - BACKEND received POST /api/v1/login: email_id=pulkitgiddu09@gmail.com, password present=true
+2026-02-13 01:27:54 INFO  [] c.s.s.c.UserSignUpController - BACKEND login success: id=8789ba4d-c1ba-4041-a3ef-37bc17ff21a9
+2026-02-13 01:30:32 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-13 01:30:32 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-13 01:30:32 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from flipkart
+2026-02-13 01:32:50 INFO  [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-02-13 01:32:50 INFO  [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-02-13 01:32:50 INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-13 01:32:50 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-02-13 01:32:53 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-02-13 01:33:02 INFO  [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-02-13 01:33:02 INFO  [] c.s.snatchmart.SnatchMartApplication - Starting SnatchMartApplication using Java 21.0.9 with PID 4275 (/Users/pulkitgiddu/Documents/Code/Backend/snatchMart/target/classes started by pulkitgiddu in /Users/pulkitgiddu/Documents/Code/Backend/snatchMart)
+2026-02-13 01:33:02 DEBUG [] c.s.snatchmart.SnatchMartApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2026-02-13 01:33:02 INFO  [] c.s.snatchmart.SnatchMartApplication - The following 1 profile is active: "local"
+2026-02-13 01:33:02 INFO  [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-13 01:33:02 INFO  [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-13 01:33:02 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-02-13 01:33:02 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-13 01:33:02 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 60 ms. Found 12 JPA repository interfaces.
+2026-02-13 01:33:03 INFO  [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2026-02-13 01:33:03 INFO  [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-02-13 01:33:03 INFO  [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-02-13 01:33:03 INFO  [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-02-13 01:33:03 INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-02-13 01:33:03 INFO  [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 629 ms
+2026-02-13 01:33:03 INFO  [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-13 01:33:03 INFO  [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2026-02-13 01:33:03 INFO  [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-02-13 01:33:03 INFO  [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-13 01:33:03 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-02-13 01:33:06 INFO  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@30b819e1
+2026-02-13 01:33:06 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-02-13 01:33:06 WARN  [] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-13 01:33:07 INFO  [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.7
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-13 01:33:08 INFO  [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-13 01:33:24 INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-13 01:33:24 INFO  [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-13 01:33:24 DEBUG [] c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-02-13 01:33:24 INFO  [] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-02-13 01:33:24 WARN  [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-02-13 01:33:24 WARN  [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-13 01:33:25 INFO  [] o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:postgresql://ep-blue-field-afvby5th-pooler.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require'
+2026-02-13 01:33:25 INFO  [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-02-13 01:33:25 INFO  [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-02-13 01:33:25 INFO  [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/'
+2026-02-13 01:33:25 INFO  [] c.s.snatchmart.SnatchMartApplication - Started SnatchMartApplication in 23.35 seconds (process running for 23.495)
+2026-02-13 01:33:25 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-13 01:33:25 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-13 01:33:25 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from flipkart
+2026-02-13 01:33:41 INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-13 01:33:41 INFO  [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-02-13 01:33:41 INFO  [] o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-02-13 01:34:42 INFO  [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-02-13 01:34:42 INFO  [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-02-13 01:34:42 INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-13 01:34:42 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-02-13 01:34:45 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-02-13 02:03:36 INFO  [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-02-13 02:03:36 INFO  [] c.s.snatchmart.SnatchMartApplication - Starting SnatchMartApplication using Java 21.0.9 with PID 8625 (/Users/pulkitgiddu/Documents/Code/Backend/snatchMart/target/classes started by pulkitgiddu in /Users/pulkitgiddu/Documents/Code/Backend/snatchMart)
+2026-02-13 02:03:36 DEBUG [] c.s.snatchmart.SnatchMartApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2026-02-13 02:03:36 INFO  [] c.s.snatchmart.SnatchMartApplication - The following 1 profile is active: "local"
+2026-02-13 02:03:36 INFO  [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-13 02:03:36 INFO  [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-13 02:03:36 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-02-13 02:03:36 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-13 02:03:36 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 62 ms. Found 12 JPA repository interfaces.
+2026-02-13 02:03:36 INFO  [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2026-02-13 02:03:36 INFO  [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-02-13 02:03:36 INFO  [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-02-13 02:03:36 INFO  [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-02-13 02:03:36 INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-02-13 02:03:36 INFO  [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 644 ms
+2026-02-13 02:03:37 INFO  [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-13 02:03:37 INFO  [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2026-02-13 02:03:37 INFO  [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-02-13 02:03:37 INFO  [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-13 02:03:37 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-02-13 02:03:40 INFO  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@57e3145b
+2026-02-13 02:03:40 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-02-13 02:03:40 WARN  [] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-13 02:03:41 INFO  [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.7
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-13 02:03:42 INFO  [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-13 02:03:58 INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-13 02:03:58 INFO  [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-13 02:03:58 DEBUG [] c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-02-13 02:03:58 INFO  [] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-02-13 02:03:58 WARN  [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-02-13 02:03:58 WARN  [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-13 02:03:59 INFO  [] o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:postgresql://ep-blue-field-afvby5th-pooler.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require'
+2026-02-13 02:03:59 INFO  [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-02-13 02:03:59 INFO  [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-02-13 02:03:59 INFO  [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/'
+2026-02-13 02:03:59 INFO  [] c.s.snatchmart.SnatchMartApplication - Started SnatchMartApplication in 23.11 seconds (process running for 23.286)
+2026-02-13 02:03:59 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-13 02:03:59 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-13 02:03:59 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from flipkart
+2026-02-13 02:04:11 INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-13 02:04:11 INFO  [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-02-13 02:04:11 INFO  [] o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-02-13 02:05:32 WARN  [] o.h.p.entity.AbstractEntityPersister - HHH000502: The [product] property of the [com.snatchmart.snatchmart.entity.UserWishlist] entity was modified, but it won't be updated because the property is immutable.
+2026-02-13 02:05:32 WARN  [] o.h.p.entity.AbstractEntityPersister - HHH000502: The [user] property of the [com.snatchmart.snatchmart.entity.UserWishlist] entity was modified, but it won't be updated because the property is immutable.
+2026-02-13 02:10:25 INFO  [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-02-13 02:10:25 INFO  [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-02-13 02:10:25 INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-13 02:10:25 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-02-13 02:10:28 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

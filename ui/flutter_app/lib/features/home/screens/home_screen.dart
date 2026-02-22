@@ -1,10 +1,16 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
+import '../../../config/app_providers.dart';
 import '../../../models/category.dart';
 import '../../../models/product.dart';
+import '../../auth/providers/auth_provider.dart';
 import '../../products/providers/product_provider.dart';
 import '../../wishlist/providers/wishlist_provider.dart';
 import '../providers/category_provider.dart';
@@ -12,11 +18,24 @@ import '../../../core/utils/network_utils.dart';
 import '../../../widgets/shimmer_loading.dart';
 import '../../../widgets/empty_state.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  int _selectedSegment = 0; // 0 = Home, 1 = Dashboard
+
+  @override
+  Widget build(BuildContext context) {
+    // Prefetch profile when logged in so Profile tab opens with data already loaded
+    final auth = ref.watch(authStateProvider).valueOrNull;
+    if (auth != null && auth.userId.isNotEmpty) {
+      ref.watch(userProfileProvider(auth.userId));
+    }
+
     final categoriesAsync = ref.watch(categoryListProvider);
     final productsAsync = ref.watch(topDealsProvider);
     final wishlistProductsAsync = ref.watch(wishlistProductsProvider);
@@ -30,7 +49,7 @@ class HomeScreen extends ConsumerWidget {
         },
         child: CustomScrollView(
           slivers: [
-            // 1. Top logo + search bar
+            // 1. Header: profile icon + Home | Dashboard toggle + search bar
             SliverToBoxAdapter(
               child: Container(
                 width: double.infinity,
@@ -54,19 +73,54 @@ class HomeScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              'SnatchMart',
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                        const _HeaderUserAvatar(),
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          height: 36,
+                          child: CupertinoSlidingSegmentedControl<int>(
+                            groupValue: _selectedSegment,
+                            thumbColor: Colors.white,
+                            backgroundColor: Colors.white.withOpacity(0.25),
+                            padding: const EdgeInsets.all(2),
+                            children: {
+                              0: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                                child: Center(
+                                  child: Text(
+                                    'Home',
+                                    style: TextStyle(
+                                      color: _selectedSegment == 0
+                                          ? Theme.of(context).colorScheme.primary
+                                          : Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13,
+                                    ),
                                   ),
-                            ),
-                          ],
+                                ),
+                              ),
+                              1: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                                child: Center(
+                                  child: Text(
+                                    'Dashboard',
+                                    style: TextStyle(
+                                      color: _selectedSegment == 1
+                                          ? Theme.of(context).colorScheme.primary
+                                          : Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            },
+                            onValueChanged: (int? v) {
+                              if (v != null && mounted) setState(() => _selectedSegment = v);
+                            },
+                          ),
                         ),
+                        const Spacer(),
                         IconButton(
                           icon: const Icon(Icons.notifications_outlined),
                           onPressed: () => context.push('/notifications'),
@@ -74,36 +128,31 @@ class HomeScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    InkWell(
-                      onTap: () => context.push('/products'),
-                      borderRadius: BorderRadius.circular(12),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface.withOpacity(0.9),
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).colorScheme.shadow.withOpacity(0.08),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.search, color: Theme.of(context).colorScheme.outline),
-                            const SizedBox(width: 12),
-                            Text(
-                              'Search products, deals...',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                  ),
-                            ),
-                            const Spacer(),
-                            Icon(Icons.mic_none_outlined, size: 20, color: Theme.of(context).colorScheme.outline),
-                          ],
+                    const SizedBox(height: 14),
+                    Material(
+                      color: Colors.white.withOpacity(0.95),
+                      borderRadius: BorderRadius.circular(24),
+                      elevation: 0,
+                      child: InkWell(
+                        onTap: () => context.push('/products'),
+                        borderRadius: BorderRadius.circular(24),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                          child: Row(
+                            children: [
+                              Icon(Icons.search_rounded, size: 22, color: Theme.of(context).colorScheme.primary),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Text(
+                                  'Search products, deals...',
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                      ),
+                                ),
+                              ),
+                              Icon(Icons.mic_rounded, size: 20, color: Theme.of(context).colorScheme.primary.withOpacity(0.8)),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -111,6 +160,14 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
             ),
+            // 2. Content: Home (categories + feed) or Dashboard (login required)
+            if (_selectedSegment == 1) ...[
+              SliverToBoxAdapter(
+                child: ref.watch(authStateProvider).valueOrNull == null
+                    ? const _DashboardLoginGate()
+                    : const _DashboardContent(),
+              ),
+            ] else ...[
             // 2. Categories (horizontal strip with outline icons, light purple bg, active indicator)
             categoriesAsync.when(
               data: (categories) => SliverToBoxAdapter(
@@ -121,7 +178,10 @@ class HomeScreen extends ConsumerWidget {
                     ref.read(productCategoryFilterProvider.notifier).state = categoryId;
                     context.push('/products');
                   },
-                ),
+                )
+                    .animate()
+                    .fadeIn(duration: 380.ms, curve: Curves.easeOut)
+                    .slideY(begin: 0.04, end: 0, curve: Curves.easeOut),
               ),
               loading: () => SliverToBoxAdapter(
                 child: Builder(
@@ -164,24 +224,36 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            // 3. Sponsored (banner carousel, normal speed)
-            const SliverToBoxAdapter(
-              child: _SponsoredBannersSection(),
+            // 3. Sponsored (banner carousel) + optional Lottie hero
+            SliverToBoxAdapter(
+              child: _SponsoredBannersSection()
+                  .animate()
+                  .fadeIn(delay: 80.ms, duration: 400.ms, curve: Curves.easeOut)
+                  .slideY(begin: 0.03, end: 0, delay: 80.ms, duration: 400.ms, curve: Curves.easeOut),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
             // 4. Promoted products banners (carousel)
             SliverToBoxAdapter(
-              child: _PromoBanners(ref: ref, productsAsync: productsAsync),
+              child: _PromoBanners(ref: ref, productsAsync: productsAsync)
+                  .animate()
+                  .fadeIn(delay: 100.ms, duration: 380.ms, curve: Curves.easeOut)
+                  .slideY(begin: 0.02, end: 0, delay: 100.ms, duration: 380.ms, curve: Curves.easeOut),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
             // 5. Top Picks for you
             SliverToBoxAdapter(
-              child: _TopPicksSection(ref: ref, productsAsync: productsAsync),
+              child: _TopPicksSection(ref: ref, productsAsync: productsAsync)
+                  .animate()
+                  .fadeIn(delay: 120.ms, duration: 380.ms, curve: Curves.easeOut)
+                  .slideY(begin: 0.02, end: 0, delay: 120.ms, duration: 380.ms, curve: Curves.easeOut),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
             // 6. From your wishlist (X left in wishlist)
             SliverToBoxAdapter(
-              child: _WishlistSection(ref: ref, wishlistProductsAsync: wishlistProductsAsync),
+              child: _WishlistSection(ref: ref, wishlistProductsAsync: wishlistProductsAsync)
+                  .animate()
+                  .fadeIn(delay: 140.ms, duration: 380.ms, curve: Curves.easeOut)
+                  .slideY(begin: 0.02, end: 0, delay: 140.ms, duration: 380.ms, curve: Curves.easeOut),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
             // 7. Ads section (dummy)
@@ -213,15 +285,17 @@ class HomeScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-              ),
+              )
+                  .animate()
+                  .fadeIn(delay: 120.ms, duration: 350.ms)
+                  .slideX(begin: -0.02, end: 0, delay: 120.ms, duration: 350.ms, curve: Curves.easeOut),
             ),
             productsAsync.when(
               data: (products) {
                 if (products.isEmpty) {
-                  return const SliverFillRemaining(
-                    child: EmptyState(
+                  return SliverFillRemaining(
+                    child: _EmptyDealsLottie(
                       message: 'No deals right now. Check back later!',
-                      icon: Icons.local_offer_outlined,
                     ),
                   );
                 }
@@ -231,7 +305,10 @@ class HomeScreen extends ConsumerWidget {
                     delegate: SliverChildBuilderDelegate(
                       (_, i) {
                         final p = products[i];
-                        return _ProductCard(product: p);
+                        return _ProductCard(product: p)
+                            .animate()
+                            .fadeIn(delay: (50 * i).ms, duration: 350.ms, curve: Curves.easeOut)
+                            .slideX(begin: 0.02, end: 0, delay: (50 * i).ms, duration: 350.ms, curve: Curves.easeOut);
                       },
                       childCount: products.length,
                     ),
@@ -255,27 +332,472 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
+            ],
           ],
         ),
       ),
-      bottomNavigationBar: _GlassNavBar(
-        selectedIndex: 0,
-        onDestinationSelected: (i) {
-          switch (i) {
-            case 1:
-              context.push('/products');
-              break;
-            case 2:
-              context.push('/coupons');
-              break;
-            case 3:
-              context.push('/notifications');
-              break;
-            case 4:
-              context.push('/profile');
-              break;
-          }
-        },
+    );
+  }
+}
+
+const String _kDefaultProfilePhotoUrl =
+    'https://avatars.githubusercontent.com/u/101356458?v=4';
+
+/// Empty state with optional Lottie and fallback icon.
+class _EmptyDealsLottie extends StatelessWidget {
+  const _EmptyDealsLottie({required this.message});
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 140,
+              child: Lottie.asset(
+                'assets/lottie/placeholder.json',
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) => Icon(
+                  Icons.local_offer_outlined,
+                  size: 80,
+                  color: scheme.primary.withOpacity(0.6),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// User avatar for home header (top left). Taps to profile. Shows guest icon when logged out.
+class _HeaderUserAvatar extends ConsumerWidget {
+  const _HeaderUserAvatar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final auth = ref.watch(authStateProvider).valueOrNull;
+    final primary = Theme.of(context).colorScheme.primary;
+
+    // Logged out: show guest avatar (no profile photo)
+    if (auth == null || auth.userId.isEmpty) {
+      return Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => context.push('/profile'),
+          borderRadius: BorderRadius.circular(20),
+          child: CircleAvatar(
+            radius: 18,
+            backgroundColor: Colors.white.withOpacity(0.3),
+            child: CircleAvatar(
+              radius: 16,
+              backgroundColor: Colors.white,
+              child: Icon(Icons.person_rounded, size: 24, color: primary),
+            ),
+          ),
+        ),
+      );
+    }
+
+    final userId = auth.userId;
+    final userAsync = ref.watch(userProfileProvider(userId));
+    final user = userAsync.valueOrNull;
+    final photoUrl = user?.profilePictureUrl ?? _kDefaultProfilePhotoUrl;
+    final name = user != null
+        ? [user.firstName, user.lastName].where((e) => e != null && e.isNotEmpty).join(' ').trim()
+        : '';
+    final initial = name.isNotEmpty ? name[0].toUpperCase() : '?';
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => context.push('/profile'),
+        borderRadius: BorderRadius.circular(20),
+        child: CircleAvatar(
+          radius: 18,
+          backgroundColor: Colors.white.withOpacity(0.3),
+          child: CircleAvatar(
+            radius: 16,
+            backgroundColor: Colors.white,
+            child: ClipOval(
+              child: CachedNetworkImage(
+                imageUrl: photoUrl,
+                width: 32,
+                height: 32,
+                fit: BoxFit.cover,
+                placeholder: (_, __) => Text(
+                  initial,
+                  style: TextStyle(color: primary, fontWeight: FontWeight.w600, fontSize: 14),
+                ),
+                errorWidget: (_, __, ___) => Text(
+                  initial,
+                  style: TextStyle(color: primary, fontWeight: FontWeight.w600, fontSize: 14),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Shown when user is not logged in and Dashboard tab is selected.
+class _DashboardLoginGate extends StatelessWidget {
+  const _DashboardLoginGate();
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 48, 24, 24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.lock_outline_rounded,
+            size: 64,
+            color: scheme.primary.withOpacity(0.7),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Log in to access the dashboard',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: scheme.onSurface,
+                ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Earnings, reports, and exclusive tools are available after you sign in.',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
+          ),
+          const SizedBox(height: 28),
+          FilledButton.icon(
+            onPressed: () => context.go('/login'),
+            icon: const Icon(Icons.login_rounded, size: 20),
+            label: const Text('Log in'),
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Dashboard: user summary cards + Money / Exclusive Tools / Reports (theme-aware).
+class _DashboardContent extends ConsumerWidget {
+  const _DashboardContent();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final scheme = Theme.of(context).colorScheme;
+    final auth = ref.watch(authStateProvider).valueOrNull;
+    final userId = auth?.userId ?? '';
+    final userAsync = userId.isNotEmpty ? ref.watch(userProfileProvider(userId)) : null;
+    final user = userAsync?.valueOrNull;
+    final displayName = user != null
+        ? [user.firstName, user.lastName].where((e) => e != null && e.isNotEmpty).join(' ').trim()
+        : 'Guest';
+    final displayNameFallback = displayName.isEmpty ? 'User' : displayName;
+    final initial = displayNameFallback.isNotEmpty ? displayNameFallback[0].toUpperCase() : 'U';
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Header cards row (profile, User ID, Total Profit)
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [scheme.primary, scheme.secondary],
+              ),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _DashboardHeaderCard(
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 22,
+                          backgroundColor: Colors.white,
+                          child: Text(
+                            initial,
+                            style: TextStyle(
+                              color: scheme.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            displayNameFallback,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _DashboardHeaderCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'User ID',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.9),
+                            fontSize: 12,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          userId.isEmpty ? '—' : userId,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _DashboardHeaderCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Total Profit',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.9),
+                            fontSize: 12,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        const Text(
+                          '₹30',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          // Three columns on wide screens; single column on narrow to avoid overflow
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final useColumn = constraints.maxWidth < 500;
+              // Order: Money, Exclusive Tools, Reports (Exclusive above Reports)
+              final sectionCards = [
+                _DashboardSectionCard(
+                  title: 'Money',
+                  scheme: scheme,
+                  items: [
+                    _DashboardItem(icon: Icons.currency_rupee_rounded, label: 'My Earnings'),
+                    _DashboardItem(icon: Icons.request_quote_rounded, label: 'Request Payment'),
+                    _DashboardItem(icon: Icons.history_rounded, label: 'Payment History'),
+                  ],
+                ),
+                _DashboardSectionCard(
+                  title: 'Exclusive Tools',
+                  scheme: scheme,
+                  items: [
+                    _DashboardItem(icon: Icons.link_rounded, label: 'Make Link', route: '/profile/make-link'),
+                    _DashboardItem(icon: Icons.trending_up_rounded, label: 'Profit Share'),
+                    _DashboardItem(icon: Icons.badge_rounded, label: 'EK Affiliaters'),
+                  ],
+                ),
+                _DashboardSectionCard(
+                  title: 'Reports',
+                  scheme: scheme,
+                  items: [
+                    _DashboardItem(icon: Icons.show_chart_rounded, label: 'Reports'),
+                    _DashboardItem(icon: Icons.description_rounded, label: 'Flipkart Reports'),
+                    _DashboardItem(icon: Icons.link_rounded, label: 'My Link Performance'),
+                  ],
+                ),
+              ];
+              if (useColumn) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (var i = 0; i < sectionCards.length; i++) ...[
+                      if (i > 0) const SizedBox(height: 12),
+                      sectionCards[i],
+                    ],
+                  ],
+                );
+              }
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: sectionCards[0]),
+                  const SizedBox(width: 12),
+                  Expanded(child: sectionCards[1]),
+                  const SizedBox(width: 12),
+                  Expanded(child: sectionCards[2]),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DashboardHeaderCard extends StatelessWidget {
+  const _DashboardHeaderCard({required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: child,
+    );
+  }
+}
+
+class _DashboardItem {
+  const _DashboardItem({required this.icon, required this.label, this.route});
+  final IconData icon;
+  final String label;
+  final String? route;
+}
+
+class _DashboardSectionCard extends StatelessWidget {
+  const _DashboardSectionCard({
+    required this.title,
+    required this.scheme,
+    required this.items,
+  });
+  final String title;
+  final ColorScheme scheme;
+  final List<_DashboardItem> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: scheme.surfaceContainerHighest.withOpacity(0.5),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: scheme.onSurface,
+                  ),
+            ),
+            const SizedBox(height: 10),
+            ...items.map(
+              (item) => Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Material(
+                  color: scheme.surface,
+                  borderRadius: BorderRadius.circular(10),
+                  child: InkWell(
+                    onTap: item.route != null
+                        ? () => context.push(item.route!)
+                        : null,
+                    borderRadius: BorderRadius.circular(10),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: scheme.primary.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Icon(item.icon, size: 16, color: scheme.primary),
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(minWidth: 0),
+                              child: Text(
+                                item.label,
+                                style: TextStyle(
+                                  color: scheme.onSurface,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                          Icon(Icons.chevron_right_rounded, size: 18, color: scheme.primary),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -509,7 +1031,7 @@ class _WishlistSection extends StatelessWidget {
               ),
               if (count > 0)
                 TextButton(
-                  onPressed: () => context.push('/wishlist'),
+                  onPressed: () => context.push('/profile/wishlist'),
                   child: const Text('See all'),
                 ),
             ],
@@ -925,61 +1447,80 @@ class _ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: InkWell(
-        onTap: () => context.push('/products/${product.id}'),
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  product.imageUrl ?? '',
-                  width: 80,
-                  height: 80,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
-                    width: 80,
-                    height: 80,
-                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                    child: const Icon(Icons.image_not_supported_outlined),
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Material(
+        color: scheme.surfaceContainerLow.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(16),
+        elevation: 0,
+        shadowColor: scheme.shadow.withOpacity(0.06),
+        child: InkWell(
+          onTap: () => context.push('/products/${product.id}'),
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: CachedNetworkImage(
+                    imageUrl: product.imageUrl ?? '',
+                    width: 88,
+                    height: 88,
+                    fit: BoxFit.cover,
+                    placeholder: (_, __) => Container(
+                      width: 88,
+                      height: 88,
+                      color: scheme.surfaceContainerHighest,
+                      child: Icon(Icons.image_rounded, color: scheme.outline),
+                    ),
+                    errorWidget: (_, __, ___) => Container(
+                      width: 88,
+                      height: 88,
+                      color: scheme.surfaceContainerHighest,
+                      child: Icon(Icons.image_not_supported_rounded, color: scheme.outline),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      product.productName,
-                      style: Theme.of(context).textTheme.titleSmall,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '₹${product.salePrice.toStringAsFixed(0)}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    if (product.discountPercent != null)
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        '${product.discountPercent!.toStringAsFixed(0)}% off',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Theme.of(context).colorScheme.tertiary,
+                        product.productName,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        '₹${product.salePrice.toStringAsFixed(0)}',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: scheme.primary,
+                              fontWeight: FontWeight.bold,
                             ),
                       ),
-                  ],
+                      if (product.discountPercent != null) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          '${product.discountPercent!.toStringAsFixed(0)}% off',
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: scheme.tertiary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Icon(Icons.chevron_right_rounded, color: scheme.outline, size: 22),
+              ],
+            ),
           ),
         ),
       ),
@@ -1012,99 +1553,6 @@ class _ProductCardShimmer extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// iOS-style bottom nav with frosted glass (blur + semi-transparent surface).
-class _GlassNavBar extends StatelessWidget {
-  const _GlassNavBar({
-    required this.selectedIndex,
-    required this.onDestinationSelected,
-  });
-
-  final int selectedIndex;
-  final ValueChanged<int> onDestinationSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final blue = Theme.of(context).colorScheme.primary;
-    final yellow = Theme.of(context).colorScheme.secondary;
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: isDark
-                  ? [
-                      blue.withOpacity(0.35),
-                      yellow.withOpacity(0.15),
-                    ]
-                  : [
-                      blue.withOpacity(0.12),
-                      yellow.withOpacity(0.25),
-                    ],
-            ),
-            border: Border(
-              top: BorderSide(
-                color: isDark
-                    ? Colors.white.withOpacity(0.12)
-                    : blue.withOpacity(0.2),
-                width: 0.5,
-              ),
-            ),
-          ),
-          child: SafeArea(
-            top: false,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              child: NavigationBar(
-                selectedIndex: selectedIndex,
-                onDestinationSelected: onDestinationSelected,
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                surfaceTintColor: Colors.transparent,
-                indicatorColor: isDark
-                    ? yellow.withOpacity(0.85)
-                    : yellow.withOpacity(0.95),
-                height: 64,
-                destinations: const [
-                  NavigationDestination(
-                    icon: Icon(Icons.home_outlined),
-                    selectedIcon: Icon(Icons.home),
-                    label: 'Home',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.grid_view_outlined),
-                    selectedIcon: Icon(Icons.grid_view),
-                    label: 'Products',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.card_giftcard_outlined),
-                    selectedIcon: Icon(Icons.card_giftcard),
-                    label: 'Coupons',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.notifications_outlined),
-                    selectedIcon: Icon(Icons.notifications),
-                    label: 'Notification',
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.person_outline),
-                    selectedIcon: Icon(Icons.person),
-                    label: 'Profile',
-                  ),
-                ],
-              ),
-            ),
           ),
         ),
       ),
@@ -1149,12 +1597,11 @@ class _CategoryStrip extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final isDark = scheme.brightness == Brightness.dark;
     final stripBg = isDark
-        ? scheme.surfaceContainerHigh
-        : scheme.surfaceContainerLow;
+        ? scheme.surfaceContainerHigh.withOpacity(0.6)
+        : scheme.surface.withOpacity(0.8);
     return Container(
       width: double.infinity,
-      color: stripBg,
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -1207,44 +1654,47 @@ class _CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final itemBg = isSelected
-        ? scheme.surfaceContainerHighest
-        : scheme.surface;
-    final borderColor = isSelected
-        ? scheme.outline
-        : scheme.outlineVariant;
-    final contentColor = scheme.onSurface;
+        ? scheme.primary.withOpacity(0.12)
+        : scheme.surfaceContainerHighest.withOpacity(0.6);
+    final contentColor = isSelected ? scheme.primary : scheme.onSurface;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 6),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           child: SizedBox(
             width: _CategoryStrip._itemWidth,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOut,
                   width: iconBoxSize,
                   height: iconBoxSize,
-                  child: Container(
-                    width: iconBoxSize,
-                    height: iconBoxSize,
-                    decoration: BoxDecoration(
-                      color: itemBg,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: borderColor,
-                        width: 1,
-                      ),
-                    ),
-                    child: Center(
-                      child: Icon(
-                        icon,
-                        size: iconSize,
-                        color: contentColor,
-                      ),
+                  decoration: BoxDecoration(
+                    color: itemBg,
+                    borderRadius: BorderRadius.circular(16),
+                    border: isSelected
+                        ? Border.all(color: scheme.primary.withOpacity(0.5), width: 1.5)
+                        : null,
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: scheme.primary.withOpacity(0.15),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ]
+                        : null,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      icon,
+                      size: iconSize,
+                      color: contentColor,
                     ),
                   ),
                 ),
@@ -1252,7 +1702,7 @@ class _CategoryItem extends StatelessWidget {
                 Text(
                   label,
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                     color: contentColor,
                   ),
                   maxLines: 1,
@@ -1262,7 +1712,7 @@ class _CategoryItem extends StatelessWidget {
                 if (isSelected)
                   Container(
                     margin: const EdgeInsets.only(top: 4),
-                    width: 24,
+                    width: 28,
                     height: 3,
                     decoration: BoxDecoration(
                       color: scheme.primary,

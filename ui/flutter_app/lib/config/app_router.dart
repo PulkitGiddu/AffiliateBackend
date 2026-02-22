@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'app_providers.dart';
+import '../widgets/main_bottom_nav.dart';
 import '../features/auth/providers/auth_provider.dart';
 import '../features/auth/screens/login_screen.dart';
 import '../features/auth/screens/register_screen.dart';
@@ -15,8 +16,33 @@ import '../features/coupons/screens/coupons_screen.dart';
 import '../features/notifications/screens/notifications_screen.dart';
 import '../features/profile/screens/profile_screen.dart';
 import '../features/profile/screens/edit_profile_screen.dart';
+import '../features/dashboard/screens/make_link_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
+
+/// Wraps a route child in a smooth fade + slight slide transition for a faster, polished feel.
+/// Uses a key scoped to the route path to avoid duplicate key with StatefulShellRoute on back (Navigator keyReservation assertion).
+Page<void> _transitionPage(GoRouterState state, Widget child) {
+  return CustomTransitionPage<void>(
+    key: ValueKey('transition-${state.matchedLocation}'),
+    child: child,
+    transitionDuration: const Duration(milliseconds: 220),
+    reverseTransitionDuration: const Duration(milliseconds: 180),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const curve = Curves.easeOutCubic;
+      final fade = CurvedAnimation(parent: animation, curve: curve);
+      final slide = Tween<Offset>(begin: const Offset(0.02, 0), end: Offset.zero)
+          .animate(CurvedAnimation(parent: animation, curve: curve));
+      return FadeTransition(
+        opacity: fade,
+        child: SlideTransition(
+          position: slide,
+          child: child,
+        ),
+      );
+    },
+  );
+}
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
@@ -29,12 +55,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       final isLoggedIn = authState.valueOrNull != null;
       final location = state.matchedLocation;
 
-      // On app start: show login unless user is logged in or has skipped
       if (location == '/' && !isLoggedIn && !skippedLogin) {
         return '/login';
       }
-      // Protect profile, wishlist, budgets, notifications (require login)
-      final protectedRoutes = ['/profile', '/wishlist', '/budgets', '/notifications'];
+      final protectedRoutes = ['/profile', '/notifications'];
       final isProtected = protectedRoutes.any((r) => location.startsWith(r));
       if (isProtected && !isLoggedIn) {
         return '/login';
@@ -42,56 +66,95 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
-      GoRoute(
-        path: '/',
-        builder: (_, __) => const HomeScreen(),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return Scaffold(
+            body: navigationShell,
+            bottomNavigationBar: MainBottomNav(
+              selectedIndex: navigationShell.currentIndex,
+              onDestinationSelected: (i) => navigationShell.goBranch(i),
+            ),
+          );
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/',
+                builder: (_, __) => const HomeScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/products',
+                builder: (_, __) => const ProductsScreen(),
+              ),
+              GoRoute(
+                path: '/products/:id',
+                pageBuilder: (_, state) {
+                  final id = state.pathParameters['id'] ?? '';
+                  return _transitionPage(state, ProductDetailScreen(productId: id));
+                },
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/coupons',
+                builder: (_, __) => const CouponsScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/notifications',
+                builder: (_, __) => const NotificationsScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/profile',
+                builder: (_, __) => const ProfileScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    pageBuilder: (_, state) => _transitionPage(state, const EditProfileScreen()),
+                  ),
+                  GoRoute(
+                    path: 'wishlist',
+                    pageBuilder: (_, state) => _transitionPage(state, const WishlistScreen()),
+                  ),
+                  GoRoute(
+                    path: 'budgets',
+                    pageBuilder: (_, state) => _transitionPage(state, const BudgetsScreen()),
+                  ),
+                  GoRoute(
+                    path: 'make-link',
+                    pageBuilder: (_, state) => _transitionPage(state, const MakeLinkScreen()),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
       GoRoute(
         path: '/login',
-        builder: (_, __) => const LoginScreen(),
+        pageBuilder: (_, state) => _transitionPage(state, const LoginScreen()),
       ),
       GoRoute(
         path: '/register',
-        builder: (_, __) => const RegisterScreen(),
+        pageBuilder: (_, state) => _transitionPage(state, const RegisterScreen()),
       ),
       GoRoute(
         path: '/referral',
-        builder: (_, __) => const ReferralScreen(),
-      ),
-      GoRoute(
-        path: '/products',
-        builder: (_, __) => const ProductsScreen(),
-      ),
-      GoRoute(
-        path: '/products/:id',
-        builder: (_, state) {
-          final id = state.pathParameters['id'] ?? '';
-          return ProductDetailScreen(productId: id);
-        },
-      ),
-      GoRoute(
-        path: '/wishlist',
-        builder: (_, __) => const WishlistScreen(),
-      ),
-      GoRoute(
-        path: '/budgets',
-        builder: (_, __) => const BudgetsScreen(),
-      ),
-      GoRoute(
-        path: '/coupons',
-        builder: (_, __) => const CouponsScreen(),
-      ),
-      GoRoute(
-        path: '/notifications',
-        builder: (_, __) => const NotificationsScreen(),
-      ),
-      GoRoute(
-        path: '/profile',
-        builder: (_, __) => const ProfileScreen(),
-      ),
-      GoRoute(
-        path: '/profile/edit',
-        builder: (_, __) => const EditProfileScreen(),
+        pageBuilder: (_, state) => _transitionPage(state, const ReferralScreen()),
       ),
     ],
   );

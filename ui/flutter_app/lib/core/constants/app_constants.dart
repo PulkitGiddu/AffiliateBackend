@@ -4,8 +4,8 @@ class AppConstants {
 
   static const String appName = 'SnatchMart';
   static const int defaultPageSize = 20;
-  static const int connectTimeoutMs = 15000;
-  static const int receiveTimeoutMs = 15000;
+  static const int connectTimeoutMs = 30000;  // 30s – slow networks / backend startup
+  static const int receiveTimeoutMs = 30000;
   static const String tokenKey = 'auth_token';
   static const String userIdKey = 'user_id';
   static const String refreshTokenKey = 'refresh_token';

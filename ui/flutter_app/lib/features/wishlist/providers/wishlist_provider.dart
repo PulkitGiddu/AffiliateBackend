@@ -14,31 +14,40 @@ class WishlistNotifier extends StateNotifier<AsyncValue<List<WishlistItem>>> {
     load();
   }
   final Ref _ref;
+  bool _mounted = true;
+
+  @override
+  void dispose() {
+    _mounted = false;
+    super.dispose();
+  }
 
   Future<void> load() async {
     final userId = _ref.read(authStateProvider).valueOrNull?.userId;
     if (userId == null) {
-      state = const AsyncValue.data([]);
+      if (_mounted) state = const AsyncValue.data([]);
       return;
     }
+    if (!_mounted) return;
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       return _ref.read(wishlistRepositoryProvider).getByUser(userId);
     });
+    if (_mounted) state = result;
   }
 
   Future<void> add({required String productId}) async {
     final userId = _ref.read(authStateProvider).valueOrNull?.userId;
-    if (userId == null) return;
+    if (userId == null || !_mounted) return;
     await _ref.read(wishlistRepositoryProvider).add(userId: userId, productId: productId);
-    load();
+    if (_mounted) load();
   }
 
   Future<void> remove({required String productId}) async {
     final userId = _ref.read(authStateProvider).valueOrNull?.userId;
-    if (userId == null) return;
+    if (userId == null || !_mounted) return;
     await _ref.read(wishlistRepositoryProvider).remove(userId: userId, productId: productId);
-    load();
+    if (_mounted) load();
   }
 }
 

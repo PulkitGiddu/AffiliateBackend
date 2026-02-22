@@ -115,8 +115,9 @@ final userRepositoryProvider = Provider<UserRepository>((ref) {
   return UserRepository(ref.watch(apiClientProvider));
 });
 
-/// Fetches current user profile from backend (GET /api/v1/{userId}). Triggers when Profile is opened.
-final userProfileProvider = FutureProvider.autoDispose.family<User?, String>((ref, userId) async {
+/// Fetches current user profile from backend (GET /api/v1/{userId}).
+/// Cached (no autoDispose) so Profile opens instantly after first fetch. Prefetch from Home when logged in.
+final userProfileProvider = FutureProvider.family<User?, String>((ref, userId) async {
   if (userId.isEmpty) return null;
   final repo = ref.watch(userRepositoryProvider);
   return repo.getById(userId);

@@ -17,7 +17,10 @@ class LoggingInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    appLog('ERR ${err.response?.statusCode} ${err.requestOptions.uri}', tag: 'Dio');
+    appLog(
+      'ERR ${err.type} ${err.response?.statusCode} ${err.requestOptions.uri} | ${err.message}',
+      tag: 'Dio',
+    );
     handler.next(err);
   }
 }

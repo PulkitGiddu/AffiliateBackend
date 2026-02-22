@@ -1,11 +1,22 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'config/app_providers.dart';
 import 'config/app_router.dart';
+import 'core/constants/app_constants.dart';
 import 'core/theme/app_theme.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Request highest display refresh rate (e.g. 90Hz, 120Hz) on Android so the app feels smooth.
+  if (Platform.isAndroid) {
+    try {
+      await FlutterDisplayMode.setHighRefreshRate();
+    } catch (_) {}
+  }
   runApp(
     const ProviderScope(
       child: _SplashRoot(),
@@ -21,12 +32,15 @@ class _SplashRoot extends StatefulWidget {
   State<_SplashRoot> createState() => _SplashRootState();
 }
 
-class _SplashRootState extends State<_SplashRoot> {
+class _SplashRootState extends State<_SplashRoot> with WidgetsBindingObserver {
   bool _showSplash = true;
+  bool _splashDark = false;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _loadThemeForSplash();
     Future.delayed(const Duration(milliseconds: 1800), () {
       if (mounted) {
         setState(() => _showSplash = false);
@@ -35,19 +49,52 @@ class _SplashRootState extends State<_SplashRoot> {
   }
 
   @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && Platform.isAndroid) {
+      FlutterDisplayMode.setHighRefreshRate().ignore();
+    }
+  }
+
+  Future<void> _loadThemeForSplash() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final themeStr = prefs.getString(AppConstants.themeModeKey) ?? 'system';
+      final brightness = WidgetsBinding.instance.platformDispatcher.platformBrightness;
+      final bool dark = themeStr == 'dark' ||
+          (themeStr == 'system' && brightness == Brightness.dark);
+      if (mounted) setState(() => _splashDark = dark);
+    } catch (_) {
+      // keep _splashDark false (light)
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 350),
+      switchInCurve: Curves.easeOut,
+      switchOutCurve: Curves.easeIn,
+      transitionBuilder: (Widget child, Animation<double> animation) {
+        return FadeTransition(opacity: animation, child: child);
+      },
       child: _showSplash
-          ? const _SplashScreen(key: ValueKey('splash'))
+          ? _SplashScreen(key: const ValueKey('splash'), isDark: _splashDark)
           : const SnatchMartApp(key: ValueKey('app')),
     );
   }
 }
 
-/// Splash screen with logo2.png on blue gradient (no black background).
+/// Splash screen: theme-based background and logo (logo_without_bg) with fade + scale animation.
 class _SplashScreen extends StatefulWidget {
-  const _SplashScreen({super.key});
+  const _SplashScreen({super.key, required this.isDark});
+
+  final bool isDark;
 
   @override
   State<_SplashScreen> createState() => _SplashScreenState();
@@ -63,14 +110,14 @@ class _SplashScreenState extends State<_SplashScreen>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 900),
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    _scale = Tween<double>(begin: 1.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    _scale = Tween<double>(begin: 0.88, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
     );
-    _opacity = Tween<double>(begin: 1.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    _opacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: const Interval(0.0, 0.7, curve: Curves.easeOut)),
     );
     _controller.forward();
   }
@@ -83,25 +130,21 @@ class _SplashScreenState extends State<_SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    const splashBlue = Color(0xFF2874F0);
-    const splashBlueDark = Color(0xFF1565C0);
+    final isDark = widget.isDark;
+    final backgroundColor = isDark ? const Color(0xFF121212) : Colors.white;
+    const splashAsset = 'lib/asserts/logo_without_bg.png';
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.light,
+      themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
       home: Scaffold(
-        backgroundColor: splashBlue,
+        backgroundColor: backgroundColor,
         body: Container(
           width: double.infinity,
           height: double.infinity,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [splashBlue, splashBlueDark],
-            ),
-          ),
+          color: backgroundColor,
           child: SafeArea(
             child: Center(
               child: AnimatedBuilder(
@@ -111,12 +154,15 @@ class _SplashScreenState extends State<_SplashScreen>
                     opacity: _opacity.value,
                     child: Transform.scale(
                       scale: _scale.value,
+                      alignment: Alignment.center,
                       child: Padding(
-                        padding: const EdgeInsets.all(48),
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
                         child: Image.asset(
-                          'lib/asserts/logo2.png',
+                          splashAsset,
                           fit: BoxFit.contain,
                           filterQuality: FilterQuality.medium,
+                          width: 320,
+                          height: 160,
                         ),
                       ),
                     ),

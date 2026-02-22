@@ -37,6 +37,9 @@ dependencies:
   shimmer: ^3.0.0
   flutter_slidable: ^3.0.1
   pull_to_refresh: ^2.0.0
+  lottie: ^3.1.0
+  flutter_animate: ^4.5.0
+  flutter_displaymode: ^0.6.0
 
 dev_dependencies:
   flutter_test:
@@ -50,6 +53,13 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.3
   image: ^4.7.2
 
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "lib/asserts/light.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "lib/asserts/light.png"
+
 flutter:
   uses-material-design: true
   assets:
@@ -61,4 +71,9 @@ flutter:
     - lib/asserts/banner_3_myntra.png
     - lib/asserts/banner_4_mega.png
     - lib/asserts/banner_5_super.png
+    - lib/asserts/light.png
+    - lib/asserts/black.png
+    - lib/asserts/logo_without_bg.png
+    - lib/asserts/light_without_bg.png
     - assets/mock_data.json
+    - assets/lottie/

@@ -62,6 +62,19 @@ public class GlobalExceptionHandler {
         return buildResponse(message, request.getRequestURI(), HttpStatus.BAD_REQUEST);
     }
 
+    /** Login/auth failures from UserServiceImpl so the client can show them in the UI. */
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleRuntime(RuntimeException ex, HttpServletRequest request) {
+        String msg = ex.getMessage() != null ? ex.getMessage() : "";
+        if ("Invalid email or password".equals(msg)) {
+            return buildResponse(msg, request.getRequestURI(), HttpStatus.UNAUTHORIZED);
+        }
+        if ("User account is inactive".equals(msg)) {
+            return buildResponse(msg, request.getRequestURI(), HttpStatus.FORBIDDEN);
+        }
+        return buildResponse("Unexpected error", request.getRequestURI(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, HttpServletRequest request) {
         return buildResponse("Unexpected error", request.getRequestURI(), HttpStatus.INTERNAL_SERVER_ERROR);

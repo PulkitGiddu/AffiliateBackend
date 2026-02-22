@@ -8,6 +8,7 @@ import 'interceptors/error_interceptor.dart';
 import 'interceptors/logging_interceptor.dart';
 
 /// Production Dio client with JWT, logging, and error handling.
+/// Timeouts are read from [AppConstants] at creation; do a full restart (not hot reload) to apply changes.
 class ApiClient {
   ApiClient._() {
     _dio = Dio(BaseOptions(

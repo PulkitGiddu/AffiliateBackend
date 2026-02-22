@@ -22,7 +22,7 @@ import '../../models/product.dart';
 import '../../models/user.dart';
 
 /// Set to false to disable mock data entirely (then remove this file + JSON + repo fallbacks).
-const bool useMockWhenOffline = true;
+const bool useMockWhenOffline = false;
 
 const String _assetPath = 'assets/mock_data.json';
 

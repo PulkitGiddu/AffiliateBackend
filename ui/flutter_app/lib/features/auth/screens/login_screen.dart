@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../config/app_providers.dart';
+import '../../../core/errors/exceptions.dart';
 import '../../../core/network/api_config.dart';
 import '../../../core/utils/logger.dart';
 import '../providers/auth_provider.dart';
@@ -74,6 +75,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               if (!mounted) return;
               context.go('/');
             },
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.onSurface,
+            ),
             child: const Text('Skip'),
           ),
         ],
@@ -166,8 +170,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: Text(
-                      auth.error?.toString() ?? 'Error',
-                      style: TextStyle(color: Theme.of(context).colorScheme.error),
+                      auth.error is AppException
+                          ? (auth.error! as AppException).message ?? auth.error.toString()
+                          : auth.error?.toString() ?? 'Something went wrong',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 FilledButton(

@@ -31,7 +31,7 @@ class ProductDetailScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.favorite_border),
-            onPressed: () => context.push('/wishlist'),
+            onPressed: () => context.push('/profile/wishlist'),
           ),
         ],
       ),

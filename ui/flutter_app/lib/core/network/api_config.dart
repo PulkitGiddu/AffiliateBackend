@@ -15,10 +15,19 @@ class ApiConfig {
   /// When [BASE_URL] is not set: Android uses 10.0.2.2:8081 (emulator only), others use 127.0.0.1:8081.
   /// On a physical Android device, 10.0.2.2 does NOT work — use your computer's LAN IP instead:
   ///   flutter run --dart-define=BASE_URL=http://YOUR_PC_IP:8081
-  /// (Same WiFi; find IP: Mac `ipconfig getifaddr en0`, Windows `ipconfig`.)
+  /// Use your PC's IP (e.g. 192.168.1.3), NOT 192.168.1.255 (that is the broadcast address and will not work).
+  /// Same WiFi; find IP: Mac `ipconfig getifaddr en0`, Windows `ipconfig`.
+  static bool _warnedEmulatorUrl = false;
+
   static String get baseUrl {
     if (_baseUrlEnv.isNotEmpty) return _baseUrlEnv;
     if (defaultTargetPlatform == TargetPlatform.android) {
+      // 10.0.2.2 = host machine only when using Android *emulator*. On a physical device it will time out.
+      if (kDebugMode && !_warnedEmulatorUrl) {
+        _warnedEmulatorUrl = true;
+        // ignore: avoid_print
+        print('ApiConfig: Using http://10.0.2.2:8081 (emulator). On a physical device use: flutter run --dart-define=BASE_URL=http://YOUR_PC_IP:8081');
+      }
       return 'http://10.0.2.2:8081';
     }
     return 'http://127.0.0.1:8081';
