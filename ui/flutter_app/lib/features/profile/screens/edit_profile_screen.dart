@@ -1,6 +1,11 @@
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 import '../../../config/app_providers.dart';
 import '../../../models/user.dart';
 import '../../auth/providers/auth_provider.dart';
@@ -16,24 +21,23 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
-  late TextEditingController _profilePictureUrlController;
   bool _isSaving = false;
   bool _hasFilled = false;
   String? _error;
+  String? _pickedImagePath;
+  String? _profilePictureUrl;
 
   @override
   void initState() {
     super.initState();
     _firstNameController = TextEditingController();
     _lastNameController = TextEditingController();
-    _profilePictureUrlController = TextEditingController();
   }
 
   @override
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
-    _profilePictureUrlController.dispose();
     super.dispose();
   }
 
@@ -41,7 +45,156 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     if (user == null) return;
     _firstNameController.text = user.firstName ?? '';
     _lastNameController.text = user.lastName ?? '';
-    _profilePictureUrlController.text = user.profilePictureUrl ?? '';
+    _profilePictureUrl = user.profilePictureUrl;
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final picker = ImagePicker();
+      final picked = await picker.pickImage(source: source, maxWidth: 800, imageQuality: 85);
+      if (picked == null) return;
+
+      final appDir = await getApplicationDocumentsDirectory();
+      final ext = p.extension(picked.path);
+      final savedPath = p.join(appDir.path, 'profile_picture$ext');
+      final savedFile = await File(picked.path).copy(savedPath);
+
+      setState(() => _pickedImagePath = savedFile.path);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not pick image: $e'), behavior: SnackBarBehavior.floating),
+      );
+    }
+  }
+
+  void _showUrlDialog() {
+    final controller = TextEditingController(text: _profilePictureUrl ?? '');
+    final scheme = Theme.of(context).colorScheme;
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Profile picture URL'),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.url,
+          autocorrect: false,
+          decoration: InputDecoration(
+            hintText: 'https://example.com/photo.jpg',
+            prefixIcon: Icon(Icons.link_rounded, color: scheme.primary),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              final url = controller.text.trim();
+              Navigator.of(ctx).pop();
+              if (url.isEmpty) return;
+              setState(() {
+                _profilePictureUrl = url;
+                _pickedImagePath = null;
+              });
+              ref.read(localProfilePictureProvider.notifier).clear();
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    ).then((_) => controller.dispose());
+  }
+
+  void _showImagePickerSheet() {
+    final scheme = Theme.of(context).colorScheme;
+    showModalBottomSheet(
+      context: context,
+      useRootNavigator: true,
+      backgroundColor: scheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 20),
+                decoration: BoxDecoration(
+                  color: scheme.onSurfaceVariant.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Text(
+                'Change profile picture',
+                style: Theme.of(ctx).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: _PickerOption(
+                      icon: Icons.camera_alt_rounded,
+                      label: 'Camera',
+                      onTap: () {
+                        Navigator.of(ctx).pop();
+                        _pickImage(ImageSource.camera);
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _PickerOption(
+                      icon: Icons.photo_library_rounded,
+                      label: 'Gallery',
+                      onTap: () {
+                        Navigator.of(ctx).pop();
+                        _pickImage(ImageSource.gallery);
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _PickerOption(
+                      icon: Icons.link_rounded,
+                      label: 'URL',
+                      onTap: () {
+                        Navigator.of(ctx).pop();
+                        _showUrlDialog();
+                      },
+                    ),
+                  ),
+                  if (_pickedImagePath != null || _profilePictureUrl != null || ref.read(localProfilePictureProvider) != null) ...[
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _PickerOption(
+                        icon: Icons.delete_outline_rounded,
+                        label: 'Remove',
+                        color: scheme.error,
+                        onTap: () {
+                          Navigator.of(ctx).pop();
+                          setState(() {
+                            _pickedImagePath = null;
+                            _profilePictureUrl = null;
+                          });
+                          ref.read(localProfilePictureProvider.notifier).clear();
+                        },
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _save() async {
@@ -62,8 +215,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         userId,
         firstName: _firstNameController.text.trim().isEmpty ? null : _firstNameController.text.trim(),
         lastName: _lastNameController.text.trim().isEmpty ? null : _lastNameController.text.trim(),
-        profilePictureUrl: _profilePictureUrlController.text.trim().isEmpty ? null : _profilePictureUrlController.text.trim(),
+        profilePictureUrl: _profilePictureUrl,
       );
+
+      if (_pickedImagePath != null) {
+        await ref.read(localProfilePictureProvider.notifier).setPath(_pickedImagePath!);
+      } else if (_profilePictureUrl != null && _profilePictureUrl!.isNotEmpty) {
+        await ref.read(localProfilePictureProvider.notifier).clear();
+      }
+
       ref.invalidate(userProfileProvider(userId));
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -84,6 +244,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final auth = ref.watch(authStateProvider).valueOrNull;
     final userId = auth?.userId ?? '';
     final userAsync = ref.watch(userProfileProvider(userId));
+    final scheme = Theme.of(context).colorScheme;
+    final localPicPath = ref.watch(localProfilePictureProvider);
+
+    final displayImagePath = _pickedImagePath ?? localPicPath;
 
     return Scaffold(
       appBar: AppBar(
@@ -105,6 +269,84 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        Center(
+                          child: GestureDetector(
+                            onTap: _showImagePickerSheet,
+                            child: SizedBox(
+                              width: 120,
+                              height: 120,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 120,
+                                    height: 120,
+                                    child: CustomPaint(
+                                      painter: _GradientRingPainter(
+                                        colors: [
+                                          scheme.primary,
+                                          scheme.secondary,
+                                          const Color(0xFF34A853),
+                                          const Color(0xFFEA4335),
+                                        ],
+                                        strokeWidth: 4,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 112,
+                                    height: 112,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: scheme.surfaceContainerHigh,
+                                    ),
+                                    child: ClipOval(
+                                      child: displayImagePath != null && File(displayImagePath).existsSync()
+                                          ? Image.file(
+                                              File(displayImagePath),
+                                              width: 112,
+                                              height: 112,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : (_profilePictureUrl != null && _profilePictureUrl!.isNotEmpty)
+                                              ? CachedNetworkImage(
+                                                  imageUrl: _profilePictureUrl!,
+                                                  width: 112,
+                                                  height: 112,
+                                                  fit: BoxFit.cover,
+                                                  placeholder: (_, __) => Icon(Icons.person, size: 48, color: scheme.onSurfaceVariant),
+                                                  errorWidget: (_, __, ___) => Icon(Icons.person, size: 48, color: scheme.onSurfaceVariant),
+                                                )
+                                              : Icon(Icons.person, size: 48, color: scheme.onSurfaceVariant),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: 4,
+                                    bottom: 4,
+                                    child: Container(
+                                      width: 36,
+                                      height: 36,
+                                      decoration: BoxDecoration(
+                                        color: scheme.primary,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(color: scheme.surface, width: 2),
+                                      ),
+                                      child: Icon(Icons.camera_alt_rounded, size: 18, color: scheme.onPrimary),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Center(
+                          child: TextButton(
+                            onPressed: _showImagePickerSheet,
+                            child: const Text('Change photo'),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
                         TextFormField(
                           controller: _firstNameController,
                           decoration: const InputDecoration(
@@ -142,18 +384,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                             helperText: 'Username cannot be changed here',
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          controller: _profilePictureUrlController,
-                          decoration: const InputDecoration(
-                            labelText: 'Profile picture URL (optional)',
-                            prefixIcon: Icon(Icons.image_outlined),
-                          ),
-                          keyboardType: TextInputType.url,
-                        ),
                         if (_error != null) ...[
                           const SizedBox(height: 16),
-                          Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                          Text(_error!, style: TextStyle(color: scheme.error)),
                         ],
                         const SizedBox(height: 24),
                         FilledButton(
@@ -172,4 +405,65 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             ),
     );
   }
+}
+
+class _PickerOption extends StatelessWidget {
+  const _PickerOption({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.color,
+  });
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final fg = color ?? scheme.primary;
+    return Material(
+      color: fg.withOpacity(0.08),
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          child: Column(
+            children: [
+              Icon(icon, size: 28, color: fg),
+              const SizedBox(height: 6),
+              Text(label, style: TextStyle(color: fg, fontWeight: FontWeight.w600, fontSize: 13)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _GradientRingPainter extends CustomPainter {
+  _GradientRingPainter({required this.colors, required this.strokeWidth});
+  final List<Color> colors;
+  final double strokeWidth;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    final gradient = SweepGradient(center: Alignment.center, colors: colors);
+    final paint = Paint()
+      ..shader = gradient.createShader(rect)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+    canvas.drawCircle(
+      Offset(size.width / 2, size.height / 2),
+      size.width / 2 - strokeWidth / 2,
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

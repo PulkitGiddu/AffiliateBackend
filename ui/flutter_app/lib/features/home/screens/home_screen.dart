@@ -104,11 +104,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Sliding toggle: Home | TheJwels + wishlist icon
+                    // Sliding toggle: Home | TheJewels + wishlist icon
                     Row(
                       children: [
                         _HeaderToggle(
-                          labels: const ['Home', 'TheJwels'],
+                          labels: const ['Home', 'TheJewels'],
                           selectedIndex: _selectedTab,
                           onChanged: (i) {
                             if (mounted) setState(() => _selectedTab = i);
@@ -185,10 +185,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
             ),
-            // Content switches between Home feed and TheJwels
+            // Content switches between Home feed and TheJewels
             if (_selectedTab == 1) ...[
               const SliverFillRemaining(
-                child: _TheJwelsVideoSection(),
+                child: _TheJewelsVideoSection(),
               ),
             ] else ...[
             // 2. Categories (horizontal strip with outline icons, light purple bg, active indicator)
@@ -482,15 +482,15 @@ class _HeaderUserAvatar extends ConsumerWidget {
   }
 }
 
-/// Video showcase for TheJwels tab.
-class _TheJwelsVideoSection extends StatefulWidget {
-  const _TheJwelsVideoSection();
+/// Video showcase for TheJewels tab.
+class _TheJewelsVideoSection extends StatefulWidget {
+  const _TheJewelsVideoSection();
 
   @override
-  State<_TheJwelsVideoSection> createState() => _TheJwelsVideoSectionState();
+  State<_TheJewelsVideoSection> createState() => _TheJewelsVideoSectionState();
 }
 
-class _TheJwelsVideoSectionState extends State<_TheJwelsVideoSection> {
+class _TheJewelsVideoSectionState extends State<_TheJewelsVideoSection> {
   late VideoPlayerController _controller;
   bool _initialized = false;
 
@@ -564,7 +564,7 @@ class _TheJwelsVideoSectionState extends State<_TheJwelsVideoSection> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          'TheJwels',
+                          'TheJewels',
                           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
@@ -618,7 +618,7 @@ class _TheJwelsVideoSectionState extends State<_TheJwelsVideoSection> {
   }
 }
 
-/// Glassmorphic sliding toggle for header tabs (Home / TheJwels).
+/// Glassmorphic sliding toggle for header tabs (Home / TheJewels).
 class _HeaderToggle extends StatelessWidget {
   const _HeaderToggle({
     required this.labels,

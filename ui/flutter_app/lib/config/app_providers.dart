@@ -18,6 +18,31 @@ import '../models/user.dart';
 /// Controls bottom nav bar visibility (home screen hides on scroll down).
 final bottomNavVisibleProvider = StateProvider<bool>((ref) => true);
 
+/// Local profile picture path (stored in SharedPreferences).
+const _kProfilePicKey = 'local_profile_picture_path';
+
+final localProfilePictureProvider =
+    StateNotifierProvider<LocalProfilePictureNotifier, String?>((ref) {
+  final prefs = ref.watch(sharedPreferencesProvider).valueOrNull;
+  return LocalProfilePictureNotifier(prefs);
+});
+
+class LocalProfilePictureNotifier extends StateNotifier<String?> {
+  LocalProfilePictureNotifier(this._prefs)
+      : super(_prefs?.getString(_kProfilePicKey));
+  final SharedPreferences? _prefs;
+
+  Future<void> setPath(String path) async {
+    state = path;
+    await _prefs?.setString(_kProfilePicKey, path);
+  }
+
+  Future<void> clear() async {
+    state = null;
+    await _prefs?.remove(_kProfilePicKey);
+  }
+}
+
 final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) async {
   return await SharedPreferences.getInstance();
 });

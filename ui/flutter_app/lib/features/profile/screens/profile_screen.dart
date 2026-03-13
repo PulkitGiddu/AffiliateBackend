@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,103 +10,160 @@ import '../../auth/providers/auth_provider.dart';
 const String kDefaultProfilePhotoUrl =
     'https://avatars.githubusercontent.com/u/101356458?v=4';
 
-class ProfileScreen extends ConsumerWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  static const _expandedHeight = 280.0;
+  static const _collapsedAvatarSize = 36.0;
+  static const _expandedAvatarSize = 110.0;
+
+  @override
+  Widget build(BuildContext context) {
     final auth = ref.watch(authStateProvider).valueOrNull;
     final userId = auth?.userId ?? '';
     final userAsync = userId.isNotEmpty ? ref.watch(userProfileProvider(userId)) : null;
+    final localPicPath = ref.watch(localProfilePictureProvider);
 
     final scheme = Theme.of(context).colorScheme;
+
+    String userName = auth?.email.split('@').first ?? '';
+    if (userAsync != null) {
+      userAsync.whenData((User? u) {
+        if (u != null) {
+          final full = [u.firstName, u.lastName]
+              .where((e) => e != null && e.isNotEmpty)
+              .join(' ')
+              .trim();
+          if (full.isNotEmpty) userName = full;
+        }
+      });
+    }
+
+    String photoUrl = kDefaultProfilePhotoUrl;
+    if (userAsync != null) {
+      userAsync.whenData((User? u) {
+        if (u?.profilePictureUrl != null && u!.profilePictureUrl!.isNotEmpty) {
+          photoUrl = u.profilePictureUrl!;
+        }
+      });
+    }
+
+    final topPad = MediaQuery.of(context).padding.top;
 
     return Scaffold(
       backgroundColor: scheme.surface,
       body: auth == null
           ? _buildLoggedOutContent(context, ref)
-          : SafeArea(
-              child: CustomScrollView(
-                slivers: [
-                  // Top bar: email + close (like reference)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 8, 8),
-                      child: Row(
+          : CustomScrollView(
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
+              slivers: [
+                SliverAppBar(
+                  expandedHeight: _expandedHeight,
+                  pinned: true,
+                  automaticallyImplyLeading: false,
+                  backgroundColor: scheme.surface,
+                  surfaceTintColor: Colors.transparent,
+                  flexibleSpace: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final currentHeight = constraints.maxHeight;
+                      final collapsedHeight = kToolbarHeight + topPad;
+                      final range = _expandedHeight + topPad - collapsedHeight;
+                      final t = ((currentHeight - collapsedHeight) / range).clamp(0.0, 1.0);
+                      final avatarSize = _collapsedAvatarSize + (_expandedAvatarSize - _collapsedAvatarSize) * t;
+                      final expandedOpacity = ((t - 0.15) / 0.35).clamp(0.0, 1.0);
+                      final collapsedOpacity = ((0.3 - t) / 0.25).clamp(0.0, 1.0);
+
+                      return Stack(
+                        fit: StackFit.expand,
+                        clipBehavior: Clip.hardEdge,
                         children: [
-                          Expanded(
-                            child: Text(
-                              auth.email,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    color: scheme.onSurface,
-                                    fontWeight: FontWeight.w500,
+                          // Expanded content (fades out on collapse)
+                          Positioned.fill(
+                            child: SafeArea(
+                              child: Opacity(
+                                opacity: expandedOpacity,
+                                child: Center(
+                                  child: SingleChildScrollView(
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () => context.push('/profile/edit'),
+                                          child: _AnimatedAvatar(
+                                            size: avatarSize,
+                                            photoUrl: photoUrl,
+                                            localImagePath: localPicPath,
+                                            scheme: scheme,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 14),
+                                        Text(
+                                          'Hi, ${userName.isEmpty ? 'User' : userName}!',
+                                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: scheme.onSurface,
+                                              ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          auth.email,
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                color: scheme.onSurfaceVariant,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
                             ),
                           ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.close,
-                              color: scheme.onSurface,
+                          // Collapsed title row (fades in on collapse)
+                          Positioned(
+                            left: 16,
+                            right: 16,
+                            top: topPad + (kToolbarHeight - _collapsedAvatarSize) / 2,
+                            child: Opacity(
+                              opacity: collapsedOpacity,
+                              child: Row(
+                                children: [
+                                  _MiniAvatar(
+                                    size: _collapsedAvatarSize,
+                                    photoUrl: photoUrl,
+                                    localImagePath: localPicPath,
+                                    scheme: scheme,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      'Hi, ${userName}!',
+                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: scheme.onSurface,
+                                          ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            onPressed: () {
-                              if (context.canPop()) {
-                                context.pop();
-                              } else {
-                                context.go('/');
-                              }
-                            },
                           ),
                         ],
-                      ),
-                    ),
+                      );
+                    },
                   ),
-                  // Profile picture with colored border + camera overlay
-                  SliverToBoxAdapter(
-                    child: userAsync == null
-                        ? _ProfileAvatar(photoUrl: kDefaultProfilePhotoUrl, onEdit: () => context.push('/profile/edit'))
-                        : userAsync.when(
-                            data: (User? u) => _ProfileAvatar(
-                              photoUrl: u?.profilePictureUrl ?? kDefaultProfilePhotoUrl,
-                              onEdit: () => context.push('/profile/edit'),
-                            ),
-                            loading: () => _ProfileAvatar(photoUrl: kDefaultProfilePhotoUrl, onEdit: () => context.push('/profile/edit')),
-                            error: (_, __) => _ProfileAvatar(photoUrl: kDefaultProfilePhotoUrl, onEdit: () => context.push('/profile/edit')),
-                          ),
-                  ),
-                  // Greeting
-                  SliverToBoxAdapter(
-                    child: userAsync == null
-                        ? _Greeting(name: auth.email.split('@').first)
-                        : userAsync.when(
-                            data: (User? u) {
-                              final name = u != null
-                                  ? [u.firstName, u.lastName].where((e) => e != null && e.isNotEmpty).join(' ').trim()
-                                  : '';
-                              return _Greeting(name: name.isEmpty ? auth.email.split('@').first : name);
-                            },
-                            loading: () => _Greeting(name: auth.email.split('@').first),
-                            error: (_, __) => _Greeting(name: auth.email.split('@').first),
-                          ),
-                  ),
-                  // Manage account button
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                      child: OutlinedButton(
-                        onPressed: () => context.push('/profile/edit'),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          side: BorderSide(color: scheme.outline),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                        ),
-                        child: const Text('Manage your account'),
-                      ),
-                    ),
-                  ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 20)),
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 4)),
                   // Section: Dashboard
                   SliverToBoxAdapter(
                     child: _SectionLabel(label: 'Dashboard'),
@@ -241,7 +299,6 @@ class ProfileScreen extends ConsumerWidget {
                   const SliverToBoxAdapter(child: SizedBox(height: 80)),
                 ],
               ),
-            ),
     );
   }
 
@@ -255,10 +312,11 @@ class ProfileScreen extends ConsumerWidget {
           ref.watch(mockUserProfileProvider).when(
             data: (User? u) => _ProfileAvatar(
               photoUrl: u?.profilePictureUrl ?? kDefaultProfilePhotoUrl,
+              localImagePath: ref.watch(localProfilePictureProvider),
               onEdit: () {},
             ),
-            loading: () => _ProfileAvatar(photoUrl: kDefaultProfilePhotoUrl, onEdit: () {}),
-            error: (_, __) => _ProfileAvatar(photoUrl: kDefaultProfilePhotoUrl, onEdit: () {}),
+            loading: () => _ProfileAvatar(photoUrl: kDefaultProfilePhotoUrl, localImagePath: ref.watch(localProfilePictureProvider), onEdit: () {}),
+            error: (_, __) => _ProfileAvatar(photoUrl: kDefaultProfilePhotoUrl, localImagePath: ref.watch(localProfilePictureProvider), onEdit: () {}),
           ),
           const SizedBox(height: 24),
           Text(
@@ -540,24 +598,71 @@ class _SettingsTile extends StatelessWidget {
   }
 }
 
-/// Large profile avatar with colored border + camera overlay.
-class _ProfileAvatar extends StatelessWidget {
-  const _ProfileAvatar({required this.photoUrl, required this.onEdit});
+/// Small avatar shown in the collapsed app bar title.
+class _MiniAvatar extends StatelessWidget {
+  const _MiniAvatar({
+    required this.size,
+    required this.photoUrl,
+    required this.scheme,
+    this.localImagePath,
+  });
+  final double size;
   final String photoUrl;
-  final VoidCallback onEdit;
+  final String? localImagePath;
+  final ColorScheme scheme;
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    const size = 120.0;
-    const borderWidth = 4.0;
-    const innerSize = size - borderWidth * 2;
+    final hasLocal = localImagePath != null && File(localImagePath!).existsSync();
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: scheme.surfaceContainerHigh,
+        border: Border.all(color: scheme.primary, width: 2),
+      ),
+      child: ClipOval(
+        child: hasLocal
+            ? Image.file(File(localImagePath!), width: size, height: size, fit: BoxFit.cover)
+            : CachedNetworkImage(
+                imageUrl: photoUrl,
+                width: size,
+                height: size,
+                fit: BoxFit.cover,
+                placeholder: (_, __) => Icon(Icons.person, size: size * 0.5, color: scheme.onSurfaceVariant),
+                errorWidget: (_, __, ___) => Icon(Icons.person, size: size * 0.5, color: scheme.onSurfaceVariant),
+              ),
+      ),
+    );
+  }
+}
 
-    return Center(
+/// Animated-size avatar with gradient ring, used in the expanded flexible space.
+class _AnimatedAvatar extends StatelessWidget {
+  const _AnimatedAvatar({
+    required this.size,
+    required this.photoUrl,
+    required this.scheme,
+    this.localImagePath,
+  });
+  final double size;
+  final String photoUrl;
+  final String? localImagePath;
+  final ColorScheme scheme;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasLocal = localImagePath != null && File(localImagePath!).existsSync();
+    const borderWidth = 3.5;
+    final innerSize = size - borderWidth * 2;
+
+    return SizedBox(
+      width: size,
+      height: size,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Colored border ring (Google-style gradient)
           SizedBox(
             width: size,
             height: size,
@@ -573,7 +678,6 @@ class _ProfileAvatar extends StatelessWidget {
               ),
             ),
           ),
-          // Inner circle with photo
           Container(
             width: innerSize,
             height: innerSize,
@@ -582,14 +686,83 @@ class _ProfileAvatar extends StatelessWidget {
               color: scheme.surfaceContainerHigh,
             ),
             child: ClipOval(
-              child: CachedNetworkImage(
-                imageUrl: photoUrl,
-                width: innerSize,
-                height: innerSize,
-                fit: BoxFit.cover,
-                placeholder: (_, __) => Icon(Icons.person, size: 48, color: scheme.onSurfaceVariant),
-                errorWidget: (_, __, ___) => Icon(Icons.person, size: 48, color: scheme.onSurfaceVariant),
+              child: hasLocal
+                  ? Image.file(File(localImagePath!), width: innerSize, height: innerSize, fit: BoxFit.cover)
+                  : CachedNetworkImage(
+                      imageUrl: photoUrl,
+                      width: innerSize,
+                      height: innerSize,
+                      fit: BoxFit.cover,
+                      placeholder: (_, __) => Icon(Icons.person, size: innerSize * 0.4, color: scheme.onSurfaceVariant),
+                      errorWidget: (_, __, ___) => Icon(Icons.person, size: innerSize * 0.4, color: scheme.onSurfaceVariant),
+                    ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Large profile avatar with colored border + camera overlay.
+/// Prefers a local file image when available, otherwise falls back to network URL.
+class _ProfileAvatar extends StatelessWidget {
+  const _ProfileAvatar({required this.photoUrl, required this.onEdit, this.localImagePath});
+  final String photoUrl;
+  final String? localImagePath;
+  final VoidCallback onEdit;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    const size = 120.0;
+    const borderWidth = 4.0;
+    const innerSize = size - borderWidth * 2;
+
+    final hasLocal = localImagePath != null && File(localImagePath!).existsSync();
+
+    return Center(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SizedBox(
+            width: size,
+            height: size,
+            child: CustomPaint(
+              painter: _GradientRingPainter(
+                colors: [
+                  scheme.primary,
+                  scheme.secondary,
+                  const Color(0xFF34A853),
+                  const Color(0xFFEA4335),
+                ],
+                strokeWidth: borderWidth,
               ),
+            ),
+          ),
+          Container(
+            width: innerSize,
+            height: innerSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: scheme.surfaceContainerHigh,
+            ),
+            child: ClipOval(
+              child: hasLocal
+                  ? Image.file(
+                      File(localImagePath!),
+                      width: innerSize,
+                      height: innerSize,
+                      fit: BoxFit.cover,
+                    )
+                  : CachedNetworkImage(
+                      imageUrl: photoUrl,
+                      width: innerSize,
+                      height: innerSize,
+                      fit: BoxFit.cover,
+                      placeholder: (_, __) => Icon(Icons.person, size: 48, color: scheme.onSurfaceVariant),
+                      errorWidget: (_, __, ___) => Icon(Icons.person, size: 48, color: scheme.onSurfaceVariant),
+                    ),
             ),
           ),
           // Camera overlay bottom-right
