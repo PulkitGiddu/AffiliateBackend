@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:video_player/video_player.dart';
 import '../../../config/app_providers.dart';
 import '../../../models/category.dart';
 import '../../../models/product.dart';
@@ -17,6 +17,7 @@ import '../providers/category_provider.dart';
 import '../../../core/utils/network_utils.dart';
 import '../../../widgets/shimmer_loading.dart';
 import '../../../widgets/empty_state.dart';
+import '../../../widgets/category_circle.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -26,11 +27,42 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  int _selectedSegment = 0; // 0 = Home, 1 = Dashboard
+  int _selectedTab = 0;
+  final _scrollController = ScrollController();
+  double _lastScrollOffset = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final offset = _scrollController.offset;
+    final delta = offset - _lastScrollOffset;
+    _lastScrollOffset = offset;
+
+    if (offset <= 0) {
+      ref.read(bottomNavVisibleProvider.notifier).state = true;
+      return;
+    }
+
+    if (delta > 4) {
+      ref.read(bottomNavVisibleProvider.notifier).state = false;
+    } else if (delta < -4) {
+      ref.read(bottomNavVisibleProvider.notifier).state = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Prefetch profile when logged in so Profile tab opens with data already loaded
     final auth = ref.watch(authStateProvider).valueOrNull;
     if (auth != null && auth.userId.isNotEmpty) {
       ref.watch(userProfileProvider(auth.userId));
@@ -39,6 +71,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final categoriesAsync = ref.watch(categoryListProvider);
     final productsAsync = ref.watch(topDealsProvider);
     final wishlistProductsAsync = ref.watch(wishlistProductsProvider);
+    final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: RefreshIndicator(
@@ -48,8 +81,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ref.invalidate(wishlistNotifierProvider);
         },
         child: CustomScrollView(
+          controller: _scrollController,
           slivers: [
-            // 1. Header: profile icon + Home | Dashboard toggle + search bar
             SliverToBoxAdapter(
               child: Container(
                 width: double.infinity,
@@ -63,109 +96,99 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      Theme.of(context).colorScheme.primary,
-                      Theme.of(context).colorScheme.secondary,
-                    ],
+                    colors: Theme.of(context).brightness == Brightness.dark
+                        ? [scheme.surfaceContainerHigh, scheme.surfaceContainer]
+                        : [scheme.primary, scheme.secondary],
                   ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Sliding toggle: Home | TheJwels + wishlist icon
                     Row(
                       children: [
-                        const _HeaderUserAvatar(),
-                        const SizedBox(width: 10),
-                        SizedBox(
-                          height: 36,
-                          child: CupertinoSlidingSegmentedControl<int>(
-                            groupValue: _selectedSegment,
-                            thumbColor: Colors.white,
-                            backgroundColor: Colors.white.withOpacity(0.25),
-                            padding: const EdgeInsets.all(2),
-                            children: {
-                              0: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-                                child: Center(
-                                  child: Text(
-                                    'Home',
-                                    style: TextStyle(
-                                      color: _selectedSegment == 0
-                                          ? Theme.of(context).colorScheme.primary
-                                          : Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              1: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-                                child: Center(
-                                  child: Text(
-                                    'Dashboard',
-                                    style: TextStyle(
-                                      color: _selectedSegment == 1
-                                          ? Theme.of(context).colorScheme.primary
-                                          : Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            },
-                            onValueChanged: (int? v) {
-                              if (v != null && mounted) setState(() => _selectedSegment = v);
-                            },
-                          ),
+                        _HeaderToggle(
+                          labels: const ['Home', 'TheJwels'],
+                          selectedIndex: _selectedTab,
+                          onChanged: (i) {
+                            if (mounted) setState(() => _selectedTab = i);
+                          },
+                          scheme: scheme,
                         ),
                         const Spacer(),
-                        IconButton(
-                          icon: const Icon(Icons.notifications_outlined),
-                          onPressed: () => context.push('/notifications'),
-                          color: Colors.white,
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () => context.push('/profile/wishlist'),
+                            borderRadius: BorderRadius.circular(20),
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).brightness == Brightness.dark
+                                    ? scheme.surfaceContainerHighest.withOpacity(0.5)
+                                    : Colors.white.withOpacity(0.2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.favorite_border_rounded,
+                                size: 22,
+                                color: Theme.of(context).brightness == Brightness.dark
+                                    ? scheme.onSurface
+                                    : Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 14),
-                    Material(
-                      color: Colors.white.withOpacity(0.95),
-                      borderRadius: BorderRadius.circular(24),
-                      elevation: 0,
-                      child: InkWell(
-                        onTap: () => context.push('/products'),
-                        borderRadius: BorderRadius.circular(24),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-                          child: Row(
-                            children: [
-                              Icon(Icons.search_rounded, size: 22, color: Theme.of(context).colorScheme.primary),
-                              const SizedBox(width: 14),
-                              Expanded(
-                                child: Text(
-                                  'Search products, deals...',
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                      ),
+                    // Search bar
+                    Builder(builder: (context) {
+                      final isDark = Theme.of(context).brightness == Brightness.dark;
+                      final searchBg = isDark
+                          ? scheme.surfaceContainerHighest
+                          : Colors.white.withOpacity(0.95);
+                      final searchIcon = isDark ? scheme.primary : scheme.primary;
+                      final searchHint = isDark ? scheme.onSurfaceVariant : scheme.onSurfaceVariant;
+                      return Material(
+                        color: searchBg,
+                        borderRadius: BorderRadius.circular(12),
+                        elevation: 0,
+                        child: InkWell(
+                          onTap: () => context.push('/products'),
+                          borderRadius: BorderRadius.circular(12),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                            child: Row(
+                              children: [
+                                Icon(Icons.search_rounded, size: 22, color: searchIcon),
+                                const SizedBox(width: 14),
+                                Expanded(
+                                  child: Text(
+                                    'Search for products',
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                          color: searchHint,
+                                        ),
+                                  ),
                                 ),
-                              ),
-                              Icon(Icons.mic_rounded, size: 20, color: Theme.of(context).colorScheme.primary.withOpacity(0.8)),
-                            ],
+                                Icon(Icons.mic_rounded, size: 20, color: searchIcon.withOpacity(0.8)),
+                                const SizedBox(width: 12),
+                                Icon(Icons.camera_alt_outlined, size: 20, color: searchIcon.withOpacity(0.8)),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    }),
                   ],
                 ),
               ),
             ),
-            // 2. Content: Home (categories + feed) or Dashboard (login required)
-            if (_selectedSegment == 1) ...[
-              SliverToBoxAdapter(
-                child: ref.watch(authStateProvider).valueOrNull == null
-                    ? const _DashboardLoginGate()
-                    : const _DashboardContent(),
+            // Content switches between Home feed and TheJwels
+            if (_selectedTab == 1) ...[
+              const SliverFillRemaining(
+                child: _TheJwelsVideoSection(),
               ),
             ] else ...[
             // 2. Categories (horizontal strip with outline icons, light purple bg, active indicator)
@@ -232,14 +255,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   .slideY(begin: 0.03, end: 0, delay: 80.ms, duration: 400.ms, curve: Curves.easeOut),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
-            // 4. Promoted products banners (carousel)
-            SliverToBoxAdapter(
-              child: _PromoBanners(ref: ref, productsAsync: productsAsync)
-                  .animate()
-                  .fadeIn(delay: 100.ms, duration: 380.ms, curve: Curves.easeOut)
-                  .slideY(begin: 0.02, end: 0, delay: 100.ms, duration: 380.ms, curve: Curves.easeOut),
-            ),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
             // 5. Top Picks for you
             SliverToBoxAdapter(
               child: _TopPicksSection(ref: ref, productsAsync: productsAsync)
@@ -256,7 +271,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   .slideY(begin: 0.02, end: 0, delay: 140.ms, duration: 380.ms, curve: Curves.easeOut),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
-            // 7. Ads section (dummy)
+            // 7. Recommended deals for you (Amazon-style grouped cards)
+            SliverToBoxAdapter(
+              child: _RecommendedDealsSection(
+                categoriesAsync: categoriesAsync,
+                productsAsync: productsAsync,
+              ).animate()
+                  .fadeIn(delay: 160.ms, duration: 380.ms, curve: Curves.easeOut)
+                  .slideY(begin: 0.02, end: 0, delay: 160.ms, duration: 380.ms, curve: Curves.easeOut),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            // 8. Ads section (dummy)
             const SliverToBoxAdapter(
               child: _AdsSection(),
             ),
@@ -332,6 +357,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
+            const SliverToBoxAdapter(child: SizedBox(height: 80)),
             ],
           ],
         ),
@@ -449,6 +475,255 @@ class _HeaderUserAvatar extends ConsumerWidget {
                 ),
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Video showcase for TheJwels tab.
+class _TheJwelsVideoSection extends StatefulWidget {
+  const _TheJwelsVideoSection();
+
+  @override
+  State<_TheJwelsVideoSection> createState() => _TheJwelsVideoSectionState();
+}
+
+class _TheJwelsVideoSectionState extends State<_TheJwelsVideoSection> {
+  late VideoPlayerController _controller;
+  bool _initialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.asset('lib/asserts/animation/animation.mp4')
+      ..setLooping(true)
+      ..setVolume(0)
+      ..initialize().then((_) {
+        if (mounted) {
+          setState(() => _initialized = true);
+          _controller.play();
+        }
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    if (!_initialized) {
+      return Center(
+        child: CircularProgressIndicator(color: scheme.primary),
+      );
+    }
+
+    return Column(
+      children: [
+        Expanded(
+          child: ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                FittedBox(
+                  fit: BoxFit.cover,
+                  child: SizedBox(
+                    width: _controller.value.size.width,
+                    height: _controller.value.size.height,
+                    child: VideoPlayer(_controller),
+                  ),
+                ),
+                // Gradient overlay at bottom for text readability
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    height: 140,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.7),
+                        ],
+                      ),
+                    ),
+                    padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'TheJwels',
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Premium jewellery deals coming soon',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Colors.white.withOpacity(0.8),
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // Play/pause tap
+                Positioned.fill(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _controller.value.isPlaying
+                            ? _controller.pause()
+                            : _controller.play();
+                      });
+                    },
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 200),
+                      opacity: _controller.value.isPlaying ? 0.0 : 1.0,
+                      child: Center(
+                        child: Container(
+                          width: 64,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.5),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 36),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 80),
+      ],
+    );
+  }
+}
+
+/// Glassmorphic sliding toggle for header tabs (Home / TheJwels).
+class _HeaderToggle extends StatelessWidget {
+  const _HeaderToggle({
+    required this.labels,
+    required this.selectedIndex,
+    required this.onChanged,
+    required this.scheme,
+  });
+
+  final List<String> labels;
+  final int selectedIndex;
+  final ValueChanged<int> onChanged;
+  final ColorScheme scheme;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    const itemH = 40.0;
+    const itemW = 100.0;
+    const pad = 3.0;
+    final totalW = itemW * labels.length + pad * 2;
+
+    final trackColor = isDark
+        ? Colors.white.withOpacity(0.08)
+        : Colors.white.withOpacity(0.18);
+    final trackBorder = isDark
+        ? Colors.white.withOpacity(0.10)
+        : Colors.white.withOpacity(0.25);
+
+    final bubbleColor = isDark
+        ? Colors.white.withOpacity(0.12)
+        : Colors.white.withOpacity(0.85);
+    final bubbleBorder = isDark
+        ? Colors.white.withOpacity(0.15)
+        : Colors.white.withOpacity(0.5);
+
+    final selectedTextColor = isDark ? Colors.white : scheme.primary;
+    final unselectedTextColor = isDark
+        ? Colors.white.withOpacity(0.6)
+        : Colors.white.withOpacity(0.9);
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular((itemH + pad * 2) / 2),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+        child: Container(
+          width: totalW,
+          height: itemH + pad * 2,
+          decoration: BoxDecoration(
+            color: trackColor,
+            borderRadius: BorderRadius.circular((itemH + pad * 2) / 2),
+            border: Border.all(color: trackBorder, width: 1),
+          ),
+          child: Stack(
+            children: [
+              // Glass bubble indicator
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 320),
+                curve: Curves.easeOutCubic,
+                left: pad + selectedIndex * itemW,
+                top: pad,
+                child: Container(
+                  width: itemW,
+                  height: itemH,
+                  decoration: BoxDecoration(
+                    color: bubbleColor,
+                    borderRadius: BorderRadius.circular(itemH / 2),
+                    border: Border.all(color: bubbleBorder, width: 0.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: isDark
+                            ? Colors.white.withOpacity(0.05)
+                            : Colors.black.withOpacity(0.06),
+                        blurRadius: 8,
+                        spreadRadius: 0,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // Labels
+              Row(
+                children: List.generate(labels.length, (i) {
+                  final selected = selectedIndex == i;
+                  return GestureDetector(
+                    onTap: () => onChanged(i),
+                    behavior: HitTestBehavior.opaque,
+                    child: SizedBox(
+                      width: itemW,
+                      height: itemH + pad * 2,
+                      child: Center(
+                        child: AnimatedDefaultTextStyle(
+                          duration: const Duration(milliseconds: 200),
+                          style: TextStyle(
+                            color: selected ? selectedTextColor : unselectedTextColor,
+                            fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                          child: Text(labels[i]),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ],
           ),
         ),
       ),
@@ -1118,17 +1393,21 @@ class _HorizontalProductCard extends StatelessWidget {
   }
 }
 
-// Dummy ads section.
 class _AdsSection extends StatelessWidget {
   const _AdsSection();
 
+  static const _offers = [
+    _OfferAsset('lib/asserts/Offers/apple.png', 'Apple'),
+    _OfferAsset('lib/asserts/Offers/apple17pro.jpg', 'iPhone 17 Pro'),
+    _OfferAsset('lib/asserts/Offers/samsungS.webp', 'Samsung Galaxy S'),
+    _OfferAsset('lib/asserts/Offers/nothing.webp', 'Nothing Phone'),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    const ads = [
-      _AdItem('Brand A', Icons.storefront_rounded),
-      _AdItem('Brand B', Icons.shopping_bag_outlined),
-      _AdItem('Brand C', Icons.card_giftcard_rounded),
-    ];
+    final scheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1136,56 +1415,83 @@ class _AdsSection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Offers',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         SizedBox(
-          height: 100,
+          height: 340,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: ads.length,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            itemCount: _offers.length,
             itemBuilder: (_, i) {
-              final item = ads[i];
+              final offer = _offers[i];
               return Padding(
-                padding: const EdgeInsets.only(right: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 6),
                 child: Container(
-                  width: 160,
+                  width: 300,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceContainerLow,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5)),
+                    color: isDark ? scheme.surfaceContainerHigh : Colors.white,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: isDark
+                          ? scheme.outlineVariant.withOpacity(0.2)
+                          : scheme.outlineVariant.withOpacity(0.25),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(isDark ? 0.15 : 0.04),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: Stack(
                     children: [
-                      Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(item.icon, size: 32, color: Theme.of(context).colorScheme.primary),
-                            const SizedBox(height: 4),
-                            Text(item.name, style: Theme.of(context).textTheme.labelLarge),
-                          ],
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(13),
+                        child: Container(
+                          width: 300,
+                          height: 340,
+                          color: isDark ? scheme.surfaceContainerHighest : const Color(0xFFF5F5F5),
+                          child: Image.asset(
+                            offer.assetPath,
+                            width: 300,
+                            height: 340,
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, __, ___) => Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.local_offer_rounded, size: 32, color: scheme.primary),
+                                  const SizedBox(height: 4),
+                                  Text(offer.label, style: Theme.of(context).textTheme.labelLarge),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                       Positioned(
-                        top: 6,
-                        right: 6,
+                        top: 8,
+                        right: 8,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(4),
+                            color: Colors.black.withOpacity(0.65),
+                            borderRadius: BorderRadius.circular(6),
                           ),
-                          child: Text(
-                            'AD',
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
+                          child: const Text(
+                            'Ad',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.3,
+                            ),
                           ),
                         ),
                       ),
@@ -1201,19 +1507,19 @@ class _AdsSection extends StatelessWidget {
   }
 }
 
-class _AdItem {
-  const _AdItem(this.name, this.icon);
-  final String name;
-  final IconData icon;
+class _OfferAsset {
+  const _OfferAsset(this.assetPath, this.label);
+  final String assetPath;
+  final String label;
 }
 
-// Sponsored: 5 banners in carousel, 0.5s per slide.
 const List<_BannerItem> _sponsoredBanners = [
-  _BannerItem('lib/asserts/banner_1_diwali.png', 'Diwali Sale'),
-  _BannerItem('lib/asserts/banner_2_flipkart.png', 'Flipkart Big Billion'),
-  _BannerItem('lib/asserts/banner_3_myntra.png', 'Myntra Sale'),
-  _BannerItem('lib/asserts/banner_4_mega.png', 'Mega Sale'),
-  _BannerItem('lib/asserts/banner_5_super.png', 'Super Savings'),
+  _BannerItem('lib/asserts/sales/flipkartbig.jpg', 'Flipkart Big Sale'),
+  _BannerItem('lib/asserts/sales/flipkarrsale.webp', 'Flipkart Sale'),
+  _BannerItem('lib/asserts/sales/myntra.jpg', 'Myntra Sale'),
+  _BannerItem('lib/asserts/sales/myntrasale.jpg', 'Myntra End of Season'),
+  _BannerItem('lib/asserts/sales/amazon.jpeg', 'Amazon Deals'),
+  _BannerItem('lib/asserts/sales/amazonsale.jpeg', 'Amazon Great Sale'),
 ];
 
 class _BannerItem {
@@ -1560,23 +1866,7 @@ class _ProductCardShimmer extends StatelessWidget {
   }
 }
 
-/// Outline icon for category by slug/name (e-commerce style).
-IconData _categoryIcon(String? id, String name, String slug) {
-  final s = (slug.isEmpty ? name.toLowerCase() : slug).replaceAll(' ', '-');
-  if (s.contains('electron')) return Icons.laptop_mac_outlined;
-  if (s.contains('fashion') || s.contains('cloth')) return Icons.checkroom_outlined;
-  if (s.contains('home') || s.contains('kitchen')) return Icons.lightbulb_outline;
-  if (s.contains('sport') || s.contains('fitness')) return Icons.fitness_center_outlined;
-  if (s.contains('beauty')) return Icons.face_retouching_natural_outlined;
-  if (s.contains('book') || s.contains('station')) return Icons.menu_book_outlined;
-  if (s.contains('auto') || s.contains('vehicle')) return Icons.directions_bike_outlined;
-  if (s.contains('furniture')) return Icons.chair_outlined;
-  if (s.contains('health') || s.contains('hygiene')) return Icons.medication_outlined;
-  if (s.contains('mobile')) return Icons.smartphone_outlined;
-  return Icons.category_outlined;
-}
-
-/// Category strip: theme-aware bg, horizontal scroll, outline icons, active = darker bg + bar.
+/// Horizontally scrollable category strip with colored circular icons.
 class _CategoryStrip extends StatelessWidget {
   const _CategoryStrip({
     required this.categories,
@@ -1588,142 +1878,331 @@ class _CategoryStrip extends StatelessWidget {
   final String? selectedCategoryId;
   final void Function(String? categoryId) onCategoryTap;
 
-  static const double _itemWidth = 72;
-  static const double _iconBoxSize = 64;
-  static const double _iconSize = 30;
-
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final isDark = scheme.brightness == Brightness.dark;
-    final stripBg = isDark
-        ? scheme.surfaceContainerHigh.withOpacity(0.6)
-        : scheme.surface.withOpacity(0.8);
+
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _CategoryItem(
-              label: 'For You',
-              icon: Icons.shopping_bag_outlined,
-              iconBoxSize: _iconBoxSize,
-              iconSize: _iconSize,
-              isSelected: selectedCategoryId == null || (selectedCategoryId?.isEmpty ?? true),
-              onTap: () => onCategoryTap(null),
-            ),
-            ...categories.map(
-              (c) => _CategoryItem(
+      color: isDark ? scheme.surfaceContainerLow : Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: SizedBox(
+        height: 90,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          itemCount: categories.length + 1,
+          itemBuilder: (context, i) {
+            if (i == 0) {
+              final isAll = selectedCategoryId == null || selectedCategoryId!.isEmpty;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: CategoryCircle(
+                  label: 'All\nCategories',
+                  meta: categoryMetaFor('All', 'all'),
+                  isSelected: isAll,
+                  onTap: () => onCategoryTap(null),
+                ),
+              );
+            }
+            final c = categories[i - 1];
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: CategoryCircle(
                 label: c.name,
-                icon: _categoryIcon(c.id, c.name, c.slug),
-                iconBoxSize: _iconBoxSize,
-                iconSize: _iconSize,
+                meta: categoryMetaFor(c.name, c.slug),
                 isSelected: selectedCategoryId == c.id,
                 onTap: () => onCategoryTap(c.id),
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
   }
 }
 
-class _CategoryItem extends StatelessWidget {
-  const _CategoryItem({
-    required this.label,
-    required this.icon,
-    required this.iconBoxSize,
-    required this.iconSize,
-    required this.isSelected,
-    required this.onTap,
+// ---------------------------------------------------------------------------
+// Recommended deals section (Amazon-style: horizontally scrollable category
+// cards, each with a 2x2 product grid, discount badges, and deal labels).
+// ---------------------------------------------------------------------------
+
+class _RecommendedDealsSection extends StatelessWidget {
+  const _RecommendedDealsSection({
+    required this.categoriesAsync,
+    required this.productsAsync,
   });
 
-  final String label;
-  final IconData icon;
-  final double iconBoxSize;
-  final double iconSize;
-  final bool isSelected;
-  final VoidCallback onTap;
+  final AsyncValue<List<Category>> categoriesAsync;
+  final AsyncValue<List<Product>> productsAsync;
+
+  @override
+  Widget build(BuildContext context) {
+    return categoriesAsync.when(
+      data: (categories) => productsAsync.when(
+        data: (products) {
+          if (products.isEmpty) return const SizedBox.shrink();
+
+          final grouped = <String, List<Product>>{};
+          grouped['Deals for you'] = products.take(4).toList();
+          for (final cat in categories) {
+            final catProducts = products.where((p) => p.categoryId == cat.id).toList();
+            if (catProducts.isNotEmpty) {
+              grouped[cat.name] = catProducts.take(4).toList();
+            }
+          }
+          if (grouped.length <= 1) {
+            final remaining = products.skip(4).toList();
+            if (remaining.length >= 4) {
+              grouped['Trending Now'] = remaining.take(4).toList();
+            }
+            if (remaining.length >= 8) {
+              grouped['Best Sellers'] = remaining.skip(4).take(4).toList();
+            }
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  'Recommended deals for you',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                height: 330,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  itemCount: grouped.length,
+                  itemBuilder: (context, i) {
+                    final entry = grouped.entries.elementAt(i);
+                    return _DealCard(
+                      title: entry.key,
+                      products: entry.value,
+                      onTapMore: () => context.push('/products'),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        },
+        loading: () => _RecommendedDealsShimmer(),
+        error: (_, __) => const SizedBox.shrink(),
+      ),
+      loading: () => _RecommendedDealsShimmer(),
+      error: (_, __) => const SizedBox.shrink(),
+    );
+  }
+}
+
+class _DealCard extends StatelessWidget {
+  const _DealCard({
+    required this.title,
+    required this.products,
+    required this.onTapMore,
+  });
+
+  final String title;
+  final List<Product> products;
+  final VoidCallback onTapMore;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final itemBg = isSelected
-        ? scheme.primary.withOpacity(0.12)
-        : scheme.surfaceContainerHighest.withOpacity(0.6);
-    final contentColor = isSelected ? scheme.primary : scheme.onSurface;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: SizedBox(
-            width: _CategoryStrip._itemWidth,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardBg = isDark ? scheme.surfaceContainerHigh : Colors.white;
+
+    final gridItems = products.take(4).toList();
+    while (gridItems.length < 4) {
+      gridItems.add(gridItems.last);
+    }
+
+    return Container(
+      width: 280,
+      margin: const EdgeInsets.symmetric(horizontal: 6),
+      decoration: BoxDecoration(
+        color: cardBg,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: isDark ? scheme.outlineVariant.withOpacity(0.2) : scheme.outlineVariant.withOpacity(0.25),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDark ? 0.15 : 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 14, 8, 8),
+            child: Row(
               children: [
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.easeOut,
-                  width: iconBoxSize,
-                  height: iconBoxSize,
-                  decoration: BoxDecoration(
-                    color: itemBg,
-                    borderRadius: BorderRadius.circular(16),
-                    border: isSelected
-                        ? Border.all(color: scheme.primary.withOpacity(0.5), width: 1.5)
-                        : null,
-                    boxShadow: isSelected
-                        ? [
-                            BoxShadow(
-                              color: scheme.primary.withOpacity(0.15),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ]
-                        : null,
-                  ),
-                  child: Center(
-                    child: Icon(
-                      icon,
-                      size: iconSize,
-                      color: contentColor,
-                    ),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  label,
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                    color: contentColor,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
+                GestureDetector(
+                  onTap: onTapMore,
+                  child: Icon(Icons.chevron_right_rounded, color: scheme.onSurfaceVariant, size: 24),
                 ),
-                if (isSelected)
-                  Container(
-                    margin: const EdgeInsets.only(top: 4),
-                    width: 28,
-                    height: 3,
-                    decoration: BoxDecoration(
-                      color: scheme.primary,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
               ],
             ),
           ),
-        ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+              child: GridView.count(
+                crossAxisCount: 2,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                childAspectRatio: 0.82,
+                physics: const NeverScrollableScrollPhysics(),
+                children: gridItems.map((p) => _DealGridItem(product: p)).toList(),
+              ),
+            ),
+          ),
+        ],
       ),
+    );
+  }
+}
+
+class _DealGridItem extends StatelessWidget {
+  const _DealGridItem({required this.product});
+  final Product product;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final discount = product.discountPercent;
+    final hasExpiry = product.dealsExpiresAt != null &&
+        product.dealsExpiresAt!.isAfter(DateTime.now());
+
+    String dealLabel;
+    if (hasExpiry) {
+      final diff = product.dealsExpiresAt!.difference(DateTime.now());
+      final h = diff.inHours.toString().padLeft(2, '0');
+      final m = (diff.inMinutes % 60).toString().padLeft(2, '0');
+      final s = (diff.inSeconds % 60).toString().padLeft(2, '0');
+      dealLabel = 'Ends in $h:$m:$s';
+    } else {
+      dealLabel = 'Limited time deal';
+    }
+
+    return GestureDetector(
+      onTap: () => context.push('/products/${product.id}'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: isDark
+                    ? scheme.surfaceContainerHighest
+                    : const Color(0xFFF5F5F5),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: product.imageUrl != null && product.imageUrl!.isNotEmpty
+                    ? Image.network(
+                        product.imageUrl!,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => Center(
+                          child: Icon(Icons.image_outlined, color: scheme.onSurfaceVariant, size: 28),
+                        ),
+                      )
+                    : Center(
+                        child: Icon(Icons.image_outlined, color: scheme.onSurfaceVariant, size: 28),
+                      ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          if (discount != null && discount > 0)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: const Color(0xFFCC0C39),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                '${discount.toStringAsFixed(0)}% off',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          const SizedBox(height: 3),
+          Text(
+            dealLabel,
+            style: TextStyle(
+              color: const Color(0xFFCC0C39),
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RecommendedDealsShimmer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: ShimmerLoading(
+            child: ShimmerBox(width: 220, height: 22),
+          ),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 330,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            itemCount: 3,
+            itemBuilder: (_, __) => Container(
+              width: 280,
+              margin: const EdgeInsets.symmetric(horizontal: 6),
+              child: ShimmerLoading(
+                child: ShimmerBox(
+                  width: 280,
+                  height: 330,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

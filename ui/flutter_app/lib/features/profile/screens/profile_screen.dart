@@ -105,8 +105,49 @@ class ProfileScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 24)),
-                  // Section: Theme (opens modal)
+                  const SliverToBoxAdapter(child: SizedBox(height: 20)),
+                  // Section: Dashboard
+                  SliverToBoxAdapter(
+                    child: _SectionLabel(label: 'Dashboard'),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _SettingsTile(
+                      icon: Icons.currency_rupee_rounded,
+                      assetPath: 'lib/asserts/iconPack/icons8-paid-50.png',
+                      title: 'My Earnings',
+                      subtitle: 'Track your commissions',
+                      onTap: () {},
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _SettingsTile(
+                      icon: Icons.link_rounded,
+                      assetPath: 'lib/asserts/iconPack/icons8-sell-50.png',
+                      title: 'Make Link',
+                      subtitle: 'Create profit links to share',
+                      onTap: () => context.push('/profile/make-link'),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _SettingsTile(
+                      icon: Icons.show_chart_rounded,
+                      assetPath: 'lib/asserts/iconPack/icons8-invoice-50.png',
+                      title: 'Reports',
+                      subtitle: 'Sales and click analytics',
+                      onTap: () {},
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _SettingsTile(
+                      icon: Icons.request_quote_rounded,
+                      assetPath: 'lib/asserts/iconPack/icons8-online-payment-50.png',
+                      title: 'Request Payment',
+                      subtitle: 'Withdraw your earnings',
+                      onTap: () {},
+                    ),
+                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 20)),
+                  // Section: App & display
                   SliverToBoxAdapter(
                     child: _SectionLabel(label: 'App & display'),
                   ),
@@ -126,6 +167,7 @@ class ProfileScreen extends ConsumerWidget {
                   SliverToBoxAdapter(
                     child: _SettingsTile(
                       icon: Icons.person_outline_rounded,
+                      assetPath: 'lib/asserts/iconPack/icons8-address-50.png',
                       title: 'Edit profile',
                       subtitle: 'Name, profile picture',
                       onTap: () => context.push('/profile/edit'),
@@ -134,6 +176,7 @@ class ProfileScreen extends ConsumerWidget {
                   SliverToBoxAdapter(
                     child: _SettingsTile(
                       icon: Icons.favorite_border_rounded,
+                      assetPath: 'lib/asserts/iconPack/icons8-unlike-50.png',
                       title: 'Wishlist',
                       subtitle: 'Saved products and deals',
                       onTap: () => context.push('/profile/wishlist'),
@@ -142,6 +185,7 @@ class ProfileScreen extends ConsumerWidget {
                   SliverToBoxAdapter(
                     child: _SettingsTile(
                       icon: Icons.savings_outlined,
+                      assetPath: 'lib/asserts/iconPack/icons8-budget-50.png',
                       title: 'Budget alerts',
                       subtitle: 'Spending limits and reminders',
                       onTap: () => context.push('/profile/budgets'),
@@ -149,7 +193,17 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                   SliverToBoxAdapter(
                     child: _SettingsTile(
+                      icon: Icons.card_giftcard_rounded,
+                      assetPath: 'lib/asserts/iconPack/icons8-coupon-50.png',
+                      title: 'Coupons',
+                      subtitle: 'Discount codes and offers',
+                      onTap: () => context.push('/coupons'),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _SettingsTile(
                       icon: Icons.notifications_outlined,
+                      assetPath: 'lib/asserts/iconPack/icons8-notification-50.png',
                       title: 'Notifications',
                       subtitle: 'Reminders and recommendations',
                       onTap: () => context.push('/notifications'),
@@ -158,9 +212,10 @@ class ProfileScreen extends ConsumerWidget {
                   SliverToBoxAdapter(
                     child: _SettingsTile(
                       icon: Icons.help_outline_rounded,
+                      assetPath: 'lib/asserts/iconPack/icons8-online-support-50.png',
                       title: 'Help and feedback',
-                      subtitle: 'FAQs and contact support',
-                      onTap: () {},
+                      subtitle: 'Chatbot, FAQs and support',
+                      onTap: () => context.push('/profile/help'),
                     ),
                   ),
                   const SliverToBoxAdapter(child: SizedBox(height: 24)),
@@ -183,6 +238,7 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ),
                   const SliverToBoxAdapter(child: SizedBox(height: 32)),
+                  const SliverToBoxAdapter(child: SizedBox(height: 80)),
                 ],
               ),
             ),
@@ -246,6 +302,7 @@ void _showThemeModal(BuildContext context, WidgetRef ref) {
 
   showModalBottomSheet<void>(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     backgroundColor: scheme.surface,
     shape: const RoundedRectangleBorder(
@@ -288,14 +345,28 @@ class _ThemeModalContentState extends State<_ThemeModalContent> {
   @override
   Widget build(BuildContext context) {
     final scheme = widget.scheme;
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final safeBottom = MediaQuery.of(context).padding.bottom;
+
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(bottom: bottomInset > 0 ? bottomInset : safeBottom),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: scheme.onSurfaceVariant.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
             Text(
               'Theme',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -304,33 +375,40 @@ class _ThemeModalContentState extends State<_ThemeModalContent> {
                   ),
             ),
             const SizedBox(height: 16),
-            RadioListTile<ThemeMode>(
-              value: ThemeMode.light,
-              groupValue: _selected,
-              onChanged: (v) => setState(() => _selected = v!),
-              title: Text('Always in light theme', style: TextStyle(color: scheme.onSurface)),
-              activeColor: scheme.primary,
+            _ThemeOption(
+              label: 'Always in light theme',
+              icon: Icons.light_mode_rounded,
+              isSelected: _selected == ThemeMode.light,
+              scheme: scheme,
+              onTap: () => setState(() => _selected = ThemeMode.light),
             ),
-            RadioListTile<ThemeMode>(
-              value: ThemeMode.dark,
-              groupValue: _selected,
-              onChanged: (v) => setState(() => _selected = v!),
-              title: Text('Always in dark theme', style: TextStyle(color: scheme.onSurface)),
-              activeColor: scheme.primary,
+            const SizedBox(height: 8),
+            _ThemeOption(
+              label: 'Always in dark theme',
+              icon: Icons.dark_mode_rounded,
+              isSelected: _selected == ThemeMode.dark,
+              scheme: scheme,
+              onTap: () => setState(() => _selected = ThemeMode.dark),
             ),
-            RadioListTile<ThemeMode>(
-              value: ThemeMode.system,
-              groupValue: _selected,
-              onChanged: (v) => setState(() => _selected = v!),
-              title: Text('Same as device theme', style: TextStyle(color: scheme.onSurface)),
-              activeColor: scheme.primary,
+            const SizedBox(height: 8),
+            _ThemeOption(
+              label: 'Same as device theme',
+              icon: Icons.settings_suggest_rounded,
+              isSelected: _selected == ThemeMode.system,
+              scheme: scheme,
+              onTap: () => setState(() => _selected = ThemeMode.system),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             Row(
               children: [
                 Expanded(
-                  child: TextButton(
+                  child: OutlinedButton(
                     onPressed: () => Navigator.of(context).pop(),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      side: BorderSide(color: scheme.outline),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    ),
                     child: const Text('Cancel'),
                   ),
                 ),
@@ -338,6 +416,10 @@ class _ThemeModalContentState extends State<_ThemeModalContent> {
                 Expanded(
                   child: FilledButton(
                     onPressed: () => widget.onSave(_selected),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    ),
                     child: const Text('Save'),
                   ),
                 ),
@@ -369,7 +451,7 @@ class _SectionLabel extends StatelessWidget {
   }
 }
 
-/// One row: circular icon + title + subtitle (settings style).
+/// One row: circular icon (or image asset) + title + subtitle (settings style).
 class _SettingsTile extends StatelessWidget {
   const _SettingsTile({
     required this.icon,
@@ -377,6 +459,7 @@ class _SettingsTile extends StatelessWidget {
     this.subtitle,
     this.titleColor,
     this.iconColor,
+    this.assetPath,
     required this.onTap,
   });
   final IconData icon;
@@ -384,6 +467,8 @@ class _SettingsTile extends StatelessWidget {
   final String? subtitle;
   final Color? titleColor;
   final Color? iconColor;
+  /// If set, shows an image asset instead of the icon.
+  final String? assetPath;
   final VoidCallback onTap;
 
   @override
@@ -414,7 +499,12 @@ class _SettingsTile extends StatelessWidget {
                     color: scheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(22),
                   ),
-                  child: Icon(icon, color: iconFg, size: 22),
+                  child: assetPath != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(22),
+                          child: Image.asset(assetPath!, width: 28, height: 28, fit: BoxFit.contain),
+                        )
+                      : Icon(icon, color: iconFg, size: 22),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -565,6 +655,75 @@ class _Greeting extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurface,
             ),
         textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
+
+class _ThemeOption extends StatelessWidget {
+  const _ThemeOption({
+    required this.label,
+    required this.icon,
+    required this.isSelected,
+    required this.scheme,
+    required this.onTap,
+  });
+  final String label;
+  final IconData icon;
+  final bool isSelected;
+  final ColorScheme scheme;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOutCubic,
+      decoration: BoxDecoration(
+        color: isSelected
+            ? scheme.primaryContainer.withOpacity(0.5)
+            : scheme.surfaceContainerHigh.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: isSelected ? scheme.primary : Colors.transparent,
+          width: 1.5,
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(14),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  size: 22,
+                  color: isSelected ? scheme.primary : scheme.onSurfaceVariant,
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      color: isSelected ? scheme.onSurface : scheme.onSurfaceVariant,
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: isSelected
+                      ? Icon(Icons.check_circle_rounded, key: const ValueKey(true), size: 22, color: scheme.primary)
+                      : Icon(Icons.circle_outlined, key: const ValueKey(false), size: 22, color: scheme.onSurfaceVariant.withOpacity(0.4)),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

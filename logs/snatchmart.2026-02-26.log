@@ -1,0 +1,600 @@
+2026-02-26 00:00:00 INFO  [] c.s.s.scheduler.DealScheduler - Starting expired deals cleanup job
+2026-02-26 00:00:30 WARN  [] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08003
+2026-02-26 00:00:30 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - HikariPool-4 - Connection is not available, request timed out after 30005ms (total=0, active=0, idle=0, waiting=0)
+2026-02-26 00:00:30 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - This connection has been closed.
+2026-02-26 00:00:30 ERROR [] o.s.s.s.TaskUtils$LoggingErrorHandler - Unexpected error occurred in scheduled task
+org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:467)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.snatchmart.snatchmart.service.serviceImpl.AffiliateSyncServiceImpl$$SpringCGLIB$$0.cleanupExpiredDeals(<generated>)
+	at com.snatchmart.snatchmart.scheduler.DealScheduler.cleanupExpiredDeals(DealScheduler.java:28)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124)
+	at io.micrometer.observation.Observation.observe(Observation.java:498)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124)
+	at org.springframework.scheduling.config.Task$OutcomeTrackingRunnable.run(Task.java:85)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at org.springframework.scheduling.concurrent.ReschedulingRunnable.run(ReschedulingRunnable.java:96)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [HikariPool-4 - Connection is not available, request timed out after 30005ms (total=0, active=0, idle=0, waiting=0)] [n/a]
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:51)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:421)
+	... 24 common frames omitted
+Caused by: java.sql.SQLTransientConnectionException: HikariPool-4 - Connection is not available, request timed out after 30005ms (total=0, active=0, idle=0, waiting=0)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:714)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:184)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:142)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 31 common frames omitted
+Caused by: org.postgresql.util.PSQLException: This connection has been closed.
+	at org.postgresql.jdbc.PgConnection.checkClosed(PgConnection.java:1012)
+	at org.postgresql.jdbc.PgConnection.setNetworkTimeout(PgConnection.java:1736)
+	at com.zaxxer.hikari.pool.PoolBase.setNetworkTimeout(PoolBase.java:582)
+	at com.zaxxer.hikari.pool.PoolBase.isConnectionDead(PoolBase.java:174)
+	at com.zaxxer.hikari.pool.HikariPool$KeepaliveTask.run(HikariPool.java:882)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:358)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	... 3 common frames omitted
+2026-02-26 00:15:13 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 00:15:43 WARN  [] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08003
+2026-02-26 00:15:43 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - HikariPool-4 - Connection is not available, request timed out after 30005ms (total=0, active=0, idle=0, waiting=0)
+2026-02-26 00:15:43 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - This connection has been closed.
+2026-02-26 00:15:43 ERROR [] o.s.s.s.TaskUtils$LoggingErrorHandler - Unexpected error occurred in scheduled task
+org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:467)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.snatchmart.snatchmart.service.serviceImpl.AffiliateSyncServiceImpl$$SpringCGLIB$$0.syncDeals(<generated>)
+	at com.snatchmart.snatchmart.scheduler.DealScheduler.syncPrices(DealScheduler.java:22)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124)
+	at io.micrometer.observation.Observation.observe(Observation.java:498)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124)
+	at org.springframework.scheduling.config.Task$OutcomeTrackingRunnable.run(Task.java:85)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:358)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [HikariPool-4 - Connection is not available, request timed out after 30005ms (total=0, active=0, idle=0, waiting=0)] [n/a]
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:51)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:421)
+	... 23 common frames omitted
+Caused by: java.sql.SQLTransientConnectionException: HikariPool-4 - Connection is not available, request timed out after 30005ms (total=0, active=0, idle=0, waiting=0)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:714)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:184)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:142)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 30 common frames omitted
+Caused by: org.postgresql.util.PSQLException: This connection has been closed.
+	at org.postgresql.jdbc.PgConnection.checkClosed(PgConnection.java:1012)
+	at org.postgresql.jdbc.PgConnection.setNetworkTimeout(PgConnection.java:1736)
+	at com.zaxxer.hikari.pool.PoolBase.setNetworkTimeout(PoolBase.java:582)
+	at com.zaxxer.hikari.pool.PoolBase.isConnectionDead(PoolBase.java:174)
+	at com.zaxxer.hikari.pool.HikariPool$KeepaliveTask.run(HikariPool.java:882)
+	... 6 common frames omitted
+2026-02-26 00:45:13 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 00:45:43 WARN  [] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08003
+2026-02-26 00:45:43 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - HikariPool-4 - Connection is not available, request timed out after 30003ms (total=0, active=0, idle=0, waiting=0)
+2026-02-26 00:45:43 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - This connection has been closed.
+2026-02-26 00:45:43 ERROR [] o.s.s.s.TaskUtils$LoggingErrorHandler - Unexpected error occurred in scheduled task
+org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:467)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.snatchmart.snatchmart.service.serviceImpl.AffiliateSyncServiceImpl$$SpringCGLIB$$0.syncDeals(<generated>)
+	at com.snatchmart.snatchmart.scheduler.DealScheduler.syncPrices(DealScheduler.java:22)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124)
+	at io.micrometer.observation.Observation.observe(Observation.java:498)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124)
+	at org.springframework.scheduling.config.Task$OutcomeTrackingRunnable.run(Task.java:85)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:358)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [HikariPool-4 - Connection is not available, request timed out after 30003ms (total=0, active=0, idle=0, waiting=0)] [n/a]
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:51)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:421)
+	... 23 common frames omitted
+Caused by: java.sql.SQLTransientConnectionException: HikariPool-4 - Connection is not available, request timed out after 30003ms (total=0, active=0, idle=0, waiting=0)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:714)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:184)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:142)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 30 common frames omitted
+Caused by: org.postgresql.util.PSQLException: This connection has been closed.
+	at org.postgresql.jdbc.PgConnection.checkClosed(PgConnection.java:1012)
+	at org.postgresql.jdbc.PgConnection.setNetworkTimeout(PgConnection.java:1736)
+	at com.zaxxer.hikari.pool.PoolBase.setNetworkTimeout(PoolBase.java:582)
+	at com.zaxxer.hikari.pool.PoolBase.isConnectionDead(PoolBase.java:174)
+	at com.zaxxer.hikari.pool.HikariPool$KeepaliveTask.run(HikariPool.java:882)
+	... 6 common frames omitted
+2026-02-26 01:15:13 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 01:15:43 WARN  [] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08003
+2026-02-26 01:15:43 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - HikariPool-4 - Connection is not available, request timed out after 30003ms (total=0, active=0, idle=0, waiting=0)
+2026-02-26 01:15:43 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - This connection has been closed.
+2026-02-26 01:15:43 ERROR [] o.s.s.s.TaskUtils$LoggingErrorHandler - Unexpected error occurred in scheduled task
+org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:467)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.snatchmart.snatchmart.service.serviceImpl.AffiliateSyncServiceImpl$$SpringCGLIB$$0.syncDeals(<generated>)
+	at com.snatchmart.snatchmart.scheduler.DealScheduler.syncPrices(DealScheduler.java:22)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124)
+	at io.micrometer.observation.Observation.observe(Observation.java:498)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124)
+	at org.springframework.scheduling.config.Task$OutcomeTrackingRunnable.run(Task.java:85)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:358)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [HikariPool-4 - Connection is not available, request timed out after 30003ms (total=0, active=0, idle=0, waiting=0)] [n/a]
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:51)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:421)
+	... 23 common frames omitted
+Caused by: java.sql.SQLTransientConnectionException: HikariPool-4 - Connection is not available, request timed out after 30003ms (total=0, active=0, idle=0, waiting=0)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:714)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:184)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:142)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 30 common frames omitted
+Caused by: org.postgresql.util.PSQLException: This connection has been closed.
+	at org.postgresql.jdbc.PgConnection.checkClosed(PgConnection.java:1012)
+	at org.postgresql.jdbc.PgConnection.setNetworkTimeout(PgConnection.java:1736)
+	at com.zaxxer.hikari.pool.PoolBase.setNetworkTimeout(PoolBase.java:582)
+	at com.zaxxer.hikari.pool.PoolBase.isConnectionDead(PoolBase.java:174)
+	at com.zaxxer.hikari.pool.HikariPool$KeepaliveTask.run(HikariPool.java:882)
+	... 6 common frames omitted
+2026-02-26 01:45:13 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 01:45:43 WARN  [] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08003
+2026-02-26 01:45:43 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - HikariPool-4 - Connection is not available, request timed out after 30010ms (total=0, active=0, idle=0, waiting=0)
+2026-02-26 01:45:43 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - This connection has been closed.
+2026-02-26 01:45:43 ERROR [] o.s.s.s.TaskUtils$LoggingErrorHandler - Unexpected error occurred in scheduled task
+org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:467)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.snatchmart.snatchmart.service.serviceImpl.AffiliateSyncServiceImpl$$SpringCGLIB$$0.syncDeals(<generated>)
+	at com.snatchmart.snatchmart.scheduler.DealScheduler.syncPrices(DealScheduler.java:22)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124)
+	at io.micrometer.observation.Observation.observe(Observation.java:498)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124)
+	at org.springframework.scheduling.config.Task$OutcomeTrackingRunnable.run(Task.java:85)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:358)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [HikariPool-4 - Connection is not available, request timed out after 30010ms (total=0, active=0, idle=0, waiting=0)] [n/a]
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:51)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:421)
+	... 23 common frames omitted
+Caused by: java.sql.SQLTransientConnectionException: HikariPool-4 - Connection is not available, request timed out after 30010ms (total=0, active=0, idle=0, waiting=0)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:714)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:184)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:142)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 30 common frames omitted
+Caused by: org.postgresql.util.PSQLException: This connection has been closed.
+	at org.postgresql.jdbc.PgConnection.checkClosed(PgConnection.java:1012)
+	at org.postgresql.jdbc.PgConnection.setNetworkTimeout(PgConnection.java:1736)
+	at com.zaxxer.hikari.pool.PoolBase.setNetworkTimeout(PoolBase.java:582)
+	at com.zaxxer.hikari.pool.PoolBase.isConnectionDead(PoolBase.java:174)
+	at com.zaxxer.hikari.pool.HikariPool$KeepaliveTask.run(HikariPool.java:882)
+	... 6 common frames omitted
+2026-02-26 02:19:14 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=16m38s73ms).
+2026-02-26 02:53:57 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=34m43s537ms).
+2026-02-26 04:03:57 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=1h9m59s410ms).
+2026-02-26 04:37:08 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Pool is empty, failed to create/setup connection (b4c53cc8-9693-4ca4-848a-94036ccb27a0)
+org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:385)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:57)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:277)
+	at org.postgresql.Driver.makeConnection(Driver.java:448)
+	at org.postgresql.Driver.connect(Driver.java:298)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:144)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:370)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:207)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:488)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:752)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:731)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.net.SocketException: Network is unreachable
+	at java.base/sun.nio.ch.Net.connect0(Native Method)
+	at java.base/sun.nio.ch.Net.connect(Net.java:589)
+	at java.base/sun.nio.ch.Net.connect(Net.java:578)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:583)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:751)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:261)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:122)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:146)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:289)
+	... 14 common frames omitted
+2026-02-26 04:37:10 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=33m13s88ms).
+2026-02-26 05:38:54 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=1h1m44s557ms).
+2026-02-26 06:56:57 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=1h18m2s216ms).
+2026-02-26 08:07:55 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=1h10m58s756ms).
+2026-02-26 08:24:18 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@3010f28f (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 08:58:52 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=50m56s587ms).
+2026-02-26 09:08:54 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@5396b0cf (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 09:21:23 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@5e9ca70e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 10:09:54 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=1h11m2s167ms).
+2026-02-26 10:26:16 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@2836df59 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 11:11:00 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=1h1m6s177ms).
+2026-02-26 11:59:00 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@7b3f4e9 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 12:12:22 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=1h1m22s23ms).
+2026-02-26 12:50:17 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=37m54s540ms).
+2026-02-26 13:22:11 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=31m54s310ms).
+2026-02-26 13:23:12 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@579bacc0 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 13:23:15 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@17660e06 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 13:23:24 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@15d8e60b (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 13:28:18 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 13:28:19 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 13:28:19 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 13:28:21 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 13:58:18 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 13:58:19 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 13:58:19 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 13:58:21 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 14:28:18 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 14:28:19 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 14:28:19 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 14:28:21 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 14:58:18 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 14:58:19 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 14:58:19 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 14:58:21 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 15:28:18 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 15:28:19 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 15:28:19 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 15:28:21 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 15:58:18 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 15:58:19 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 15:58:19 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 15:58:21 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 16:02:59 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@94026f2 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 16:03:13 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@7b5027fa (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 16:03:23 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@6280b274 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 16:03:33 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@10da5e13 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 16:03:43 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@6633472f (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 16:03:53 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@30da4fce (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 16:04:10 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@77634798 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 16:04:22 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@729a5d16 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 16:04:32 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@3f02b855 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 16:04:37 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Pool is empty, failed to create/setup connection (0dc1ba75-9757-4261-a405-a732da831f91)
+org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:385)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:57)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:277)
+	at org.postgresql.Driver.makeConnection(Driver.java:448)
+	at org.postgresql.Driver.connect(Driver.java:298)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:144)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:370)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:207)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:488)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:752)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:731)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.net.UnknownHostException: ep-blue-field-afvby5th-pooler.c-2.us-west-2.aws.neon.tech
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:567)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:751)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:261)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:122)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:146)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:289)
+	... 14 common frames omitted
+2026-02-26 16:05:42 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Pool is empty, failed to create/setup connection (d0d2af7f-d621-4167-8eb0-e799252e32bd)
+org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:385)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:57)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:277)
+	at org.postgresql.Driver.makeConnection(Driver.java:448)
+	at org.postgresql.Driver.connect(Driver.java:298)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:144)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:370)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:207)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:488)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:752)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:731)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.net.UnknownHostException: ep-blue-field-afvby5th-pooler.c-2.us-west-2.aws.neon.tech
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:567)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:751)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:261)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:122)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:146)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:289)
+	... 14 common frames omitted
+2026-02-26 16:06:47 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Pool is empty, failed to create/setup connection (7f211716-ac5b-4b85-8765-5e4ae26165be)
+org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:385)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:57)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:277)
+	at org.postgresql.Driver.makeConnection(Driver.java:448)
+	at org.postgresql.Driver.connect(Driver.java:298)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:144)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:370)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:207)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:488)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:752)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:731)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.net.UnknownHostException: ep-blue-field-afvby5th-pooler.c-2.us-west-2.aws.neon.tech
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:567)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:751)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:261)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:122)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:146)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:289)
+	... 14 common frames omitted
+2026-02-26 16:07:52 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Pool is empty, failed to create/setup connection (e8156d19-4a9d-411b-8fc5-62e5d67c8315)
+org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:385)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:57)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:277)
+	at org.postgresql.Driver.makeConnection(Driver.java:448)
+	at org.postgresql.Driver.connect(Driver.java:298)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:144)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:370)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:207)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:488)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:752)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:731)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.net.UnknownHostException: ep-blue-field-afvby5th-pooler.c-2.us-west-2.aws.neon.tech
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:567)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:751)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:261)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:122)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:146)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:289)
+	... 14 common frames omitted
+2026-02-26 16:08:57 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Pool is empty, failed to create/setup connection (a2de256f-9db0-4d9b-830a-9348443c281f)
+org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:385)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:57)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:277)
+	at org.postgresql.Driver.makeConnection(Driver.java:448)
+	at org.postgresql.Driver.connect(Driver.java:298)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:144)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:370)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:207)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:488)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:752)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:731)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.net.UnknownHostException: ep-blue-field-afvby5th-pooler.c-2.us-west-2.aws.neon.tech
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:567)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:751)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:261)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:122)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:146)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:289)
+	... 14 common frames omitted
+2026-02-26 16:28:18 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 16:28:19 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 16:28:19 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 16:28:21 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 16:58:18 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 16:58:19 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 16:58:19 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 16:58:21 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 17:13:05 INFO  [] c.s.s.scheduler.DealScheduler - Starting expired deals cleanup job
+2026-02-26 17:13:06 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Deactivated 0 expired deals
+2026-02-26 17:28:18 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 17:28:19 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 17:28:19 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 17:28:21 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 17:58:18 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 17:58:19 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 17:58:19 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 17:58:21 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 18:00:00 INFO  [] c.s.s.scheduler.DealScheduler - Starting expired deals cleanup job
+2026-02-26 18:00:00 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Deactivated 0 expired deals
+2026-02-26 18:28:18 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 18:28:19 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 18:28:19 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 18:28:21 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 18:58:18 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 18:58:19 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 18:58:19 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 18:58:21 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 19:25:15 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=1m9s450ms).
+2026-02-26 19:25:39 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@6ae3fc88 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 19:25:49 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@1c36c6a7 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 19:25:59 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@53c1939f (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 19:26:09 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@3eff6a91 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 19:26:19 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@5e925fb1 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 19:26:19 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=1m3s839ms).
+2026-02-26 19:26:29 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@3ba0fb1e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 19:26:39 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@75dad905 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 19:26:50 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@423695dc (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 19:27:06 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@7a6d4c04 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 19:27:16 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@4640f6e0 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 19:28:58 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 19:28:58 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 19:28:58 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 19:29:00 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 19:34:31 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@302c11fe (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 19:34:35 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=4m15s685ms).
+2026-02-26 19:34:46 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@607fc88a (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 20:08:21 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@1b327e06 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 20:25:32 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=50m56s454ms).
+2026-02-26 20:59:37 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@6adc11bd (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 20:59:40 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@203e42fc (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 20:59:43 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@199f72f7 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 20:59:46 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Thread starvation or clock leap detected (housekeeper delta=34m14s118ms).
+2026-02-26 20:59:53 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@1344d980 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 21:00:02 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@4f18f13b (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 21:00:04 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@18cf7e02 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 21:00:10 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@1e6461f3 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 21:00:30 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@2ae47f15 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 21:00:35 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-4 - Failed to validate connection org.postgresql.jdbc.PgConnection@746ea008 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-02-26 21:26:54 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 21:26:54 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 21:26:54 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 21:26:57 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 21:56:54 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 21:56:54 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 21:56:54 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 21:56:57 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 22:26:54 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 22:26:54 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 22:26:54 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 22:26:56 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 22:56:54 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 22:56:54 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 22:56:54 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 22:56:57 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 23:26:54 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 23:26:54 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 23:26:54 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 23:26:57 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-02-26 23:56:54 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-02-26 23:56:54 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-02-26 23:56:54 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-02-26 23:56:57 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart

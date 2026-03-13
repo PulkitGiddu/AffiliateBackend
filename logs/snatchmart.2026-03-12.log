@@ -1,0 +1,644 @@
+2026-03-13 00:01:01 INFO  [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-03-13 00:01:01 INFO  [] c.s.snatchmart.SnatchMartApplication - Starting SnatchMartApplication using Java 21.0.9 with PID 64314 (/Users/pulkitgiddu/Documents/Code/Backend/snatchMart/target/classes started by pulkitgiddu in /Users/pulkitgiddu/Documents/Code/Backend/snatchMart)
+2026-03-13 00:01:01 DEBUG [] c.s.snatchmart.SnatchMartApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2026-03-13 00:01:01 INFO  [] c.s.snatchmart.SnatchMartApplication - The following 1 profile is active: "local"
+2026-03-13 00:01:01 INFO  [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-03-13 00:01:01 INFO  [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-03-13 00:01:01 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-13 00:01:01 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-13 00:01:01 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 55 ms. Found 12 JPA repository interfaces.
+2026-03-13 00:01:01 INFO  [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2026-03-13 00:01:01 INFO  [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-03-13 00:01:01 INFO  [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-03-13 00:01:01 INFO  [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-03-13 00:01:01 INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-03-13 00:01:01 INFO  [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 589 ms
+2026-03-13 00:01:01 INFO  [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-13 00:01:01 INFO  [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2026-03-13 00:01:01 INFO  [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-03-13 00:01:01 INFO  [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-13 00:01:01 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-03-13 00:01:05 INFO  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@20a08b05
+2026-03-13 00:01:05 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-03-13 00:01:06 WARN  [] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-13 00:01:15 INFO  [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.8
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-13 00:01:15 INFO  [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-13 00:01:49 INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-13 00:01:49 INFO  [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-13 00:01:49 DEBUG [] c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-03-13 00:01:49 INFO  [] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-03-13 00:01:49 WARN  [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-03-13 00:01:49 WARN  [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-13 00:01:51 INFO  [] o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:postgresql://ep-blue-field-afvby5th-pooler.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require'
+2026-03-13 00:01:51 INFO  [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-03-13 00:01:51 INFO  [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-03-13 00:01:51 INFO  [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/'
+2026-03-13 00:01:51 INFO  [] c.s.snatchmart.SnatchMartApplication - Started SnatchMartApplication in 50.308 seconds (process running for 50.443)
+2026-03-13 00:01:51 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 00:01:51 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 00:01:51 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 00:01:57 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 00:02:01 INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-13 00:02:01 INFO  [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-03-13 00:02:01 INFO  [] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-03-13 00:03:18 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7b306013 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:06:26 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5cebdbd6 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:06:42 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@20a08b05 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:08:27 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4de7e28e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:09:31 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@69211ad7 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:10:14 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@519461b9 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:10:31 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2636f9f8 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:15:00 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@59b63efe (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:16:01 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@161711b7 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:19:54 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@44309045 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:20:42 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@3756a44e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:23:39 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@38c85453 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:23:51 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@684a4058 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:23:55 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6c14451f (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:24:09 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5bbb093c (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:26:07 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@24f6e188 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:31:51 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 00:31:51 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 00:31:51 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 00:32:12 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 00:34:00 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@41a9ae02 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:49:07 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2efda1bf (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:49:28 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@553a7078 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:50:06 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@43747632 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:50:32 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@64e227e2 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:51:02 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@3a400595 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 00:51:43 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@442d9a73 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:01:51 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 01:01:51 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 01:01:51 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 01:01:57 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 01:02:59 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@d059dfc (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:04:13 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@3ff89598 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:04:18 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@339c3f28 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:06:23 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@578e445c (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:07:00 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@38ee8b5 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:09:31 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@74b0e04c (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:10:22 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@3840a96e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:10:27 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7ea7c56c (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:10:46 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@43bb49d3 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:10:59 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@39ae34a4 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:11:22 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@608e3176 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:11:58 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@3a4ab28e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:12:23 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4207d1d0 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:22:13 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@129b83dd (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:22:53 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@274edcca (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:24:00 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@40072cd8 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:24:08 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@123fb5b5 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:25:06 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@31e1fca (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:26:11 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1b1e55c7 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:26:30 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2628f555 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:27:01 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@25dfad95 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:27:03 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4b0bb374 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:27:32 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@343ff0bb (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:27:55 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@59c1df6 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:28:16 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@586b0ed2 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:30:09 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@344ed316 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:31:51 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 01:31:51 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 01:31:51 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 01:31:57 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 01:32:45 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5b4ea66 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:36:05 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@25e6ef95 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:36:43 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@29686ced (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:37:09 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4ed74b31 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:38:51 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@457f90b5 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:40:47 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1111a070 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:40:57 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5346f4c6 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:41:17 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@75103aeb (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:42:17 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4b2145fe (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:42:32 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@790f3742 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:42:51 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@3b0afd3a (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:44:10 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@13cd4133 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:46:13 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7a3ae554 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:47:32 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1129acd7 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:48:22 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@106bb7 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:48:22 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@707a87a9 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:48:28 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6b2a21b6 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:50:13 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@aa0e83d (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:52:12 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@59e22bd6 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:52:36 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@61f01940 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:53:33 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4b2fa9fa (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:53:51 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@8567759 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:55:27 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@61f2b686 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:56:34 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@59e2f078 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:56:36 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5f2918eb (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:57:14 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@10ad27b9 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:57:14 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2b808531 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:57:57 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@3cf92eea (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:59:11 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@8782f31 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 01:59:34 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@52057e69 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:00:02 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5c2baf6e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:00:37 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7659c1d6 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:01:51 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 02:01:51 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@659f47e5 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:01:52 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 02:01:52 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 02:01:59 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 02:02:36 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7abc5d2e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:03:42 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7db9a11f (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:03:42 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@70e39401 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:04:39 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@13cbb10 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:05:04 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2e84aa98 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:05:24 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@262bb7bb (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:05:34 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@760deb9c (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:05:40 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@14d47463 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:05:41 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@42f36933 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:05:58 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@616b4a3d (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:08:18 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@54d49a29 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:09:13 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@36364248 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:10:19 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4a0c6290 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:12:40 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7df3ed93 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:12:55 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@235df324 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:14:02 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@26b3ad8f (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:15:58 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@fd4bfb (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:17:44 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@d9e394e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:17:50 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@16908b6 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:19:35 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1af23061 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:19:35 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@31f1c86d (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:20:16 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@611d0b7 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:24:45 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@573edcab (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:26:22 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@60af2558 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:26:43 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@10a6ab8c (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:28:11 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7f5b9ea0 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:29:10 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@c1a4f0e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:29:32 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@761fff0e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:29:32 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6942b1fe (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:30:27 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@602cd457 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:30:38 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5c31232c (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:30:48 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2688423e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:30:57 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@55bd52e0 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:31:51 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 02:31:51 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 02:31:51 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 02:31:58 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 02:32:19 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1445d1c5 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:32:41 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2add24c0 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:38:23 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7068a2ee (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:40:07 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2b42488b (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:40:24 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@35d49189 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:40:25 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@3c130241 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:40:28 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4d997269 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:40:42 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5c50ea8a (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:40:43 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1d1f8eef (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:41:47 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1b13ad1f (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:42:15 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2d8fbcdd (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:42:15 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4afb00af (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:42:30 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6a15bfd5 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:42:31 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@476c3aa1 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:42:34 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5580a49b (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:42:44 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@122c42e9 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:43:56 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6a39f9ca (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:44:14 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4a860ac0 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:45:48 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1053b00d (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:49:34 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@390422ae (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 02:56:59 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@e277172 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:01:51 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 03:01:51 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 03:01:51 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 03:01:59 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 03:06:53 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@22b4e274 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:11:22 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5fca2319 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:11:41 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@db409c5 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:11:44 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@72d40023 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:12:34 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4d1212ed (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:12:34 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5d4240c5 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:13:55 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@f459656 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:15:50 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1c132a59 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:15:58 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@704cce75 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:16:57 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4ced86eb (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:18:07 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@49e4db4f (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:18:30 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@69d41182 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:18:34 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@35b62b8c (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:18:55 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@cc56bb4 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:19:12 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@22bd6874 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:20:17 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@16c8a41 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:21:12 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2cf6a28c (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:21:36 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@71a94856 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:22:24 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@13eb865 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:22:51 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@39afd786 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:23:13 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@798ea3c6 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:23:35 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@427ae8a8 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:24:23 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7daec1d0 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:26:14 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1dbce977 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:26:26 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@71a797e7 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:27:17 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@30fc9c19 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:28:33 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@64f5ac0c (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:30:17 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5a6e7ee2 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:30:27 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@53a05d70 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:30:56 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2cb9028a (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:31:21 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7ff01146 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:31:51 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 03:31:51 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 03:31:51 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 03:31:56 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 03:32:03 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@51578e29 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:33:14 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5453131a (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:33:53 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7f7aa80c (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:34:38 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2ada7883 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:35:42 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6c65bd3f (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:36:57 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@41fcfdf4 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:37:39 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@33b1c32 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:38:26 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@3e4237fc (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:42:55 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@322f0978 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:43:57 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@15c32bcd (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:47:05 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6fc6946 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:49:17 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7e4cf9df (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:49:52 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5a72e598 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:53:56 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@18cf02a1 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:54:13 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@748fbed3 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:57:43 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@43ede43c (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:57:56 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6347ba4 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:58:04 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@77afb08e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 03:59:23 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7814b93a (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 04:00:23 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@38787898 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 04:01:51 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 04:01:51 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 04:01:51 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 04:01:58 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 04:05:55 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@28177331 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 04:07:12 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@bd6df9a (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 04:10:48 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@100cb05b (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 04:12:38 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6807223e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 04:14:38 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6c153a25 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 04:14:41 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@3281608 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 04:16:51 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@29515d7c (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 04:18:59 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2e825c05 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 04:19:57 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@336111d2 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 04:20:07 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2cf48fa5 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 04:26:45 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@cadaf3d (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 04:26:53 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@14e844d7 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 04:27:16 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@159c2b5e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 04:45:11 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m4s96ms).
+2026-03-13 04:47:21 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m9s497ms).
+2026-03-13 05:03:54 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@50c8ab8d (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 05:03:56 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1ddf13b3 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 05:03:56 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1fc6f28d (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 05:03:57 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@ac7b63b (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 05:04:25 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@b331933 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 05:04:27 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6e14d16d (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 05:04:57 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m35s845ms).
+2026-03-13 05:06:03 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@46ee14b8 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 05:06:34 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@62c671b7 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 05:06:39 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1c6cd105 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 05:07:06 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m9s458ms).
+2026-03-13 05:07:12 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@15eb482c (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 05:25:23 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=18m16s393ms).
+2026-03-13 05:26:01 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 05:27:07 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m44s599ms).
+2026-03-13 05:43:24 WARN  [] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08003
+2026-03-13 05:43:24 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - HikariPool-1 - Connection is not available, request timed out after 1018421ms (total=0, active=0, idle=0, waiting=0)
+2026-03-13 05:43:24 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - This connection has been closed.
+2026-03-13 05:43:24 ERROR [] o.s.s.s.TaskUtils$LoggingErrorHandler - Unexpected error occurred in scheduled task
+org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:467)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.snatchmart.snatchmart.service.serviceImpl.AffiliateSyncServiceImpl$$SpringCGLIB$$0.syncDeals(<generated>)
+	at com.snatchmart.snatchmart.scheduler.DealScheduler.syncPrices(DealScheduler.java:22)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124)
+	at io.micrometer.observation.Observation.observe(Observation.java:498)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124)
+	at org.springframework.scheduling.config.Task$OutcomeTrackingRunnable.run(Task.java:85)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:358)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [HikariPool-1 - Connection is not available, request timed out after 1018421ms (total=0, active=0, idle=0, waiting=0)] [n/a]
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:51)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:421)
+	... 23 common frames omitted
+Caused by: java.sql.SQLTransientConnectionException: HikariPool-1 - Connection is not available, request timed out after 1018421ms (total=0, active=0, idle=0, waiting=0)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:714)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:184)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:142)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 30 common frames omitted
+Caused by: org.postgresql.util.PSQLException: This connection has been closed.
+	at org.postgresql.jdbc.PgConnection.checkClosed(PgConnection.java:1012)
+	at org.postgresql.jdbc.PgConnection.setNetworkTimeout(PgConnection.java:1736)
+	at com.zaxxer.hikari.pool.PoolBase.setNetworkTimeout(PoolBase.java:582)
+	at com.zaxxer.hikari.pool.PoolBase.isConnectionDead(PoolBase.java:174)
+	at com.zaxxer.hikari.pool.HikariPool$KeepaliveTask.run(HikariPool.java:882)
+	... 6 common frames omitted
+2026-03-13 05:44:31 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m23s349ms).
+2026-03-13 06:04:27 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=19m56s652ms).
+2026-03-13 06:21:10 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m42s762ms).
+2026-03-13 06:23:20 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m9s455ms).
+2026-03-13 06:38:35 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m15s930ms).
+2026-03-13 06:55:20 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m44s620ms).
+2026-03-13 06:57:05 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m44s621ms).
+2026-03-13 07:13:24 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m19s786ms).
+2026-03-13 07:15:34 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m9s463ms).
+2026-03-13 07:32:41 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m6s613ms).
+2026-03-13 07:33:35 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=54s868ms).
+2026-03-13 07:51:07 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m31s572ms).
+2026-03-13 08:07:52 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m45s150ms).
+2026-03-13 08:25:02 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m9s540ms).
+2026-03-13 08:32:18 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7m16s819ms).
+2026-03-13 08:47:48 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m29s834ms).
+2026-03-13 09:04:58 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m9s527ms).
+2026-03-13 09:21:41 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m43s622ms).
+2026-03-13 09:33:05 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=11m23s879ms).
+2026-03-13 09:50:03 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m57s994ms).
+2026-03-13 10:07:11 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m7s904ms).
+2026-03-13 10:34:40 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=27m28s877ms).
+2026-03-13 10:36:25 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m44s638ms).
+2026-03-13 11:09:31 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=33m5s973ms).
+2026-03-13 11:11:15 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m44s567ms).
+2026-03-13 11:19:20 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=8m5s145ms).
+2026-03-13 11:36:59 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m38s712ms).
+2026-03-13 11:53:44 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m44s610ms).
+2026-03-13 11:55:53 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m9s513ms).
+2026-03-13 12:12:55 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m1s623ms).
+2026-03-13 12:30:07 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m12s194ms).
+2026-03-13 12:32:17 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m9s476ms).
+2026-03-13 12:53:44 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=21m27s196ms).
+2026-03-13 12:55:53 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m9s483ms).
+2026-03-13 12:56:48 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=54s892ms).
+2026-03-13 13:00:11 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m22s773ms).
+2026-03-13 13:11:54 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 13:12:24 WARN  [] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08003
+2026-03-13 13:12:24 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - HikariPool-1 - Connection is not available, request timed out after 30011ms (total=0, active=0, idle=0, waiting=0)
+2026-03-13 13:12:24 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - This connection has been closed.
+2026-03-13 13:12:24 ERROR [] o.s.s.s.TaskUtils$LoggingErrorHandler - Unexpected error occurred in scheduled task
+org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:467)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.snatchmart.snatchmart.service.serviceImpl.AffiliateSyncServiceImpl$$SpringCGLIB$$0.syncDeals(<generated>)
+	at com.snatchmart.snatchmart.scheduler.DealScheduler.syncPrices(DealScheduler.java:22)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124)
+	at io.micrometer.observation.Observation.observe(Observation.java:498)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124)
+	at org.springframework.scheduling.config.Task$OutcomeTrackingRunnable.run(Task.java:85)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:358)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [HikariPool-1 - Connection is not available, request timed out after 30011ms (total=0, active=0, idle=0, waiting=0)] [n/a]
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:51)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:421)
+	... 23 common frames omitted
+Caused by: java.sql.SQLTransientConnectionException: HikariPool-1 - Connection is not available, request timed out after 30011ms (total=0, active=0, idle=0, waiting=0)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:714)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:184)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:142)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 30 common frames omitted
+Caused by: org.postgresql.util.PSQLException: This connection has been closed.
+	at org.postgresql.jdbc.PgConnection.checkClosed(PgConnection.java:1012)
+	at org.postgresql.jdbc.PgConnection.setNetworkTimeout(PgConnection.java:1736)
+	at com.zaxxer.hikari.pool.PoolBase.setNetworkTimeout(PoolBase.java:582)
+	at com.zaxxer.hikari.pool.PoolBase.isConnectionDead(PoolBase.java:174)
+	at com.zaxxer.hikari.pool.HikariPool$KeepaliveTask.run(HikariPool.java:882)
+	... 6 common frames omitted
+2026-03-13 13:41:54 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 13:42:24 WARN  [] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08003
+2026-03-13 13:42:24 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - HikariPool-1 - Connection is not available, request timed out after 30005ms (total=0, active=0, idle=0, waiting=0)
+2026-03-13 13:42:24 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - This connection has been closed.
+2026-03-13 13:42:24 ERROR [] o.s.s.s.TaskUtils$LoggingErrorHandler - Unexpected error occurred in scheduled task
+org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:467)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.snatchmart.snatchmart.service.serviceImpl.AffiliateSyncServiceImpl$$SpringCGLIB$$0.syncDeals(<generated>)
+	at com.snatchmart.snatchmart.scheduler.DealScheduler.syncPrices(DealScheduler.java:22)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124)
+	at io.micrometer.observation.Observation.observe(Observation.java:498)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124)
+	at org.springframework.scheduling.config.Task$OutcomeTrackingRunnable.run(Task.java:85)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:358)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [HikariPool-1 - Connection is not available, request timed out after 30005ms (total=0, active=0, idle=0, waiting=0)] [n/a]
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:51)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:421)
+	... 23 common frames omitted
+Caused by: java.sql.SQLTransientConnectionException: HikariPool-1 - Connection is not available, request timed out after 30005ms (total=0, active=0, idle=0, waiting=0)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:714)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:184)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:142)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 30 common frames omitted
+Caused by: org.postgresql.util.PSQLException: This connection has been closed.
+	at org.postgresql.jdbc.PgConnection.checkClosed(PgConnection.java:1012)
+	at org.postgresql.jdbc.PgConnection.setNetworkTimeout(PgConnection.java:1736)
+	at com.zaxxer.hikari.pool.PoolBase.setNetworkTimeout(PoolBase.java:582)
+	at com.zaxxer.hikari.pool.PoolBase.isConnectionDead(PoolBase.java:174)
+	at com.zaxxer.hikari.pool.HikariPool$KeepaliveTask.run(HikariPool.java:882)
+	... 6 common frames omitted
+2026-03-13 14:10:03 INFO  [] c.s.s.scheduler.DealScheduler - Starting expired deals cleanup job
+2026-03-13 14:10:33 WARN  [] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08003
+2026-03-13 14:10:33 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - HikariPool-1 - Connection is not available, request timed out after 30002ms (total=0, active=0, idle=0, waiting=0)
+2026-03-13 14:10:33 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - This connection has been closed.
+2026-03-13 14:10:33 ERROR [] o.s.s.s.TaskUtils$LoggingErrorHandler - Unexpected error occurred in scheduled task
+org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:467)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.snatchmart.snatchmart.service.serviceImpl.AffiliateSyncServiceImpl$$SpringCGLIB$$0.cleanupExpiredDeals(<generated>)
+	at com.snatchmart.snatchmart.scheduler.DealScheduler.cleanupExpiredDeals(DealScheduler.java:28)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124)
+	at io.micrometer.observation.Observation.observe(Observation.java:498)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124)
+	at org.springframework.scheduling.config.Task$OutcomeTrackingRunnable.run(Task.java:85)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at org.springframework.scheduling.concurrent.ReschedulingRunnable.run(ReschedulingRunnable.java:96)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [HikariPool-1 - Connection is not available, request timed out after 30002ms (total=0, active=0, idle=0, waiting=0)] [n/a]
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:51)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:421)
+	... 24 common frames omitted
+Caused by: java.sql.SQLTransientConnectionException: HikariPool-1 - Connection is not available, request timed out after 30002ms (total=0, active=0, idle=0, waiting=0)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:714)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:184)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:142)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 31 common frames omitted
+Caused by: org.postgresql.util.PSQLException: This connection has been closed.
+	at org.postgresql.jdbc.PgConnection.checkClosed(PgConnection.java:1012)
+	at org.postgresql.jdbc.PgConnection.setNetworkTimeout(PgConnection.java:1736)
+	at com.zaxxer.hikari.pool.PoolBase.setNetworkTimeout(PoolBase.java:582)
+	at com.zaxxer.hikari.pool.PoolBase.isConnectionDead(PoolBase.java:174)
+	at com.zaxxer.hikari.pool.HikariPool$KeepaliveTask.run(HikariPool.java:882)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:358)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	... 3 common frames omitted
+2026-03-13 14:11:54 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 14:12:24 WARN  [] o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08003
+2026-03-13 14:12:24 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - HikariPool-1 - Connection is not available, request timed out after 30005ms (total=0, active=0, idle=0, waiting=0)
+2026-03-13 14:12:24 ERROR [] o.h.e.jdbc.spi.SqlExceptionHelper - This connection has been closed.
+2026-03-13 14:12:24 ERROR [] o.s.s.s.TaskUtils$LoggingErrorHandler - Unexpected error occurred in scheduled task
+org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:467)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.snatchmart.snatchmart.service.serviceImpl.AffiliateSyncServiceImpl$$SpringCGLIB$$0.syncDeals(<generated>)
+	at com.snatchmart.snatchmart.scheduler.DealScheduler.syncPrices(DealScheduler.java:22)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124)
+	at io.micrometer.observation.Observation.observe(Observation.java:498)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124)
+	at org.springframework.scheduling.config.Task$OutcomeTrackingRunnable.run(Task.java:85)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:358)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [HikariPool-1 - Connection is not available, request timed out after 30005ms (total=0, active=0, idle=0, waiting=0)] [n/a]
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:51)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:421)
+	... 23 common frames omitted
+Caused by: java.sql.SQLTransientConnectionException: HikariPool-1 - Connection is not available, request timed out after 30005ms (total=0, active=0, idle=0, waiting=0)
+	at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:714)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:184)
+	at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:142)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:127)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 30 common frames omitted
+Caused by: org.postgresql.util.PSQLException: This connection has been closed.
+	at org.postgresql.jdbc.PgConnection.checkClosed(PgConnection.java:1012)
+	at org.postgresql.jdbc.PgConnection.setNetworkTimeout(PgConnection.java:1736)
+	at com.zaxxer.hikari.pool.PoolBase.setNetworkTimeout(PoolBase.java:582)
+	at com.zaxxer.hikari.pool.PoolBase.isConnectionDead(PoolBase.java:174)
+	at com.zaxxer.hikari.pool.HikariPool$KeepaliveTask.run(HikariPool.java:882)
+	... 6 common frames omitted
+2026-03-13 14:34:57 INFO  [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-03-13 14:34:57 INFO  [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-03-13 14:34:57 INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-13 14:34:57 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-03-13 14:35:27 WARN  [] com.zaxxer.hikari.pool.HikariPool - Timed-out waiting for add connection executor to shutdown
+2026-03-13 14:35:27 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

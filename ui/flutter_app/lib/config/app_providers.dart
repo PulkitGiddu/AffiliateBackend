@@ -15,6 +15,9 @@ import '../repositories/user_repository.dart';
 import '../core/mock/mock_data_loader.dart';
 import '../models/user.dart';
 
+/// Controls bottom nav bar visibility (home screen hides on scroll down).
+final bottomNavVisibleProvider = StateProvider<bool>((ref) => true);
+
 final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) async {
   return await SharedPreferences.getInstance();
 });

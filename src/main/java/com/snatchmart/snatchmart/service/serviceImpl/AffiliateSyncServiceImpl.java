@@ -1,8 +1,12 @@
 package com.snatchmart.snatchmart.service.serviceImpl;
 
+import com.snatchmart.snatchmart.entity.Category;
+import com.snatchmart.snatchmart.entity.Merchant;
 import com.snatchmart.snatchmart.entity.Product;
 import com.snatchmart.snatchmart.integration.AffiliateClient;
 import com.snatchmart.snatchmart.integration.AffiliateDeal;
+import com.snatchmart.snatchmart.repository.CategoryRepository;
+import com.snatchmart.snatchmart.repository.MerchantRepository;
 import com.snatchmart.snatchmart.repository.ProductRepository;
 import com.snatchmart.snatchmart.service.AffiliateSyncService;
 import org.slf4j.Logger;
@@ -10,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -20,10 +25,19 @@ public class AffiliateSyncServiceImpl implements AffiliateSyncService {
 
     private final List<AffiliateClient> affiliateClients;
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
+    private final MerchantRepository merchantRepository;
 
-    public AffiliateSyncServiceImpl(List<AffiliateClient> affiliateClients, ProductRepository productRepository) {
+    public AffiliateSyncServiceImpl(
+            List<AffiliateClient> affiliateClients,
+            ProductRepository productRepository,
+            CategoryRepository categoryRepository,
+            MerchantRepository merchantRepository
+    ) {
         this.affiliateClients = affiliateClients;
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+        this.merchantRepository = merchantRepository;
     }
 
     @Override
@@ -32,10 +46,54 @@ public class AffiliateSyncServiceImpl implements AffiliateSyncService {
             List<AffiliateDeal> deals = client.fetchLatestDeals();
             for (AffiliateDeal deal : deals) {
                 productRepository.findByProductUniqueId(deal.getProductUniqueId())
-                        .ifPresent(existing -> updateProductPricing(existing, deal));
+                        .ifPresentOrElse(
+                                existing -> updateProductPricing(existing, deal),
+                                () -> createProductFromDeal(deal)
+                        );
             }
             log.info("Synced {} deals from {}", deals.size(), client.provider());
         }
+    }
+
+    private void createProductFromDeal(AffiliateDeal deal) {
+        String merchantName = deal.getMerchantName() != null && !deal.getMerchantName().isBlank()
+                ? deal.getMerchantName() : "Affiliate";
+        String categorySlug = deal.getCategorySlug() != null && !deal.getCategorySlug().isBlank()
+                ? deal.getCategorySlug() : "deals";
+
+        Merchant merchant = merchantRepository.findByNameIgnoreCase(merchantName)
+                .orElseGet(() -> {
+                    Merchant m = Merchant.builder()
+                            .name(merchantName)
+                            .build();
+                    return merchantRepository.save(m);
+                });
+
+        Category category = categoryRepository.findBySlug(categorySlug)
+                .orElseGet(() -> {
+                    Category c = Category.builder()
+                            .name(categorySlug.replace("-", " "))
+                            .slug(categorySlug)
+                            .build();
+                    return categoryRepository.save(c);
+                });
+
+        BigDecimal salePrice = deal.getSalePrice() != null ? deal.getSalePrice() : BigDecimal.ZERO;
+        BigDecimal originalPrice = deal.getOriginalPrice() != null ? deal.getOriginalPrice() : salePrice;
+
+        Product product = Product.builder()
+                .productName(deal.getProductName() != null ? deal.getProductName() : "Deal")
+                .description(deal.getDescription())
+                .productUniqueId(deal.getProductUniqueId())
+                .originalPrice(originalPrice)
+                .salePrice(salePrice)
+                .affiliateUrl(deal.getAffiliateUrl())
+                .imageUrl(deal.getImageUrl())
+                .merchant(merchant)
+                .category(category)
+                .isActive(true)
+                .build();
+        productRepository.save(product);
     }
 
     @Override
@@ -48,10 +106,24 @@ public class AffiliateSyncServiceImpl implements AffiliateSyncService {
     }
 
     private void updateProductPricing(Product product, AffiliateDeal deal) {
-        product.setOriginalPrice(deal.getOriginalPrice());
-        product.setSalePrice(deal.getSalePrice());
-        product.setAffiliateUrl(deal.getAffiliateUrl());
-        product.setImageUrl(deal.getImageUrl());
+        if (deal.getOriginalPrice() != null) {
+            product.setOriginalPrice(deal.getOriginalPrice());
+        }
+        if (deal.getSalePrice() != null) {
+            product.setSalePrice(deal.getSalePrice());
+        }
+        if (deal.getAffiliateUrl() != null) {
+            product.setAffiliateUrl(deal.getAffiliateUrl());
+        }
+        if (deal.getImageUrl() != null) {
+            product.setImageUrl(deal.getImageUrl());
+        }
+        if (deal.getProductName() != null) {
+            product.setProductName(deal.getProductName());
+        }
+        if (deal.getDescription() != null) {
+            product.setDescription(deal.getDescription());
+        }
         productRepository.save(product);
     }
 }

@@ -15,4 +15,8 @@ public class AffiliateDeal {
     private BigDecimal salePrice;
     private String affiliateUrl;
     private String imageUrl;
+    /** Slug for category (e.g. "deals"). Used when creating new product. */
+    private String categorySlug;
+    /** Merchant display name (e.g. "Flipkart"). Used when creating new product. */
+    private String merchantName;
 }

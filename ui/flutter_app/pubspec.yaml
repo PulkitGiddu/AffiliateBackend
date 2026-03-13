@@ -40,6 +40,7 @@ dependencies:
   lottie: ^3.1.0
   flutter_animate: ^4.5.0
   flutter_displaymode: ^0.6.0
+  video_player: ^2.9.2
 
 dev_dependencies:
   flutter_test:
@@ -66,14 +67,13 @@ flutter:
     - lib/asserts/snatchmart.png
     - lib/asserts/logo1.png
     - lib/asserts/logo2.png
-    - lib/asserts/banner_1_diwali.png
-    - lib/asserts/banner_2_flipkart.png
-    - lib/asserts/banner_3_myntra.png
-    - lib/asserts/banner_4_mega.png
-    - lib/asserts/banner_5_super.png
     - lib/asserts/light.png
     - lib/asserts/black.png
     - lib/asserts/logo_without_bg.png
     - lib/asserts/light_without_bg.png
+    - lib/asserts/iconPack/
+    - lib/asserts/sales/
+    - lib/asserts/Offers/
+    - lib/asserts/animation/
     - assets/mock_data.json
     - assets/lottie/

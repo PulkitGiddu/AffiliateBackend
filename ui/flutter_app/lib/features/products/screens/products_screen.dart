@@ -7,20 +7,7 @@ import '../providers/product_provider.dart';
 import '../../home/providers/category_provider.dart';
 import '../../../widgets/shimmer_loading.dart';
 import '../../../widgets/empty_state.dart';
-
-/// Maps category slug/name to an icon for the left sidebar.
-IconData _iconForCategory(String? slug, String name) {
-  final s = (slug ?? name).toLowerCase();
-  if (s.contains('fashion') || s.contains('cloth')) return Icons.checkroom_rounded;
-  if (s.contains('appliance')) return Icons.kitchen_rounded;
-  if (s.contains('mobile') || s.contains('phone')) return Icons.smartphone_rounded;
-  if (s.contains('electronic') || s.contains('laptop')) return Icons.computer_rounded;
-  if (s.contains('gadget') || s.contains('smart')) return Icons.watch_rounded;
-  if (s.contains('home') || s.contains('furniture')) return Icons.home_rounded;
-  if (s.contains('beauty') || s.contains('personal')) return Icons.face_retouching_natural_rounded;
-  if (s.contains('toy') || s.contains('baby')) return Icons.child_care_rounded;
-  return Icons.category_outlined;
-}
+import '../../../widgets/category_circle.dart';
 
 class ProductsScreen extends ConsumerStatefulWidget {
   const ProductsScreen({super.key});
@@ -134,13 +121,13 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                 children: [
                   _CategorySideItem(
                     label: 'For You',
-                    icon: Icons.local_offer_rounded,
+                    meta: categoryMetaFor('All', 'all'),
                     isSelected: selectedCategoryId == null,
                     onTap: () => _onCategorySelected(null),
                   ),
                   ...categories.map((c) => _CategorySideItem(
                         label: c.name,
-                        icon: _iconForCategory(c.slug, c.name),
+                        meta: categoryMetaFor(c.name, c.slug),
                         isSelected: selectedCategoryId == c.id,
                         onTap: () => _onCategorySelected(c.id),
                       )),
@@ -172,7 +159,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                                   ref.read(productListNotifierProvider.notifier).load(),
                               child: ListView.builder(
                                 controller: _scrollController,
-                                padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+                                padding: const EdgeInsets.fromLTRB(12, 0, 12, 88),
                                 itemCount: listState.items.length +
                                     (listState.loadingMore ? 1 : 0),
                                 itemBuilder: (_, i) {
@@ -228,61 +215,62 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 class _CategorySideItem extends StatelessWidget {
   const _CategorySideItem({
     required this.label,
-    required this.icon,
+    required this.meta,
     required this.isSelected,
     required this.onTap,
   });
 
   final String label;
-  final IconData icon;
+  final CategoryMeta meta;
   final bool isSelected;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final scheme = Theme.of(context).colorScheme;
+
+    final circleBg = isDark ? meta.iconColor.withOpacity(0.18) : meta.bgColor;
+    final circleFg = isDark ? meta.iconColor.withOpacity(0.9) : meta.iconColor;
+    final textColor = isSelected ? scheme.primary : scheme.onSurfaceVariant;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       child: Material(
         color: isSelected
-            ? theme.colorScheme.primaryContainer.withOpacity(0.4)
+            ? scheme.primaryContainer.withOpacity(isDark ? 0.2 : 0.4)
             : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(12),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: 48,
-                  height: 48,
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 46,
+                  height: 46,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: isSelected
-                        ? theme.colorScheme.primary
-                        : theme.colorScheme.surfaceContainerHighest,
+                    color: circleBg,
+                    border: isSelected
+                        ? Border.all(color: scheme.primary, width: 2)
+                        : Border.all(color: isDark ? meta.iconColor.withOpacity(0.12) : Colors.transparent, width: 1),
                   ),
-                  child: Icon(
-                    icon,
-                    size: 26,
-                    color: isSelected
-                        ? theme.colorScheme.onPrimary
-                        : theme.colorScheme.onSurfaceVariant,
-                  ),
+                  child: Icon(meta.icon, size: 22, color: circleFg),
                 ),
                 const SizedBox(height: 6),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Text(
                     label,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                      color: isSelected
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.onSurfaceVariant,
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: textColor,
                     ),
                     maxLines: 2,
                     textAlign: TextAlign.center,

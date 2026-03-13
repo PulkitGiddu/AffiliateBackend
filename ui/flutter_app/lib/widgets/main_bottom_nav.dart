@@ -1,6 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
-/// Persistent bottom nav (segmented style). Clearly visible in light and dark mode.
+/// Floating pill-shaped bottom navigation bar with glassmorphic sliding bubble.
 class MainBottomNav extends StatelessWidget {
   const MainBottomNav({
     super.key,
@@ -11,104 +12,139 @@ class MainBottomNav extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onDestinationSelected;
 
-  static const List<_NavSegment> segments = [
-    _NavSegment(icon: Icons.home_rounded, iconOut: Icons.home_outlined, label: 'Home'),
-    _NavSegment(icon: Icons.grid_view_rounded, iconOut: Icons.grid_view_outlined, label: 'Products'),
-    _NavSegment(icon: Icons.card_giftcard_rounded, iconOut: Icons.card_giftcard_outlined, label: 'Coupons'),
-    _NavSegment(icon: Icons.notifications_rounded, iconOut: Icons.notifications_outlined, label: 'Notify'),
-    _NavSegment(icon: Icons.person_rounded, iconOut: Icons.person_outline_rounded, label: 'Profile'),
+  static const List<_NavItem> _items = [
+    _NavItem(icon: Icons.home_rounded, iconOut: Icons.home_outlined, label: 'Home'),
+    _NavItem(icon: Icons.grid_view_rounded, iconOut: Icons.grid_view_outlined, label: 'Categories'),
+    _NavItem(icon: Icons.notifications_rounded, iconOut: Icons.notifications_outlined, label: 'Notify'),
+    _NavItem(icon: Icons.account_circle_rounded, iconOut: Icons.account_circle_outlined, label: 'Account'),
   ];
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final scheme = Theme.of(context).colorScheme;
-    final primary = scheme.primary;
-    final secondary = scheme.secondary;
-    // Bar: app theme gradient (matches app bar / header)
-    final barGradient = LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: isDark
-          ? [primary.withOpacity(0.4), secondary.withOpacity(0.2)]
-          : [primary.withOpacity(0.15), secondary.withOpacity(0.25)],
-    );
-    final barBorder = isDark
-        ? Colors.white.withOpacity(0.1)
-        : primary.withOpacity(0.2);
-    // Selected: pill with white/light fill, primary icon and text
-    final pillBg = Colors.white.withOpacity(isDark ? 0.2 : 0.9);
-    final selectedFg = primary;
-    // Unselected: visible on gradient (white on dark, primary-tint on light)
-    final unselectedFg = isDark
-        ? Colors.white.withOpacity(0.85)
-        : primary.withOpacity(0.85);
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: barGradient,
-        border: Border(top: BorderSide(color: barBorder, width: 1)),
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.06),
-            blurRadius: 6,
-            offset: const Offset(0, -1),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 6, 8, 8),
-          child: Row(
-            children: List.generate(segments.length, (i) {
-              final seg = segments[i];
-              final selected = selectedIndex == i;
-              return Expanded(
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () => onDestinationSelected(i),
-                    borderRadius: BorderRadius.circular(20),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: selected ? pillBg : Colors.transparent,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Icon(
-                              selected ? seg.icon : seg.iconOut,
-                              size: 20,
-                              color: selected ? selectedFg : unselectedFg,
-                            ),
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            seg.label,
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                              color: selected ? selectedFg : unselectedFg,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+    final pillColor = isDark
+        ? scheme.surfaceContainerHigh.withOpacity(0.92)
+        : const Color(0xFFF2F3F7).withOpacity(0.92);
+    final selectedColor = scheme.onSurface;
+    final unselectedColor = isDark
+        ? Colors.white.withOpacity(0.40)
+        : scheme.onSurfaceVariant.withOpacity(0.50);
+
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(36),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+            child: Container(
+              height: 72,
+              decoration: BoxDecoration(
+                color: pillColor,
+                borderRadius: BorderRadius.circular(36),
+                border: Border.all(
+                  color: isDark
+                      ? Colors.white.withOpacity(0.08)
+                      : Colors.black.withOpacity(0.06),
                 ),
-              );
-            }),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
+                    blurRadius: 24,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final itemWidth = constraints.maxWidth / _items.length;
+                  final bubbleW = itemWidth - 8;
+                  const bubbleH = 56.0;
+
+                  return Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Glassmorphic sliding bubble
+                      AnimatedPositioned(
+                        duration: const Duration(milliseconds: 320),
+                        curve: Curves.easeOutCubic,
+                        left: selectedIndex * itemWidth + (itemWidth - bubbleW) / 2,
+                        child: Container(
+                          width: bubbleW,
+                          height: bubbleH,
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? Colors.white.withOpacity(0.10)
+                                : scheme.primary.withOpacity(0.08),
+                            borderRadius: BorderRadius.circular(bubbleH / 2),
+                            border: Border.all(
+                              color: isDark
+                                  ? Colors.white.withOpacity(0.12)
+                                  : scheme.primary.withOpacity(0.12),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: isDark
+                                    ? Colors.white.withOpacity(0.04)
+                                    : scheme.primary.withOpacity(0.08),
+                                blurRadius: 12,
+                                spreadRadius: 0,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      // Items
+                      Row(
+                        children: List.generate(_items.length, (i) {
+                          final item = _items[i];
+                          final selected = selectedIndex == i;
+                          final color = selected ? selectedColor : unselectedColor;
+
+                          return Expanded(
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () => onDestinationSelected(i),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  AnimatedSwitcher(
+                                    duration: const Duration(milliseconds: 200),
+                                    child: Icon(
+                                      selected ? item.icon : item.iconOut,
+                                      key: ValueKey('${i}_$selected'),
+                                      size: 26,
+                                      color: color,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  AnimatedDefaultTextStyle(
+                                    duration: const Duration(milliseconds: 200),
+                                    style: TextStyle(
+                                      color: color,
+                                      fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                                      fontSize: 11,
+                                    ),
+                                    child: Text(
+                                      item.label,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
           ),
         ),
       ),
@@ -116,8 +152,8 @@ class MainBottomNav extends StatelessWidget {
   }
 }
 
-class _NavSegment {
-  const _NavSegment({
+class _NavItem {
+  const _NavItem({
     required this.icon,
     required this.iconOut,
     required this.label,

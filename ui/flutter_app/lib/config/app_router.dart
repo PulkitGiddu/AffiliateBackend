@@ -17,6 +17,7 @@ import '../features/notifications/screens/notifications_screen.dart';
 import '../features/profile/screens/profile_screen.dart';
 import '../features/profile/screens/edit_profile_screen.dart';
 import '../features/dashboard/screens/make_link_screen.dart';
+import '../features/help/screens/help_chat_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -68,15 +69,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
-          return Scaffold(
-            body: navigationShell,
-            bottomNavigationBar: MainBottomNav(
-              selectedIndex: navigationShell.currentIndex,
-              onDestinationSelected: (i) => navigationShell.goBranch(i),
-            ),
-          );
+          return _ShellWithNav(navigationShell: navigationShell);
         },
         branches: [
+          // Tab 0: Home
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -85,6 +81,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
+          // Tab 1: Categories (Products)
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -100,14 +97,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/coupons',
-                builder: (_, __) => const CouponsScreen(),
-              ),
-            ],
-          ),
+          // Tab 2: Notifications
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -116,6 +106,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
+          // Tab 3: Account (was Profile)
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -138,11 +129,20 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                     path: 'make-link',
                     pageBuilder: (_, state) => _transitionPage(state, const MakeLinkScreen()),
                   ),
+                  GoRoute(
+                    path: 'help',
+                    pageBuilder: (_, state) => _transitionPage(state, const HelpChatScreen()),
+                  ),
                 ],
               ),
             ],
           ),
+          
         ],
+      ),
+      GoRoute(
+        path: '/coupons',
+        pageBuilder: (_, state) => _transitionPage(state, const CouponsScreen()),
       ),
       GoRoute(
         path: '/login',
@@ -159,3 +159,43 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+class _ShellWithNav extends ConsumerWidget {
+  const _ShellWithNav({required this.navigationShell});
+  final StatefulNavigationShell navigationShell;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final visible = ref.watch(bottomNavVisibleProvider);
+
+    return Scaffold(
+      extendBody: true,
+      body: Stack(
+        children: [
+          navigationShell,
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: AnimatedSlide(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOutCubic,
+              offset: visible ? Offset.zero : const Offset(0, 1.5),
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 250),
+                opacity: visible ? 1.0 : 0.0,
+                child: MainBottomNav(
+                  selectedIndex: navigationShell.currentIndex,
+                  onDestinationSelected: (i) {
+                    ref.read(bottomNavVisibleProvider.notifier).state = true;
+                    navigationShell.goBranch(i);
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
