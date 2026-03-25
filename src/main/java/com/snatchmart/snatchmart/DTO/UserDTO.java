@@ -1,5 +1,7 @@
 package com.snatchmart.snatchmart.DTO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +20,8 @@ public class UserDTO {
     private String username;
     private String first_name;
     private String last_name;
+    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password_hash;
     private Boolean is_active;
 

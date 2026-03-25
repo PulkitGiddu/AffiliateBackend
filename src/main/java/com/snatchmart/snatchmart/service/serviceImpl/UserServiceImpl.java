@@ -8,7 +8,6 @@ import com.snatchmart.snatchmart.repository.UserRepository;
 import com.snatchmart.snatchmart.service.ReferralCodeGenerator;
 import com.snatchmart.snatchmart.service.UserService;
 import com.snatchmart.snatchmart.validator.UserSignUpValidation;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.slf4j.Logger;
@@ -30,9 +29,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Autowired
     private UserSignUpValidation validation;
@@ -282,7 +278,7 @@ public class UserServiceImpl implements UserService {
         dto.setUsername(user.getUsername());
         dto.setFirst_name(user.getFirstName());
         dto.setLast_name(user.getLastName());
-        dto.setPassword_hash(user.getPasswordHash());
+        // password_hash intentionally omitted — never expose hashes in responses
         dto.setIs_active(user.getIsActive());
         dto.setReferral_code(user.getReferralCode());
         dto.setProfile_picture_url(user.getProfilePictureUrl());

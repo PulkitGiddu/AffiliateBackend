@@ -1,0 +1,243 @@
+2026-03-13 00:02:11 INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-13 00:02:12 INFO  [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-13 00:02:12 DEBUG [] c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-03-13 00:02:12 INFO  [] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-03-13 00:02:12 WARN  [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-03-13 00:02:12 WARN  [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-13 00:02:13 INFO  [] o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:postgresql://ep-blue-field-afvby5th-pooler.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require'
+2026-03-13 00:02:13 WARN  [] o.s.b.d.a.OptionalLiveReloadServer - Unable to start LiveReload server
+2026-03-13 00:02:13 WARN  [] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2026-03-13 00:02:13 INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-13 00:02:13 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-03-13 00:02:17 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-03-13 14:51:38 INFO  [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-03-13 14:51:38 INFO  [] c.s.snatchmart.SnatchMartApplication - Starting SnatchMartApplication using Java 21.0.9 with PID 99040 (/Users/pulkitgiddu/Documents/Code/Backend/snatchMart/target/classes started by pulkitgiddu in /Users/pulkitgiddu/Documents/Code/Backend/snatchMart)
+2026-03-13 14:51:38 DEBUG [] c.s.snatchmart.SnatchMartApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2026-03-13 14:51:38 INFO  [] c.s.snatchmart.SnatchMartApplication - The following 1 profile is active: "local"
+2026-03-13 14:51:38 INFO  [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-03-13 14:51:38 INFO  [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-03-13 14:51:38 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-13 14:51:38 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-13 14:51:38 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 68 ms. Found 12 JPA repository interfaces.
+2026-03-13 14:51:38 INFO  [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2026-03-13 14:51:38 INFO  [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-03-13 14:51:38 INFO  [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-03-13 14:51:38 INFO  [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-03-13 14:51:38 INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-03-13 14:51:38 INFO  [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 736 ms
+2026-03-13 14:51:38 INFO  [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-13 14:51:38 INFO  [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2026-03-13 14:51:38 INFO  [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-03-13 14:51:38 INFO  [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-13 14:51:39 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-03-13 14:51:43 INFO  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@4f15413c
+2026-03-13 14:51:43 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-03-13 14:51:46 WARN  [] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-13 14:51:48 INFO  [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.8
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-13 14:51:49 INFO  [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-13 14:52:44 INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-13 14:52:44 INFO  [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-13 14:52:44 DEBUG [] c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-03-13 14:52:44 INFO  [] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-03-13 14:52:44 WARN  [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-03-13 14:52:44 WARN  [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-13 14:52:46 INFO  [] o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:postgresql://ep-blue-field-afvby5th-pooler.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require'
+2026-03-13 14:52:46 INFO  [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-03-13 14:52:46 INFO  [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-03-13 14:52:46 INFO  [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/'
+2026-03-13 14:52:46 INFO  [] c.s.snatchmart.SnatchMartApplication - Started SnatchMartApplication in 68.418 seconds (process running for 68.596)
+2026-03-13 14:52:46 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 14:52:46 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 14:52:46 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 14:53:06 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 14:53:33 INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-13 14:53:33 INFO  [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-03-13 14:53:33 INFO  [] o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-03-13 14:53:34 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@568c95a5 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 14:53:47 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@3b6ddee5 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 14:55:41 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4f15413c (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 14:58:22 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1eaf7692 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 14:59:00 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7f81d5aa (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:00:47 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7df1dac3 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:01:19 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6fecefa6 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:03:41 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2ea7c0a2 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:07:50 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@32b13a28 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:14:45 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1f0dfa86 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:17:23 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6528094b (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:19:11 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4477a90d (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:19:11 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@57857df5 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:22:46 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 15:22:47 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 15:22:47 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 15:22:52 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 15:24:24 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@398d5f30 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:25:21 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@772aac91 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:29:43 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@24be6fd1 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:30:03 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1fc43aba (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:31:20 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@3f3e9b06 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:35:15 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@354f0a49 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:40:31 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@17daa6f5 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:42:01 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7972d6d4 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:43:50 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@769728e0 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:44:48 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@60c6e436 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:50:29 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@3c9c645e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 15:52:46 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 15:52:46 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 15:52:46 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 15:52:52 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 15:56:17 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@563539cc (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:01:53 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6ae705d9 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:03:33 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@25992c35 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:04:27 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@78fa2aad (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:05:37 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@29fed026 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:09:30 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4f113ba0 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:09:40 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@86f1d3 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:09:50 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@75548a33 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:10:00 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5fabb838 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:10:00 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=52s915ms).
+2026-03-13 16:10:00 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@4ebf54b1 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:10:00 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@41a9b2 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:10:00 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2a9bbfa (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:10:17 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@47046bea (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:10:51 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@7eab8e99 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:10:54 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@55adea2e (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:11:53 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@738a6c71 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:13:50 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@74a67158 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:14:20 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6ea91d21 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:15:41 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@478537dc (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:15:54 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2f061995 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:16:19 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@34192ef5 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:16:29 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@204bfd09 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:16:39 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@61e562bb (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:16:49 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@55628c43 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:16:49 WARN  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=48s818ms).
+2026-03-13 16:16:50 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@75ca8ccd (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:16:50 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@62265e2b (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:16:50 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@3f41bc93 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:16:50 WARN  [] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@21e9b9b4 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-03-13 16:16:53 INFO  [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-03-13 16:16:54 INFO  [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-03-13 16:16:54 INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-13 16:16:54 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-03-13 16:16:57 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-03-13 16:17:16 INFO  [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-03-13 16:17:16 INFO  [] c.s.snatchmart.SnatchMartApplication - Starting SnatchMartApplication using Java 21.0.9 with PID 10434 (/Users/pulkitgiddu/Documents/Code/Backend/snatchMart/target/classes started by pulkitgiddu in /Users/pulkitgiddu/Documents/Code/Backend/snatchMart)
+2026-03-13 16:17:16 DEBUG [] c.s.snatchmart.SnatchMartApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2026-03-13 16:17:16 INFO  [] c.s.snatchmart.SnatchMartApplication - The following 1 profile is active: "local"
+2026-03-13 16:17:16 INFO  [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-03-13 16:17:16 INFO  [] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-03-13 16:17:17 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-13 16:17:17 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-13 16:17:17 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 58 ms. Found 12 JPA repository interfaces.
+2026-03-13 16:17:17 INFO  [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2026-03-13 16:17:17 INFO  [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-03-13 16:17:17 INFO  [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-03-13 16:17:17 INFO  [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-03-13 16:17:17 INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-03-13 16:17:17 INFO  [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 633 ms
+2026-03-13 16:17:17 INFO  [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-13 16:17:17 INFO  [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.29.Final
+2026-03-13 16:17:17 INFO  [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-03-13 16:17:17 INFO  [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-13 16:17:17 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-03-13 16:17:21 INFO  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@42489ff9
+2026-03-13 16:17:21 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-03-13 16:17:22 WARN  [] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-13 16:17:23 INFO  [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.8
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-13 16:17:23 INFO  [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-13 16:17:46 INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-13 16:17:46 INFO  [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-13 16:17:46 DEBUG [] c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-03-13 16:17:46 INFO  [] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-03-13 16:17:46 WARN  [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-03-13 16:17:46 WARN  [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-13 16:17:47 INFO  [] o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:postgresql://ep-blue-field-afvby5th-pooler.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require'
+2026-03-13 16:17:47 INFO  [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-03-13 16:17:47 INFO  [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-03-13 16:17:47 INFO  [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/'
+2026-03-13 16:17:47 INFO  [] c.s.snatchmart.SnatchMartApplication - Started SnatchMartApplication in 30.596 seconds (process running for 30.746)
+2026-03-13 16:17:47 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 16:17:47 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 16:17:47 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 16:17:50 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 16:21:29 INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-13 16:21:29 INFO  [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-03-13 16:21:29 INFO  [] o.s.web.servlet.DispatcherServlet - Completed initialization in 7 ms
+2026-03-13 16:47:47 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 16:47:47 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 16:47:47 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 16:47:50 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 17:16:28 INFO  [] o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 142 class path changes (0 additions, 0 deletions, 142 modifications)
+2026-03-13 17:16:28 INFO  [] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-03-13 17:16:28 INFO  [] o.a.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-03-13 17:16:28 INFO  [] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-03-13 17:16:28 INFO  [] o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-03-13 17:16:28 INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-13 17:16:28 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-03-13 17:16:32 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-03-13 17:16:32 INFO  [] c.s.snatchmart.SnatchMartApplication - Starting SnatchMartApplication using Java 21.0.9 with PID 10434 (/Users/pulkitgiddu/Documents/Code/Backend/snatchMart/target/classes started by pulkitgiddu in /Users/pulkitgiddu/Documents/Code/Backend/snatchMart)
+2026-03-13 17:16:32 DEBUG [] c.s.snatchmart.SnatchMartApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2026-03-13 17:16:32 INFO  [] c.s.snatchmart.SnatchMartApplication - The following 1 profile is active: "local"
+2026-03-13 17:16:32 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-13 17:16:32 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-13 17:16:32 INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 15 ms. Found 12 JPA repository interfaces.
+2026-03-13 17:16:32 INFO  [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2026-03-13 17:16:32 INFO  [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-03-13 17:16:32 INFO  [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-03-13 17:16:32 INFO  [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-03-13 17:16:32 INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-03-13 17:16:32 INFO  [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 256 ms
+2026-03-13 17:16:32 INFO  [] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-13 17:16:32 INFO  [] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-03-13 17:16:32 INFO  [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-13 17:16:32 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+2026-03-13 17:16:35 INFO  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@bc60aa1
+2026-03-13 17:16:35 INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+2026-03-13 17:16:36 WARN  [] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-13 17:16:37 INFO  [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 17.8
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-13 17:16:37 INFO  [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-13 17:16:56 INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-13 17:16:56 DEBUG [] c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-03-13 17:16:56 INFO  [] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-03-13 17:16:56 WARN  [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-03-13 17:16:56 WARN  [] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-13 17:16:56 INFO  [] o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:postgresql://ep-blue-field-afvby5th-pooler.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require'
+2026-03-13 17:16:56 INFO  [] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2026-03-13 17:16:56 INFO  [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-0.0.0.0-8081"]
+2026-03-13 17:16:56 INFO  [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/'
+2026-03-13 17:16:56 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 17:16:56 INFO  [] c.s.snatchmart.SnatchMartApplication - Started SnatchMartApplication in 24.062 seconds (process running for 3579.975)
+2026-03-13 17:16:56 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 17:16:56 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 17:16:56 INFO  [] o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2026-03-13 17:16:59 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 17:17:28 INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-13 17:17:28 INFO  [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-03-13 17:17:28 INFO  [] o.s.web.servlet.DispatcherServlet - Completed initialization in 9 ms
+2026-03-13 17:46:56 INFO  [] c.s.s.scheduler.DealScheduler - Starting 30-min price sync job
+2026-03-13 17:46:56 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 0 deals from amazon
+2026-03-13 17:46:56 INFO  [] c.s.s.i.FlipkartAffiliateClient - Flipkart affiliate not configured; using dummy deals for UI
+2026-03-13 17:46:59 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Synced 5 deals from flipkart
+2026-03-13 18:00:00 INFO  [] c.s.s.scheduler.DealScheduler - Starting expired deals cleanup job
+2026-03-13 18:00:02 INFO  [] c.s.s.s.s.AffiliateSyncServiceImpl - Deactivated 8 expired deals

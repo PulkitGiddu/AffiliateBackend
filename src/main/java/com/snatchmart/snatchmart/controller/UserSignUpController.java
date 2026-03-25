@@ -3,8 +3,6 @@ package com.snatchmart.snatchmart.controller;
 import com.snatchmart.snatchmart.DTO.UserDTO;
 import com.snatchmart.snatchmart.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,9 +17,15 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Handles user profile management (CRUD).
+ *
+ * Auth (register / login) is handled by {@link AuthController} at /api/v1/auth.
+ * The old POST /api/v1/login endpoint has been removed — use POST /api/v1/auth/login.
+ */
 @RestController
 @RequestMapping("/api/v1")
-@Tag(name = "User Management", description = "APIs for user registration, login, and referral system")
+@Tag(name = "User Management", description = "APIs for user profile, referral system. Use /api/v1/auth for register & login.")
 public class UserSignUpController {
 
     private static final Logger log = LoggerFactory.getLogger(UserSignUpController.class);
@@ -29,19 +33,24 @@ public class UserSignUpController {
     @Autowired
     private UserService userService;
 
+    // ─── Registration ─────────────────────────────────────────────────────────
+
+    /**
+     * Register a new user (legacy endpoint – delegates to UserService).
+     * Prefer POST /api/v1/auth/register which additionally returns a JWT.
+     */
     @PostMapping("/users")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-        log.info("BACKEND received POST /api/v1/users (register): email_id={}, username={}, first_name={}, last_name={}, password_hash present={}, referred_by_code={}",
-                userDTO.getEmail_id(), userDTO.getUsername(), userDTO.getFirst_name(), userDTO.getLast_name(),
-                userDTO.getPassword_hash() != null, userDTO.getReferred_by_code());
+        log.info("BACKEND received POST /api/v1/users: email_id={}, username={}", userDTO.getEmail_id(), userDTO.getUsername());
         UserDTO createdUser = userService.createUser(userDTO);
-        log.info("BACKEND createUser success: id={}, email_id={}", createdUser.getId(), createdUser.getEmail_id());
+        log.info("BACKEND createUser success: id={}", createdUser.getId());
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
+    // ─── User profile CRUD ────────────────────────────────────────────────────
+
     @PutMapping("/{id}")
-    @Operation(summary = "Update user information",
-            description = "Update user profile details")
+    @Operation(summary = "Update user information", description = "Update user profile details")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User updated successfully"),
             @ApiResponse(responseCode = "404", description = "User not found"),
@@ -52,9 +61,8 @@ public class UserSignUpController {
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get user by ID",
-            description = "Retrieve user information by their unique ID")
+    @GetMapping("/users/{id}")
+    @Operation(summary = "Get user by ID", description = "Retrieve user information by their unique ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User found"),
             @ApiResponse(responseCode = "404", description = "User not found")
@@ -64,33 +72,10 @@ public class UserSignUpController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping
-    @Operation(summary = "Get all users",
-            description = "Retrieve all registered users")
-    @ApiResponse(responseCode = "200", description = "List of all users")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> users = userService.getAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
-    }
-
-    @PostMapping("/login")
-    @Operation(summary = "User login",
-            description = "Authenticate user with email and password")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Login successful"),
-            @ApiResponse(responseCode = "401", description = "Invalid credentials"),
-            @ApiResponse(responseCode = "404", description = "User not found")
-    })
-    public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
-        log.info("BACKEND received POST /api/v1/login: email_id={}, password present={}", userDTO.getEmail_id(), userDTO.getPassword_hash() != null);
-        UserDTO loggedInUser = userService.login(userDTO);
-        log.info("BACKEND login success: id={}", loggedInUser.getId());
-        return new ResponseEntity<>(loggedInUser, HttpStatus.OK);
-    }
+    // ─── Referral system ──────────────────────────────────────────────────────
 
     @GetMapping("/referral/{referralCode}")
-    @Operation(summary = "Get user by referral code",
-            description = "Find a user using their referral code")
+    @Operation(summary = "Get user by referral code")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User found"),
             @ApiResponse(responseCode = "404", description = "Referral code not found")
@@ -101,8 +86,7 @@ public class UserSignUpController {
     }
 
     @GetMapping("/{id}/referrals")
-    @Operation(summary = "Get users referred by a specific user",
-            description = "Get all users who signed up using this user's referral code")
+    @Operation(summary = "Get users referred by a specific user")
     @ApiResponse(responseCode = "200", description = "List of referred users")
     public ResponseEntity<List<UserDTO>> getUsersReferredBy(@PathVariable UUID id) {
         List<UserDTO> referredUsers = userService.getUsersReferredBy(id);
@@ -110,8 +94,7 @@ public class UserSignUpController {
     }
 
     @GetMapping("/{id}/referral-count")
-    @Operation(summary = "Get total referral count",
-            description = "Get the total number of users referred by this user")
+    @Operation(summary = "Get total referral count")
     @ApiResponse(responseCode = "200", description = "Total referral count")
     public ResponseEntity<Long> getReferralCount(@PathVariable UUID id) {
         Long count = userService.getReferralCount(id);
@@ -119,8 +102,7 @@ public class UserSignUpController {
     }
 
     @GetMapping("/{id}/active-referral-count")
-    @Operation(summary = "Get active referral count",
-            description = "Get the number of active users referred by this user")
+    @Operation(summary = "Get active referral count")
     @ApiResponse(responseCode = "200", description = "Active referral count")
     public ResponseEntity<Long> getActiveReferralCount(@PathVariable UUID id) {
         Long count = userService.getActiveReferralCount(id);
