@@ -44,14 +44,20 @@ public class AffiliateSyncServiceImpl implements AffiliateSyncService {
     public void syncDeals() {
         for (AffiliateClient client : affiliateClients) {
             List<AffiliateDeal> deals = client.fetchLatestDeals();
+            int skipped = 0;
             for (AffiliateDeal deal : deals) {
+                // Skip deals with no valid price — would violate chk_price_positive constraint
+                if (deal.getSalePrice() == null || deal.getSalePrice().compareTo(java.math.BigDecimal.ONE) < 0) {
+                    skipped++;
+                    continue;
+                }
                 productRepository.findByProductUniqueId(deal.getProductUniqueId())
                         .ifPresentOrElse(
                                 existing -> updateProductPricing(existing, deal),
                                 () -> createProductFromDeal(deal)
                         );
             }
-            log.info("Synced {} deals from {}", deals.size(), client.provider());
+            log.info("Synced {} deals from {} ({} skipped — no valid price)", deals.size() - skipped, client.provider(), skipped);
         }
     }
 

@@ -1,43 +1,58 @@
 package com.snatchmart.snatchmart.integration;
 
-import com.snatchmart.snatchmart.configuration.FlipkartAffiliateConfig;
-import com.snatchmart.snatchmart.integration.flipkart.FlipkartAllOffersResponse;
-import com.snatchmart.snatchmart.integration.flipkart.FlipkartDotdResponse;
-import com.snatchmart.snatchmart.integration.flipkart.FlipkartOfferDto;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.snatchmart.snatchmart.integration.scraper.ProxyRotator;
+import com.snatchmart.snatchmart.integration.scraper.ScraperConfig;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * Fetches products and offers from Flipkart Affiliate API (DOTD + All Offers)
- * and maps them to {@link AffiliateDeal}. Persisted by {@link com.snatchmart.snatchmart.service.AffiliateSyncService}.
- * When flipkart.affiliate.id/token are not set, returns dummy deals so the UI has data without credentials.
+ * Scrapes Flipkart using two strategies:
+ * 1. Extracts JSON from the embedded __INITIAL_STATE__ script block (server-side rendered)
+ * 2. Falls back to HTML card parsing for any DOM-visible products
+ * 3. Falls back to dummy deals if both fail
  */
 @Component
 public class FlipkartAffiliateClient implements AffiliateClient {
+
     private static final Logger log = LoggerFactory.getLogger(FlipkartAffiliateClient.class);
 
-    private static final String DOTD_JSON = "https://affiliate-api.flipkart.net/affiliate/offers/v1/dotd/json";
-    private static final String ALL_OFFERS_JSON = "https://affiliate-api.flipkart.net/affiliate/offers/v1/all/json";
     private static final String MERCHANT_NAME = "Flipkart";
-    private static final String CATEGORY_DEALS = "deals";
-    private static final int MAX_ALL_OFFERS = 100;
+    private static final String BASE_URL = "https://www.flipkart.com";
 
-    private final FlipkartAffiliateConfig config;
-    private final RestTemplate restTemplate;
+    // Search pages — SSR-friendly, embed product JSON in <script> tags
+    private static final List<String[]> SCRAPE_TARGETS = List.of(
+            new String[]{"https://www.flipkart.com/search?q=headphones&sort=popularity", "electronics"},
+            new String[]{"https://www.flipkart.com/search?q=smartwatch&sort=relevance", "electronics"},
+            new String[]{"https://www.flipkart.com/search?q=running+shoes&sort=popularity", "fashion"},
+            new String[]{"https://www.flipkart.com/search?q=power+bank&sort=popularity", "electronics"},
+            new String[]{"https://www.flipkart.com/search?q=bluetooth+speaker&sort=popularity", "electronics"}
+    );
 
-    public FlipkartAffiliateClient(FlipkartAffiliateConfig config, RestTemplate restTemplate) {
-        this.config = config;
-        this.restTemplate = restTemplate;
+    private static final Pattern INITIAL_STATE_PATTERN = Pattern.compile(
+            "window\\.__INITIAL_STATE__\\s*=\\s*(\\{.+?\\});?\\s*(?:window|</script)",
+            Pattern.DOTALL
+    );
+
+    private final ProxyRotator proxyRotator;
+    private final ScraperConfig scraperConfig;
+    private final ObjectMapper objectMapper;
+
+    public FlipkartAffiliateClient(ProxyRotator proxyRotator, ScraperConfig scraperConfig) {
+        this.proxyRotator = proxyRotator;
+        this.scraperConfig = scraperConfig;
+        this.objectMapper = new ObjectMapper();
     }
 
     @Override
@@ -47,143 +62,250 @@ public class FlipkartAffiliateClient implements AffiliateClient {
 
     @Override
     public List<AffiliateDeal> fetchLatestDeals() {
-        if (!config.isConfigured()) {
-            log.info("Flipkart affiliate not configured; using dummy deals for UI");
+        List<AffiliateDeal> deals = new ArrayList<>();
+
+        for (String[] target : SCRAPE_TARGETS) {
+            String url = target[0];
+            String categorySlug = target[1];
+            try {
+                Document doc = proxyRotator.connect(url).get();
+
+                // Strategy 1: parse embedded JSON state
+                List<AffiliateDeal> fromJson = parseEmbeddedJson(doc, categorySlug);
+                if (!fromJson.isEmpty()) {
+                    deals.addAll(fromJson);
+                    log.info("[Flipkart Scraper] Parsed {} deals (JSON) from: {}", fromJson.size(), url);
+                } else {
+                    // Strategy 2: parse visible HTML product cards
+                    List<AffiliateDeal> fromHtml = parseHtmlCards(doc, categorySlug);
+                    deals.addAll(fromHtml);
+                    log.info("[Flipkart Scraper] Parsed {} deals (HTML) from: {}", fromHtml.size(), url);
+                }
+
+                if (deals.size() >= scraperConfig.getMaxProductsPerRun()) break;
+                proxyRotator.throttle();
+            } catch (Exception e) {
+                log.warn("[Flipkart Scraper] Failed to scrape {}: {}", url, e.getMessage());
+            }
+        }
+
+        if (deals.isEmpty()) {
+            log.warn("[Flipkart Scraper] No deals scraped — using dummy fallback");
             return buildDummyDeals();
         }
 
-        List<AffiliateDeal> deals = new ArrayList<>();
-
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Fk-Affiliate-Id", config.getId());
-            headers.set("Fk-Affiliate-Token", config.getToken());
-            HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-            // 1) Deals of the Day
-            ResponseEntity<FlipkartDotdResponse> dotdResponse = restTemplate.exchange(
-                    DOTD_JSON,
-                    HttpMethod.GET,
-                    entity,
-                    FlipkartDotdResponse.class
-            );
-            if (dotdResponse.getBody() != null && dotdResponse.getBody().getDotdList() != null) {
-                dotdResponse.getBody().getDotdList().stream()
-                        .map(o -> toDeal(o, "dotd"))
-                        .forEach(deals::add);
-            }
-
-            // 2) All Offers (limit to first N)
-            ResponseEntity<FlipkartAllOffersResponse> allResponse = restTemplate.exchange(
-                    ALL_OFFERS_JSON,
-                    HttpMethod.GET,
-                    entity,
-                    FlipkartAllOffersResponse.class
-            );
-            if (allResponse.getBody() != null && allResponse.getBody().getAllOffersList() != null) {
-                allResponse.getBody().getAllOffersList().stream()
-                        .limit(MAX_ALL_OFFERS)
-                        .map(o -> toDeal(o, "offer"))
-                        .forEach(deals::add);
-            }
-
-            log.info("Fetched {} deals from Flipkart (DOTD + All Offers)", deals.size());
-        } catch (Exception e) {
-            log.warn("Failed to fetch Flipkart affiliate deals: {}", e.getMessage());
-        }
-
+        log.info("[Flipkart Scraper] Total deals scraped: {}", deals.size());
         return deals;
     }
 
-    private AffiliateDeal toDeal(FlipkartOfferDto o, String prefix) {
-        String url = o.getUrl() != null ? o.getUrl() : "";
-        String productUniqueId = "fk-" + prefix + "-" + Integer.toHexString(url.hashCode());
-        String imageUrl = null;
-        if (o.getImageUrls() != null && !o.getImageUrls().isEmpty()) {
-            imageUrl = o.getImageUrls().stream()
-                    .filter(img -> img.getUrl() != null)
-                    .findFirst()
-                    .map(FlipkartOfferDto.FlipkartImageDto::getUrl)
-                    .orElse(null);
-        }
-        String categorySlug = (o.getCategory() != null && !o.getCategory().isBlank())
-                ? o.getCategory().toLowerCase().replaceAll("[^a-z0-9]+", "-").replaceAll("^-|-$", "")
-                : CATEGORY_DEALS;
-        if (categorySlug.isBlank()) {
-            categorySlug = CATEGORY_DEALS;
-        }
+    // ─── Strategy 1: extract from embedded JSON ───────────────────────────────
 
-        return AffiliateDeal.builder()
-                .productUniqueId(productUniqueId)
-                .productName(o.getTitle() != null ? o.getTitle() : "Deal")
-                .description(o.getDescription())
-                .originalPrice(null)
-                .salePrice(null)
-                .affiliateUrl(url)
-                .imageUrl(imageUrl)
-                .categorySlug(categorySlug)
-                .merchantName(MERCHANT_NAME)
-                .build();
+    private List<AffiliateDeal> parseEmbeddedJson(Document doc, String defaultCategorySlug) {
+        List<AffiliateDeal> deals = new ArrayList<>();
+        try {
+            Elements scripts = doc.select("script");
+            for (Element script : scripts) {
+                String content = script.html();
+                if (!content.contains("productUrl") && !content.contains("INITIAL_STATE")) continue;
+
+                Matcher m = INITIAL_STATE_PATTERN.matcher(content);
+                if (m.find()) {
+                    JsonNode root = objectMapper.readTree(m.group(1));
+                    extractDealsFromJsonNode(root, deals, defaultCategorySlug);
+                    if (!deals.isEmpty()) break;
+                }
+
+                // Also try inline JSON product arrays
+                if (content.contains("\"productUrl\"")) {
+                    try {
+                        JsonNode node = objectMapper.readTree(content.trim());
+                        extractDealsFromJsonNode(node, deals, defaultCategorySlug);
+                    } catch (Exception ignored) {}
+                }
+            }
+        } catch (Exception e) {
+            log.debug("[Flipkart Scraper] JSON parse failed: {}", e.getMessage());
+        }
+        return deals;
     }
 
-    /** Dummy deals when Flipkart credentials are not set. Saved to DB and shown in UI. */
+    private void extractDealsFromJsonNode(JsonNode root, List<AffiliateDeal> deals, String defaultCategorySlug) {
+        root.findValues("productUrl").forEach(urlNode -> {
+            try {
+                String productPath = urlNode.asText();
+                if (productPath == null || productPath.isBlank()) return;
+                String url = productPath.startsWith("http") ? productPath : BASE_URL + productPath;
+
+                // Walk up to find parent node with pricing info
+                JsonNode parent = findAncestorWithField(root, "productUrl", productPath);
+                if (parent == null) return;
+
+                String name = getTextSafe(parent, "title", "name", "productName");
+                if (name == null) return;
+
+                BigDecimal salePrice = getPriceSafe(parent, "finalPrice", "price", "discountedPrice");
+                BigDecimal origPrice = getPriceSafe(parent, "mrp", "originalPrice", "basePrice");
+                if (salePrice == null) return;
+                if (origPrice == null) origPrice = salePrice;
+
+                String imageUrl = getTextSafe(parent, "imageUrl", "image", "imgUrl");
+                String uniqueId = "fk-scrape-" + Integer.toHexString(url.hashCode());
+
+                deals.add(AffiliateDeal.builder()
+                        .productUniqueId(uniqueId)
+                        .productName(name.trim())
+                        .description(name.trim())
+                        .originalPrice(origPrice)
+                        .salePrice(salePrice)
+                        .affiliateUrl(url)
+                        .imageUrl(imageUrl)
+                        .categorySlug(inferCategorySlug(url, defaultCategorySlug))
+                        .merchantName(MERCHANT_NAME)
+                        .build());
+            } catch (Exception ignored) {}
+        });
+    }
+
+    // ─── Strategy 2: parse visible HTML cards ─────────────────────────────────
+
+    private List<AffiliateDeal> parseHtmlCards(Document doc, String defaultCategorySlug) {
+        List<AffiliateDeal> deals = new ArrayList<>();
+
+        Elements cards = doc.select("div[data-id]");
+        if (cards.isEmpty()) cards = doc.select("div._1AtVbE, div.tUxRFH, div._2kHMtA");
+        if (cards.isEmpty()) cards = doc.select("div.IRpwTa, div._4ddWXP");
+
+        for (Element card : cards) {
+            try {
+                String name = textOrNull(card, "div.KzDlHZ, div._4rR01T, a.s1Q9rs, div.WKTcLC");
+                if (name == null || name.isBlank()) continue;
+
+                String href = attrOrNull(card, "a[href]", "href");
+                if (href == null) continue;
+                String productUrl = href.startsWith("http") ? href : BASE_URL + href;
+
+                String salePriceText = textOrNull(card, "div.Nx9bqj, div._30jeq3, div._1_WHN1");
+                String origPriceText = textOrNull(card, "div.yRaY8j, div._3I9_wc");
+
+                BigDecimal salePrice = parsePrice(salePriceText);
+                BigDecimal origPrice = parsePrice(origPriceText);
+                if (salePrice == null) continue;
+                if (origPrice == null) origPrice = salePrice;
+
+                String imageUrl = attrOrNull(card, "img", "src");
+                String uniqueId = "fk-scrape-" + Integer.toHexString(productUrl.hashCode());
+
+                deals.add(AffiliateDeal.builder()
+                        .productUniqueId(uniqueId)
+                        .productName(name.trim())
+                        .description(name.trim())
+                        .originalPrice(origPrice)
+                        .salePrice(salePrice)
+                        .affiliateUrl(productUrl)
+                        .imageUrl(imageUrl)
+                        .categorySlug(inferCategorySlug(productUrl, defaultCategorySlug))
+                        .merchantName(MERCHANT_NAME)
+                        .build());
+
+                if (deals.size() >= scraperConfig.getMaxProductsPerRun()) break;
+            } catch (Exception ignored) {}
+        }
+        return deals;
+    }
+
+    // ─── JSON tree helpers ────────────────────────────────────────────────────
+
+    private JsonNode findAncestorWithField(JsonNode root, String field, String value) {
+        if (root.isObject()) {
+            if (root.has(field) && root.get(field).asText().equals(value)) return root;
+            for (JsonNode child : root) {
+                JsonNode result = findAncestorWithField(child, field, value);
+                if (result != null) return result;
+            }
+        } else if (root.isArray()) {
+            for (JsonNode item : root) {
+                JsonNode result = findAncestorWithField(item, field, value);
+                if (result != null) return result;
+            }
+        }
+        return null;
+    }
+
+    private String getTextSafe(JsonNode node, String... fields) {
+        for (String f : fields) {
+            if (node.has(f) && !node.get(f).isNull() && !node.get(f).asText().isBlank()) {
+                return node.get(f).asText();
+            }
+        }
+        return null;
+    }
+
+    private BigDecimal getPriceSafe(JsonNode node, String... fields) {
+        for (String f : fields) {
+            if (node.has(f)) {
+                try {
+                    String val = node.get(f).asText().replaceAll("[^0-9.]", "");
+                    if (!val.isBlank()) return new BigDecimal(val);
+                } catch (Exception ignored) {}
+            }
+        }
+        return null;
+    }
+
+    // ─── Shared helpers ───────────────────────────────────────────────────────
+
+    private String textOrNull(Element parent, String cssQuery) {
+        Element el = parent.selectFirst(cssQuery);
+        return el != null ? el.text() : null;
+    }
+
+    private String attrOrNull(Element parent, String cssQuery, String attr) {
+        Element el = parent.selectFirst(cssQuery);
+        return el != null && !el.attr(attr).isBlank() ? el.attr(attr) : null;
+    }
+
+    private BigDecimal parsePrice(String text) {
+        if (text == null || text.isBlank()) return null;
+        try {
+            String cleaned = text.replaceAll("[^0-9.]", "");
+            return cleaned.isBlank() ? null : new BigDecimal(cleaned);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private String inferCategorySlug(String url, String defaultSlug) {
+        if (url.contains("headphone") || url.contains("smartwatch") || url.contains("mobile")
+                || url.contains("power") || url.contains("speaker") || url.contains("electronics")) return "electronics";
+        if (url.contains("shoes") || url.contains("clothing") || url.contains("fashion")) return "fashion";
+        if (url.contains("home") || url.contains("kitchen")) return "home-kitchen";
+        if (url.contains("books")) return "books";
+        return defaultSlug;
+    }
+
+    // ─── Dummy fallback ───────────────────────────────────────────────────────
+
     private List<AffiliateDeal> buildDummyDeals() {
         return List.of(
-                AffiliateDeal.builder()
-                        .productUniqueId("fk-dummy-1")
-                        .productName("Wireless Earbuds")
-                        .description("Noise cancellation, 20hr battery")
-                        .originalPrice(new BigDecimal("2999"))
-                        .salePrice(new BigDecimal("1999"))
-                        .affiliateUrl("https://www.flipkart.com/")
-                        .imageUrl(null)
-                        .categorySlug("electronics")
-                        .merchantName(MERCHANT_NAME)
-                        .build(),
-                AffiliateDeal.builder()
-                        .productUniqueId("fk-dummy-2")
-                        .productName("Smart Watch")
-                        .description("Fitness tracking, 7-day battery")
-                        .originalPrice(new BigDecimal("4999"))
-                        .salePrice(new BigDecimal("3499"))
-                        .affiliateUrl("https://www.flipkart.com/")
-                        .imageUrl(null)
-                        .categorySlug("electronics")
-                        .merchantName(MERCHANT_NAME)
-                        .build(),
-                AffiliateDeal.builder()
-                        .productUniqueId("fk-dummy-3")
-                        .productName("Backpack")
-                        .description("Laptop compartment, water resistant")
-                        .originalPrice(new BigDecimal("1299"))
-                        .salePrice(new BigDecimal("899"))
-                        .affiliateUrl("https://www.flipkart.com/")
-                        .imageUrl(null)
-                        .categorySlug("deals")
-                        .merchantName(MERCHANT_NAME)
-                        .build(),
-                AffiliateDeal.builder()
-                        .productUniqueId("fk-dummy-4")
-                        .productName("Power Bank 20000mAh")
-                        .description("Fast charging, dual USB")
-                        .originalPrice(new BigDecimal("1899"))
-                        .salePrice(new BigDecimal("999"))
-                        .affiliateUrl("https://www.flipkart.com/")
-                        .imageUrl(null)
-                        .categorySlug("electronics")
-                        .merchantName(MERCHANT_NAME)
-                        .build(),
-                AffiliateDeal.builder()
-                        .productUniqueId("fk-dummy-5")
-                        .productName("Running Shoes")
-                        .description("Lightweight, cushioned sole")
-                        .originalPrice(new BigDecimal("3999"))
-                        .salePrice(new BigDecimal("2499"))
-                        .affiliateUrl("https://www.flipkart.com/")
-                        .imageUrl(null)
-                        .categorySlug("deals")
-                        .merchantName(MERCHANT_NAME)
-                        .build()
+                deal("fk-dummy-1", "Wireless Earbuds", "Noise cancellation, 20hr battery", 2999, 1999, "electronics"),
+                deal("fk-dummy-2", "Smart Watch", "Fitness tracking, 7-day battery", 4999, 3499, "electronics"),
+                deal("fk-dummy-3", "Backpack", "Laptop compartment, water resistant", 1299, 899, "fashion"),
+                deal("fk-dummy-4", "Power Bank 20000mAh", "Fast charging, dual USB", 1899, 999, "electronics"),
+                deal("fk-dummy-5", "Running Shoes", "Lightweight, cushioned sole", 3999, 2499, "fashion")
         );
+    }
+
+    private AffiliateDeal deal(String uid, String name, String desc, int orig, int sale, String cat) {
+        return AffiliateDeal.builder()
+                .productUniqueId(uid)
+                .productName(name)
+                .description(desc)
+                .originalPrice(new BigDecimal(orig))
+                .salePrice(new BigDecimal(sale))
+                .affiliateUrl(BASE_URL + "/")
+                .imageUrl(null)
+                .categorySlug(cat)
+                .merchantName(MERCHANT_NAME)
+                .build();
     }
 }
