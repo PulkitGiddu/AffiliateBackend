@@ -74,3 +74,14 @@ docker run -p 8081:8081 snatchmart
 
 ## Flutter UI
 Flutter scaffold is available under `ui/flutter_app`.
+
+## UI Demo
+https://github.com/user-attachments/assets/1b50bfa3-2ed5-4bdd-99de-8a30fc836ba7
+
+
+
+
+
+
+
+
